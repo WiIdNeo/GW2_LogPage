@@ -4,7 +4,8 @@
 Ablauf:  1. Logs im Ordner finden (bereits verarbeitete werden uebersprungen)
          2. pro neuem Log EI-CLI ausfuehren (nur Upload, keine Dateien)
          3. dps.report-Metadaten holen (Boss, Spieler, Charaktere)
-         4. Wingman-Noten pro Whitelist-Spieler, in Batches, idempotent
+         4. Logs per /api/importLogQueued bei Wingman anmelden, auf Import warten,
+            dann Wingman-Noten pro Whitelist-Spieler, in Batches, idempotent
          5. Gesamtrating + Killproofs/Charaktere pro Spieler (je einmal am Ende)
 """
 import argparse, hashlib, json, logging, os, re, sqlite3, subprocess, sys, tempfile, time, tomllib
@@ -38,6 +39,7 @@ CREATE TABLE IF NOT EXISTS log(
   dps_status TEXT, dps_url TEXT,            -- ok | rejected | error | parse_failed | skipped
   wm_status TEXT, wm_id TEXT, wm_url TEXT,  -- pending | ok | rejected | error | n/a
   wm_cands TEXT, wm_attempts INTEGER DEFAULT 0, attempts INTEGER DEFAULT 0,
+  wm_queued INTEGER DEFAULT 0, wm_queued_at TEXT,   -- 0 nicht gemeldet | 1 in Wingman-Queue | 2 in Wingman-DB
   boss_key TEXT, success INTEGER, encounter_time TEXT, players_json TEXT,
   process_failed INTEGER DEFAULT 0, retry INTEGER DEFAULT 0, yt_url TEXT, ei_output TEXT, created_at TEXT);
 CREATE TABLE IF NOT EXISTS log_player(
@@ -97,6 +99,10 @@ def open_db(path, whitelist, bosses):
     db.row_factory = sqlite3.Row
     db.execute("PRAGMA journal_mode=WAL")
     db.executescript(SCHEMA)
+    cols = {r[1] for r in db.execute("PRAGMA table_info(log)")}      # Migration bestehender DBs
+    for col, typ in (("wm_queued", "INTEGER DEFAULT 0"), ("wm_queued_at", "TEXT")):
+        if col not in cols:
+            db.execute(f"ALTER TABLE log ADD COLUMN {col} {typ}")
     db.executemany("INSERT OR IGNORE INTO grade VALUES(?,?)", [(g, i + 1) for i, g in enumerate(GRADES)])
     db.execute("UPDATE player SET whitelisted=0")
     for acc in whitelist:
@@ -432,30 +438,106 @@ def rate_player(db, acc, hashes, batch_size, pause):
     return found, missing
 
 
-def resolve_wm_ids(db, pause):
-    """Wingman-ID eines dps.report-Links ueber /api/checkLogQueuedOrDB (targetURL)."""
+def wm_id_from_url(url):
+    return url.rstrip("/").rsplit("/", 1)[-1]
+
+
+def wm_check(link):
+    """Status eines dps.report-Links bei Wingman: {inDB, inQueue, targetURL, ...}."""
+    return http("GET", f"{WM}/api/checkLogQueuedOrDB", params={"link": link}, timeout=30).json()
+
+
+def wm_import(link):
+    """Meldet einen dps.report-Link bei Wingman zum Import an (Queue).
+    Antwort: {"success": 1, "futureLink": ".../log/<ID>", "note": ...}"""
+    return http("GET", f"{WM}/api/importLogQueued", params={"link": link}, timeout=30).json()
+
+
+def queue_imports(db, pause):
+    """Stellt sicher, dass jedes Log mit dps.report-Link bei Wingman in der DB oder Import-Queue liegt.
+    Nur dann kann /api/ratePerformanceOfPlayerInLogs das Log finden."""
     rows = db.execute("SELECT file_hash, dps_url, wm_cands FROM log WHERE wm_status='pending' "
-                      "AND wm_id IS NULL AND dps_url IS NOT NULL").fetchall()
+                      "AND wm_queued=0 AND dps_url IS NOT NULL").fetchall()
+    if rows:
+        log.info("Wingman: %d Logs pruefen/zum Import anmelden", len(rows))
     for r in rows:
-        try:
-            d = http("GET", f"{WM}/api/checkLogQueuedOrDB", params={"link": r["dps_url"]}, timeout=30).json()
+        state, wid = 0, None
+        try:                                            # evtl. schon vorhanden (z. B. EI-Direktupload)
+            d = wm_check(r["dps_url"])
+            time.sleep(pause)
+            if d.get("inDB") or d.get("inQueue"):
+                state = 2 if d.get("inDB") else 1
+                wid = wm_id_from_url(d["targetURL"]) if d.get("targetURL") else None
         except Exception as e:
             log.warning("checkLogQueuedOrDB fehlgeschlagen (%s): %s", r["dps_url"], e)
-            continue
-        time.sleep(pause)
-        target = d.get("targetURL")
-        if target and (d.get("inDB") or d.get("inQueue")):
-            wid = target.rstrip("/").rsplit("/", 1)[-1]
-            cands = [c for c in json.loads(r["wm_cands"] or "[]") if c != wid]
-            db.execute("UPDATE log SET wm_cands=? WHERE file_hash=?", (json.dumps([wid] + cands), r["file_hash"]))
+        if not state:
+            try:
+                d = wm_import(r["dps_url"])
+                time.sleep(pause)
+            except Exception as e:
+                log.warning("importLogQueued fehlgeschlagen (%s), naechster Lauf versucht es erneut: %s", r["dps_url"], e)
+                continue
+            if d.get("success") == 1 and d.get("futureLink"):
+                state, wid = 1, wm_id_from_url(d["futureLink"])
+            else:
+                log.warning("Wingman hat den Import abgelehnt (%s): %s", r["dps_url"], d.get("note") or d)
+                db.execute("UPDATE log SET wm_attempts=wm_attempts+1, "
+                           "wm_status=CASE WHEN wm_attempts+1>=? THEN 'error' ELSE wm_status END "
+                           "WHERE file_hash=?", (MAX_ATTEMPTS, r["file_hash"]))
+                db.commit()
+                continue
+        cands = json.loads(r["wm_cands"] or "[]")
+        if wid:
+            cands = [wid] + [c for c in cands if c != wid]
+        db.execute("UPDATE log SET wm_queued=?, wm_queued_at=?, wm_id=COALESCE(?, wm_id), wm_cands=? WHERE file_hash=?",
+                   (state, now(), wid, json.dumps(cands), r["file_hash"]))
+        db.commit()
+
+
+def wait_for_imports(db, wait, poll, pause, stale_hours=24):
+    """Wartet bis `wait` Sekunden darauf, dass Logs aus der Wingman-Queue in der DB landen.
+    Nicht fertige bleiben 'pending' (ohne Fehlversuch) und werden beim naechsten Lauf erneut geprueft."""
+    deadline = time.time() + wait
+    while True:
+        rows = db.execute("SELECT file_hash, dps_url, wm_queued_at FROM log "
+                          "WHERE wm_status='pending' AND wm_queued=1").fetchall()
+        if not rows:
+            return
+        for r in rows:
+            try:
+                d = wm_check(r["dps_url"])
+                time.sleep(pause)
+            except Exception as e:
+                log.warning("checkLogQueuedOrDB fehlgeschlagen (%s): %s", r["dps_url"], e)
+                continue
+            if d.get("inDB"):
+                db.execute("UPDATE log SET wm_queued=2 WHERE file_hash=?", (r["file_hash"],))
+            elif not d.get("inQueue"):
+                # weder in DB noch in Queue -> Import ist verloren gegangen, neu anmelden
+                db.execute("UPDATE log SET wm_queued=0 WHERE file_hash=?", (r["file_hash"],))
+        db.commit()
+        left = db.execute("SELECT COUNT(*) FROM log WHERE wm_status='pending' AND wm_queued=1").fetchone()[0]
+        if not left or time.time() >= deadline:
+            break
+        log.info("Wingman-Queue: %d Logs warten noch ...", left)
+        time.sleep(poll)
+    cutoff = datetime.now(timezone.utc).timestamp() - stale_hours * 3600
+    for r in db.execute("SELECT file_hash, wm_queued_at FROM log WHERE wm_status='pending' AND wm_queued=1").fetchall():
+        try:
+            if datetime.fromisoformat(r["wm_queued_at"]).timestamp() < cutoff:
+                log.warning("Log seit >%dh in der Wingman-Queue - als Fehler markiert", stale_hours)
+                db.execute("UPDATE log SET wm_status='error' WHERE file_hash=?", (r["file_hash"],))
+        except (TypeError, ValueError):
+            pass
     db.commit()
 
 
 def wingman_stage(db, cfg):
-    resolve_wm_ids(db, cfg["wingman"]["pause"])
-    wl = cfg["whitelist"]
     bs, pause = cfg["wingman"]["batch_size"], cfg["wingman"]["pause"]
-    pending = db.execute("SELECT * FROM log WHERE wm_status='pending' "
+    queue_imports(db, pause)
+    wait_for_imports(db, cfg["wingman"]["wait"], cfg["wingman"]["poll"], pause)
+    wl = cfg["whitelist"]
+    pending = db.execute("SELECT * FROM log WHERE wm_status='pending' AND wm_queued=2 "
                          "AND dps_status IN ('ok','rejected')").fetchall()
     todo = {}
     for r in pending:
@@ -536,9 +618,12 @@ def finalize(db):
                      ("SELECT wm_status s, COUNT(*) n FROM log GROUP BY 1", "Wingman")]:
         print(f"  {label:10}", {r["s"]: r["n"] for r in db.execute(q)})
     print("  failed    ", db.execute("SELECT COUNT(*) FROM log WHERE process_failed=1").fetchone()[0])
-    n = db.execute("SELECT COUNT(*) FROM log WHERE wm_status='pending' AND wm_cands='[]'").fetchone()[0]
+    n = db.execute("SELECT COUNT(*) FROM log WHERE wm_status='pending' AND wm_queued<2 AND dps_url IS NOT NULL").fetchone()[0]
     if n:
-        print(f"  ! {n} Logs ohne Wingman-ID (dps.report abgelehnt? Wingman liefert die ID nur ueber den dps.report-Link)")
+        print(f"  ! {n} Logs warten noch auf den Wingman-Import (naechster Lauf prueft erneut)")
+    n = db.execute("SELECT COUNT(*) FROM log WHERE wm_status='pending' AND dps_url IS NULL").fetchone()[0]
+    if n:
+        print(f"  ! {n} Logs ohne dps.report-Link - Wingman-Import nicht moeglich")
 
 
 def main():
@@ -551,16 +636,26 @@ def main():
     ap.add_argument("--skip-ei", action="store_true")
     ap.add_argument("--skip-wingman", action="store_true")
     ap.add_argument("--refresh-players", action="store_true", help="Gesamtrating+KP fuer alle neu laden")
+    ap.add_argument("--requeue-wingman", action="store_true",
+                    help="Logs mit wm_status=error/pending erneut bei Wingman anmelden und bewerten")
     ap.add_argument("--debug", action="store_true", help="rohe EI-Ausgabe anzeigen")
     a = ap.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     cfg = tomllib.loads(Path(a.config).read_text(encoding="utf-8"))
     cfg.setdefault("wingman", {}).setdefault("batch_size", 40)
     cfg["wingman"].setdefault("pause", 0.5)
+    cfg["wingman"].setdefault("wait", 180)     # max. Sekunden Wartezeit auf die Wingman-Import-Queue
+    cfg["wingman"].setdefault("poll", 10)      # Abstand der Queue-Abfragen in Sekunden
     root = a.log_dir or cfg["log_dir"]
     bosses_path = Path(a.config).parent / cfg.get("bosses_file", "bosses.toml")
     bosses = load_bosses(bosses_path)
     db = open_db(cfg["db_path"], cfg["whitelist"], bosses)
+
+    if a.requeue_wingman:
+        n = db.execute("UPDATE log SET wm_status='pending', wm_attempts=0, wm_queued=0, process_failed=0 "
+                       "WHERE wm_status IN ('error','pending') AND dps_url IS NOT NULL").rowcount
+        db.commit()
+        log.info("%d Logs fuer Wingman zurueckgesetzt", n)
 
     if not a.skip_ei:
         files = find_new_files(db, root, cfg.get("skip_name_patterns", []), skip_sets(bosses), a.limit)

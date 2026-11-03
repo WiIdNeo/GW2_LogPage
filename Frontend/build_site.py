@@ -4,7 +4,7 @@ Seiten:
   index.html          Log-Uebersicht mit Filter (Spieler / Boss / Modus)
   players.html        Spielerliste
   player-<slug>.html  eine Seite pro Whitelist-Spieler
-  (legal.html wird NICHT erzeugt - nur verlinkt; liegt manuell im Ausgabeordner)
+  (legal.html und features.html werden NICHT erzeugt - nur verlinkt; liegen manuell im Ausgabeordner)
   style.css, filter.js
 
 Jeder filterbare Container hat die Klasse 'item' plus Klassen wie
@@ -57,6 +57,7 @@ def link(url, text):
 
 def page(title, body, scripts=False, nav=True):
     navhtml = ('<nav><a href="index.html">Logs</a> | <a href="players.html">Spieler</a> | '
+               '<a href="features.html">Geplante Features</a> | '
                '<a href="legal.html">Lizenz &amp; Rechtliches</a></nav>') if nav else ""
     js = '<script src="filter.js"></script>' if scripts else ""
     return f"""<!DOCTYPE html>
@@ -312,7 +313,7 @@ JS = """// Generischer Filter: <select data-filter id="x"> -> value = CSS-Klasse
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--db", help="Pfad zur SQLite-DB (Default: db_path aus ./config.toml, sonst ./gw2logs.sqlite)")
-    ap.add_argument("--out", default="site", help="Ausgabeordner, relativ zum Ausfuehrverzeichnis (Default: ./site)")
+    ap.add_argument("--out", default="./../docs", help="Ausgabeordner, relativ zum Ausfuehrverzeichnis (Default: ./site)")
     a = ap.parse_args()
 
     db_arg = a.db

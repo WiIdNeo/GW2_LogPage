@@ -1,0 +1,104 @@
+# bosses.toml - Bossliste fuer gw2logs (Quelle: /api/bosses von Wingman)
+#
+# enabled = true   Logs dieses Bosses werden bei Wingman bewertet und in die Statistik gezaehlt.
+#                  false = Log wird zwar hochgeladen, aber nicht bewertet.
+# cm      = true   Boss hat einen CM-Modus. Wingman nutzt dafuer die negative ID
+#                  (z. B. -17154 = Deimos CM). Beide Modi werden getrennt gezaehlt.
+# only_cm = true   Boss gibt es nur als CM (Fraktale).
+# aliases = [..]   weitere IDs, unter denen arcdps den Ordner anlegt (Ordnername: 'Boss (ID)')
+# lcm     = true   Nur zur Info (Legendary CM), wird noch nicht ausgewertet.
+# Die Reihenfolge in dieser Datei ist die Anzeigereihenfolge.
+# Neue/unbekannte Boss-IDs aus Logs werden mit enabled = false in die DB eingetragen
+# und beim Lauf als Warnung gemeldet.
+
+boss = [
+
+  # --- Raid Wing 1 (Spirit Vale) ---
+  { id = 15438, short = "vg", name = "Vale Guardian", type = "raid", wing = 1, cm = false, enabled = true },
+  { id = 15415, short = "woods", name = "Spirit Woods", type = "raid", wing = 1, cm = false, enabled = false },
+  { id = 15429, short = "gors", name = "Gorseval", type = "raid", wing = 1, cm = false, enabled = true },
+  { id = 15375, short = "sab", name = "Sabetha", type = "raid", wing = 1, cm = false, enabled = true },
+
+  # --- Raid Wing 2 (Salvation Pass) ---
+  { id = 16123, short = "sloth", name = "Slothasor", type = "raid", wing = 2, cm = false, enabled = true },
+  { id = 16088, short = "trio", name = "Bandit Trio", type = "raid", wing = 2, cm = false, enabled = false },
+  { id = 16115, short = "matt", name = "Matthias Gabrel", type = "raid", wing = 2, cm = false, enabled = true },
+
+  # --- Raid Wing 3 (Stronghold of the Faithful) ---
+  { id = 16253, short = "esc", name = "Escort", type = "raid", wing = 3, cm = false, enabled = false },
+  { id = 16235, short = "kc", name = "Keep Construct", type = "raid", wing = 3, cm = true, enabled = true },
+  { id = 16247, short = "tc", name = "Twisted Castle", type = "raid", wing = 3, cm = false, enabled = false },
+  { id = 16246, short = "xera", name = "Xera", type = "raid", wing = 3, cm = false, enabled = true },
+
+  # --- Raid Wing 4 (Bastion of the Penitent) ---
+  { id = 17194, short = "cairn", name = "Cairn", type = "raid", wing = 4, cm = true, enabled = true },
+  { id = 17172, short = "mo", name = "Mursaat Overseer", type = "raid", wing = 4, cm = true, enabled = true },
+  { id = 17188, short = "sam", name = "Samarog", type = "raid", wing = 4, cm = true, enabled = true },
+  { id = 17154, short = "dei", name = "Deimos", type = "raid", wing = 4, cm = true, enabled = true },
+
+  # --- Raid Wing 5 (Hall of Chains) ---
+  { id = 19767, short = "sh", name = "Soulless Horror", type = "raid", wing = 5, cm = true, enabled = true },
+  { id = 19828, short = "river", name = "River of Souls", type = "raid", wing = 5, cm = false, enabled = false },
+  { id = 19691, short = "bk", name = "Statue of Ice (Broken King)", type = "raid", wing = 5, cm = false, enabled = false },
+  { id = 19536, short = "eos", name = "Statue of Death (Eater of Souls)", type = "raid", wing = 5, cm = false, enabled = false },
+  { id = 19651, short = "eyes", name = "Statue of Darkness (Eyes)", type = "raid", wing = 5, cm = false, enabled = false },
+  { id = 19450, short = "dhuum", name = "Dhuum", type = "raid", wing = 5, cm = true, enabled = true },
+
+  # --- Raid Wing 6 (Mythwright Gambit) ---
+  { id = 43974, short = "ca", name = "Conjured Amalgamate", type = "raid", wing = 6, cm = true, enabled = true },
+  { id = 21105, short = "twins", name = "Twin Largos", type = "raid", wing = 6, cm = true, enabled = true },
+  { id = 20934, short = "q1", name = "Qadim", type = "raid", wing = 6, cm = true, enabled = true },
+
+  # --- Raid Wing 7 (The Key of Ahdashim) ---
+  { id = 22006, short = "adina", name = "Cardinal Adina", type = "raid", wing = 7, cm = true, enabled = true },
+  { id = 21964, short = "sabir", name = "Cardinal Sabir", type = "raid", wing = 7, cm = true, enabled = true },
+  { id = 22000, short = "q2", name = "Qadim the Peerless", type = "raid", wing = 7, cm = true, enabled = true },
+
+  # --- Raid Wing 8 (Mount Balrior) ---
+  { id = 26725, short = "greer", name = "Greer", type = "raid", wing = 8, cm = true, enabled = true },
+  { id = 26774, short = "deci", name = "Decima", type = "raid", wing = 8, cm = true, enabled = true },
+  { id = 26712, short = "ura", name = "Ura", type = "raid", wing = 8, cm = true, lcm = true, enabled = true },
+
+  # --- Strikes: Icebrood Saga ---
+  { id = 22154, short = "ice", name = "Icebrood Construct", type = "strike", cm = false, enabled = true },
+  { id = 22343, short = "kodas", name = "The Voice and The Claw", type = "strike", cm = false, enabled = true },
+  { id = 22492, short = "frae", name = "Fraenir of Jormag", type = "strike", cm = false, enabled = true },
+  { id = 22521, short = "bone", name = "Boneskinner", type = "strike", cm = false, enabled = false },
+  { id = 22711, short = "woj", name = "Whisper of Jormag", type = "strike", cm = false, enabled = false },
+  { id = 21333, short = "freezie", name = "Freezie", type = "strike", cm = false, enabled = false },
+
+  # --- Strikes: End of Dragons ---
+  { id = 24033, short = "mai", name = "Captain Mai Trin", type = "strike", cm = true, enabled = false },
+  { id = 23957, short = "ankka", name = "Ankka", type = "strike", cm = true, enabled = false },
+  { id = 24485, short = "li", name = "Minister Li", type = "strike", cm = true, enabled = false },
+  { id = 24375, short = "va", name = "Void Amalgamate (Harvest Temple)", type = "strike", aliases = [43488], cm = true, enabled = false },
+
+  # --- Strikes: Old Lion's Court / Secrets of the Obscure / Janthir Wilds / Visions of Eternity ---
+  { id = 25413, short = "olc", name = "Old Lion's Court", type = "strike", cm = true, enabled = false },
+  { id = 25705, short = "dagda", name = "Dagda", type = "strike", cm = true, enabled = false },
+  { id = 25989, short = "cerus", name = "Cerus", type = "strike", cm = true, lcm = true, enabled = false },
+  { id = 27124, short = "kela", name = "Kela", type = "strike", cm = true, enabled = false },
+  { id = 28106, short = "vloxx", name = "Vloxx", type = "strike", cm = true, lcm = true, enabled = false },
+
+  # --- Fraktale (nur CM) ---
+  { id = 17021, short = "mama", name = "MAMA", type = "fractal", only_cm = true, enabled = false },
+  { id = 17028, short = "siax", name = "Siax", type = "fractal", only_cm = true, enabled = false },
+  { id = 16948, short = "enso", name = "Ensolyss", type = "fractal", only_cm = true, enabled = false },
+  { id = 17632, short = "skor", name = "Skorvald", type = "fractal", only_cm = true, enabled = false },
+  { id = 17949, short = "arts", name = "Artsariiv", type = "fractal", only_cm = true, enabled = false },
+  { id = 17759, short = "arkk", name = "Arkk", type = "fractal", only_cm = true, enabled = false },
+  { id = 23254, short = "elai", name = "Elemental Ai", type = "fractal", only_cm = true, enabled = false },
+  { id = 232542, short = "darkai", name = "Dark Ai", type = "fractal", only_cm = true, enabled = false },
+  { id = 232543, short = "ai", name = "Ai (Full)", type = "fractal", only_cm = true, enabled = false },
+  { id = 25577, short = "kana", name = "Kanaxai", type = "fractal", only_cm = true, enabled = false },
+  { id = 26231, short = "eparch", name = "Eparch", type = "fractal", only_cm = true, enabled = false },
+  { id = 27010, short = "kinfall", name = "Whispering Shadow (Kinfall)", type = "fractal", only_cm = true, enabled = false },
+
+  # --- Golems ---
+  { id = 16199, short = "golem", name = "Standard Kitty Golem", type = "golem", cm = false, enabled = false },
+  { id = 19645, short = "golem2", name = "Medium Kitty Golem", type = "golem", cm = false, enabled = false },
+  { id = 19676, short = "golem3", name = "Large Kitty Golem", type = "golem", cm = false, enabled = false },
+  { id = 16202, short = "golem4", name = "Massive Kitty Golem", type = "golem", cm = false, enabled = false },
+  { id = 16177, short = "golem5", name = "Average Kitty Golem", type = "golem", cm = false, enabled = false },
+  { id = 16198, short = "golem6", name = "Vital Kitty Golem", type = "golem", cm = false, enabled = false },
+]

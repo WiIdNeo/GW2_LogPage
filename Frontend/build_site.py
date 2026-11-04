@@ -312,7 +312,7 @@ JS = """// Generischer Filter: <select data-filter id="x"> -> value = CSS-Klasse
 # ---------------------------------------------------------------- main
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--db", help="Pfad zur SQLite-DB (Default: db_path aus ./config.toml, sonst ./gw2logs.sqlite)")
+    ap.add_argument("--db", default="./../Backend/gw2logs.sqlite", help="Pfad zur SQLite-DB (Default: db_path aus ./config.toml, sonst ./gw2logs.sqlite)")
     ap.add_argument("--out", default="./../docs", help="Ausgabeordner, relativ zum Ausfuehrverzeichnis (Default: ./site)")
     a = ap.parse_args()
 

@@ -2,7 +2,7 @@
 """GW2-Log-Pipeline: EI-Upload (dps.report/Wingman) -> SQLite -> Wingman-Ratings.
 
 Ablauf:  1. Logs im Ordner finden (bereits verarbeitete werden uebersprungen)
-         2. pro neuem Log EI-CLI ausfuehren (nur Upload, keine Dateien)
+         2. pro neuem Log EI-CLI ausfuehren (Upload; JSON nur als Zwischenprodukt -> gekuerzt in log_analysis)
          3. dps.report-Metadaten holen (Boss, Spieler, Charaktere)
          4. Logs per /api/importLogQueued bei Wingman anmelden, auf Import warten,
             dann Wingman-Noten pro Whitelist-Spieler, in Batches, idempotent
@@ -13,6 +13,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 import requests
+import extract_log                      # gekuerzte EI-JSON (liegt neben diesem Script)
 
 GRADES = ["SSS", "SS", "S", "A+", "A", "B+", "B", "C+", "C", "D", "E", "F"]  # Index+1 = Zahl
 CATS = ["Damage", "Mechanics", "Speed", "Support", "Teamplay"]
@@ -56,6 +57,11 @@ CREATE TABLE IF NOT EXISTS player_boss_best(
 CREATE TABLE IF NOT EXISTS player_kp(
   account TEXT, boss_key TEXT, total INTEGER, by_class_json TEXT,
   PRIMARY KEY(account, boss_key));
+CREATE TABLE IF NOT EXISTS log_analysis(
+  file_hash TEXT PRIMARY KEY,               -- = log.file_hash
+  dps_slug TEXT, boss_key TEXT, duration_ms INTEGER, success INTEGER,
+  schema_ver INTEGER, analyzed_at TEXT,
+  data TEXT);                               -- gekuerzte EI-JSON (extract_log.py), kompakt
 
 CREATE VIEW IF NOT EXISTS v_avg_boss AS
 SELECT account, boss_key, category, logs, avg_num,
@@ -215,6 +221,7 @@ def find_new_files(db, root, skip_patterns, skip_ids, limit=None):
 # sample.conf), damit der Wingman-Upload (uploadProcessed) vollstaendige Daten bekommt.
 EI_OVERRIDES = {
     "SaveAtOut": "false", "SaveOutHTML": "false", "SaveOutCSV": "false", "SaveOutJSON": "true",
+    "IndentJSON": "false", "RawTimelineArrays": "true", "CompressRaw": "false",   # JSON nur Zwischenprodukt; Graph-Daten (targetDamage1S) noetig
     "SaveOutTrace": "false", "ApplicationTraces": "false",
     "UploadToDPSReports": "true", "UploadToWingman": "false", "UploadToRaidar": "false",
     "SendEmbedToWebhook": "false", "SendSimpleMessageToWebhook": "false", "AutoDiscordBatch": "false",
@@ -305,13 +312,26 @@ def _safe(name):
     return re.sub(r"[^\w.+-]+", "_", name or "unknown").strip("_") or "unknown"
 
 
-def dump_json(ei_cfg, tmpdir, src, meta):
-    """Raeumt die von EI erzeugte JSON im Temp-Ordner auf (immer) und kopiert sie vorher - falls
-    [ei] json_dump_dir gesetzt ist - in einen festen Ordner: <json_dump_dir>/<Boss[_CM]>/.
-    [ei] json_dump_max_per_boss begrenzt die Anzahl pro Boss (0 = unbegrenzt, Default 2).
-    Laeuft im Worker-Thread; die Datei wird anhand des Log-Dateinamens gefunden, weil alle
-    parallelen Jobs im selben Temp-Ordner schreiben.
-    Hier koennte spaeter auch die Auswertung ansetzen (Pfad des JSON: `j`)."""
+def load_filter(cfg):
+    """Boss-Filter (Ziele/Mechaniken) aus [analysis] filter_file, relativ zur config.toml."""
+    name = cfg.get("analysis", {}).get("filter_file", "analysis_filter.toml")
+    if not name:
+        return {}
+    p = Path(cfg.get("_dir", ".")) / name
+    if not p.exists():
+        log.warning("Analyse-Filter %s nicht gefunden - es wird nur nach Whitelist-Spielern gekuerzt", p)
+        return {}
+    return extract_log.load_filters(p)
+
+
+def analyze_json(cfg, tmpdir, f, meta, flt, wl):
+    """Kuerzt die von EI erzeugte JSON (extract_log.extract) und gibt das Ergebnis zurueck (oder None).
+    Die ausfuehrliche JSON wird IMMER aus dem Temp-Ordner geloescht. Laeuft im Worker-Thread, fasst die DB
+    nicht an. Optional: gekuerzte JSON nach [analysis] slim_dir (Debugging), Original der ersten
+    raw_keep_per_boss Logs je Boss nach raw_dir (zum Ansehen neuer Bosse).
+    Achtung Speicher: pro paralleler EI-Instanz wird die komplette JSON einmal geladen."""
+    acfg = cfg.get("analysis", {})
+    src = f["path"]
     base = src.name
     for e in EXTS:
         if base.lower().endswith(e):
@@ -320,28 +340,59 @@ def dump_json(ei_cfg, tmpdir, src, meta):
     found = sorted(Path(tmpdir).glob(glob.escape(base) + "*.json"), key=lambda x: x.stat().st_mtime)
     if not found:
         log.warning("Keine EI-JSON fuer %s gefunden (SaveOutJSON/OutLocation pruefen)", src.name)
-        return
+        return None
     j = found[-1]
+    slim = None
     try:
-        dump_dir = ei_cfg.get("json_dump_dir", "json_dump")
-        if dump_dir:
-            label = "unknown"
+        if acfg.get("enabled", True):
+            label, bkey = "unknown", None
             if meta:
                 try:
                     m = parse_meta(meta)
+                    bkey = m["boss_key"]
                     label = _safe(m["boss_name"] or m["boss_key"]) + ("_CM" if m["is_cm"] else "")
                 except Exception:
                     pass
-            target = Path(dump_dir) / label
-            maxn = int(ei_cfg.get("json_dump_max_per_boss", 2))
-            with _dump_lock:
-                target.mkdir(parents=True, exist_ok=True)
-                if maxn <= 0 or len(list(target.glob("*.json"))) < maxn:
-                    shutil.copy2(j, target / j.name)
-                    log.info("JSON kopiert: %s", target / j.name)
+            root = extract_log.load_json(j)
+            slim, st = extract_log.extract(root, graph=acfg.get("graph", "full"), source_name=src.name,
+                                           whitelist=wl, filters=flt, filter_keys=[bkey] if bkey else ())
+            for w in st["warnings"]:
+                log.warning("%s: %s", src.name, w)
+            if acfg.get("slim_dir", "json_slim"):
+                d = Path(acfg.get("slim_dir", "json_slim")) / label
+                d.mkdir(parents=True, exist_ok=True)
+                (d / f"{f['hash'][:8]}_{extract_log.out_name(j)}").write_text(
+                    json.dumps(slim, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+            keep_raw = int(acfg.get("raw_keep_per_boss", 0))
+            if keep_raw > 0 and acfg.get("raw_dir"):
+                target = Path(acfg["raw_dir"]) / label
+                with _dump_lock:
+                    target.mkdir(parents=True, exist_ok=True)
+                    if len(list(target.glob("*.json"))) < keep_raw:
+                        shutil.copy2(j, target / j.name)
+                        log.info("Original-JSON behalten: %s", target / j.name)
+    except Exception:
+        log.exception("Analyse fehlgeschlagen: %s", src.name)
+        slim = None
     finally:
-        for x in found:                             # Temp-Ordner nicht mit grossen JSONs fuellen
+        for x in found:                             # ausfuehrliche JSON nie liegen lassen
             x.unlink(missing_ok=True)
+    return slim
+
+
+def store_analysis(db, file_hash, slim):
+    """Schreibt die gekuerzte JSON in log_analysis (nur Hauptthread, NACH ei_store)."""
+    ph = slim.get("phases") or []
+    ok = (slim.get("meta") or {}).get("success")
+    db.execute(
+        "INSERT INTO log_analysis(file_hash,dps_slug,boss_key,duration_ms,success,schema_ver,analyzed_at,data) "
+        "VALUES(?,?,?,?,?,?,?,?) ON CONFLICT(file_hash) DO UPDATE SET dps_slug=excluded.dps_slug, "
+        "boss_key=excluded.boss_key, duration_ms=excluded.duration_ms, success=excluded.success, "
+        "schema_ver=excluded.schema_ver, analyzed_at=excluded.analyzed_at, data=excluded.data",
+        (file_hash, slim.get("dps_slug"), slim.get("boss_key"), ph[0].get("end") if ph else None,
+         None if ok is None else int(bool(ok)), slim.get("schema"), now(),
+         json.dumps(slim, ensure_ascii=False, separators=(",", ":"))))
+    db.commit()
 
 
 def ei_stage(db, cfg, files, debug, jobs=1):
@@ -349,6 +400,7 @@ def ei_stage(db, cfg, files, debug, jobs=1):
     dps.report-Metadaten ebenfalls. ALLE DB-Zugriffe bleiben im Hauptthread (sqlite3-Verbindung ist
     nicht thread-sicher): die Worker liefern nur Ergebnisse, der Hauptthread verbucht sie."""
     wl = {a.casefold() for a in cfg["whitelist"]}
+    flt = load_filter(cfg)
     with tempfile.TemporaryDirectory() as tmp:
         conf = write_conf(cfg["ei"], tmp)         # wird von allen Prozessen nur gelesen
 
@@ -357,15 +409,15 @@ def ei_stage(db, cfg, files, debug, jobs=1):
             rc, out = run_ei(cfg["ei"], conf, f["path"])
             r = parse_ei_output(out)
             meta = fetch_dps_meta(r["dps_link"]) if r and r["dps_link"] else None
-            dump_json(cfg["ei"], tmp, f["path"], meta)
-            return f, rc, out, r, meta
+            slim = analyze_json(cfg, tmp, f, meta, flt, wl)
+            return f, rc, out, r, meta, slim
 
         fails = 0
         ex = ThreadPoolExecutor(max_workers=max(1, jobs))
         try:
             futs = [ex.submit(work, f) for f in files]
             for i, fut in enumerate(as_completed(futs), 1):
-                f, rc, out, r, meta = fut.result()
+                f, rc, out, r, meta, slim = fut.result()
                 log.info("[%d/%d] EI fertig: %s", i, len(files), f["path"].name)
                 if debug:
                     print("----- EI-Ausgabe -----\n" + out + "\n----------------------")
@@ -378,6 +430,8 @@ def ei_stage(db, cfg, files, debug, jobs=1):
                     continue                                # nicht speichern -> naechster Lauf versucht es neu
                 fails = 0
                 ei_store(db, wl, f, rc, out, r, meta)
+                if slim:                                    # Zeile in log existiert jetzt
+                    store_analysis(db, f["hash"], slim)
         except KeyboardInterrupt:
             ex.shutdown(wait=False, cancel_futures=True)
             raise
@@ -738,6 +792,7 @@ def main():
     a = ap.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     cfg = tomllib.loads(Path(a.config).read_text(encoding="utf-8"))
+    cfg["_dir"] = Path(a.config).resolve().parent
     cfg.setdefault("wingman", {}).setdefault("batch_size", 40)
     cfg["wingman"].setdefault("pause", 0.5)
     cfg["wingman"].setdefault("wait", 180)     # max. Sekunden Wartezeit auf die Wingman-Import-Queue

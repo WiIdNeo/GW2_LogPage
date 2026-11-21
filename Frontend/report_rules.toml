@@ -1,0 +1,52 @@
+# report_rules.toml - wann ist ein Wert in der Log-Bewertung auffaellig?
+# Wird von build_site.py gelesen (--rules). Aenderungen wirken beim naechsten Seitenbau.
+#
+# Regelarten:  [mechanic."Name"]  [buff."Name"]  [metric.<name>]  [consumables]
+# Boss-spezifisch (ersetzt globale Regel gleichen Namens):  [boss."-17194".mechanic."Name"]
+#   Boss-ID, bei Challenge Mode negativ (wie in bosses.toml / analysis_filter.toml).
+#
+# Schluessel einer Regel:
+#   critical = 1                  auffaellig, wenn Wert >= 1   (bei Mechaniken Default 1)
+#   critical_below = 80           auffaellig, wenn Wert < 80
+#   list_if_not_critical = true   auch unauffaelliges auflisten (Mechaniken nur bei Anzahl > 0)
+#   text_if_listed_critical       Text bei Auffaelligkeit
+#   text_if_listed_not_critical   Text, wenn nur informativ gelistet
+#   link                          Link zur Erklaerung
+#   professions = ["Firebrand"]   Regel nur fuer diese Professionen / Elite-Spezialisierungen
+# Platzhalter: {value} {count} {threshold} {rule} {player} {account} {character} {time} {times}
+#   {time} = erstes Auftreten (m:ss), {times} = bis zu 5 Zeitpunkte
+# Metriken: dps, breakbar_damage, flanking_percent, resurrects  (Phase 0, Hauptziele)
+# Mechaniken (Name) siehe analysis_filter.toml - sie stehen immer in den Daten, auch ohne Regel.
+
+# --- Beispiele (Namen bitte gegen analysis_filter.toml / buffs_info pruefen) ---
+[mechanic."Dead"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du bist gestorben."
+
+[mechanic."Down"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du bist {value}x gedownt."
+
+
+
+
+
+
+# [mechanic."Beispiel-Mechanik"]
+# critical = 1
+# link = "https://wiki.guildwars2.com/wiki/..."
+# text_if_listed_critical = "Du wurdest {value}x von Beispiel-Mechanik getroffen ({times}). Das sollte dich nie treffen."
+
+# [metric.flanking_percent]
+# critical_below = 50
+# professions = ["Weaver"]
+# text_if_listed_critical = "Du hast nur {value} Sekunden geflankt. Wenn du kein Tank warst, solltest du mehr darauf achten hinter dem Boss zu stehen."
+
+# [consumables]
+# critical_below = 2
+# text_if_listed_critical = "Nur {value} Consumable(s) aktiv (Food + Utility erwartet)."
+
+# [boss."-17194".mechanic."Slam"]
+# critical = 2

@@ -8,7 +8,7 @@ Ablauf:  1. Logs im Ordner finden (bereits verarbeitete werden uebersprungen)
             dann Wingman-Noten pro Whitelist-Spieler, in Batches, idempotent
          5. Gesamtrating + Killproofs/Charaktere pro Spieler (je einmal am Ende)
 """
-import argparse, hashlib, json, logging, os, re, sqlite3, subprocess, sys, tempfile, time, tomllib
+import argparse, glob, hashlib, json, logging, os, re, shutil, sqlite3, subprocess, sys, tempfile, threading, time, tomllib
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
@@ -94,15 +94,34 @@ def http(method, url, retries=4, **kw):
 
 
 # ---------------------------------------------------------------- DB
+def reset_db_files(path):
+    """Loescht die DB samt WAL/SHM-Dateien (nur mit --reset-db)."""
+    for suffix in ("", "-wal", "-shm"):
+        f = Path(str(path) + suffix)
+        if f.exists():
+            f.unlink()
+            log.warning("DB-Datei geloescht: %s", f)
+
+
+def migrate(db):
+    """Ergaenzt fehlende Spalten in bestehenden Tabellen (additiv, nie destruktiv)."""
+    mem = sqlite3.connect(":memory:")
+    mem.executescript(SCHEMA)
+    for (tbl,) in mem.execute("SELECT name FROM sqlite_master WHERE type='table'"):
+        have = {r[1] for r in db.execute(f"PRAGMA table_info({tbl})")}
+        for _, col, typ, _, dflt, _ in mem.execute(f"PRAGMA table_info({tbl})"):
+            if col not in have:
+                db.execute(f"ALTER TABLE {tbl} ADD COLUMN {col} {typ}" + (f" DEFAULT {dflt}" if dflt is not None else ""))
+                log.info("DB-Migration: %s.%s ergaenzt", tbl, col)
+    mem.close()
+
+
 def open_db(path, whitelist, bosses):
     db = sqlite3.connect(path)
     db.row_factory = sqlite3.Row
     db.execute("PRAGMA journal_mode=WAL")
-    db.executescript(SCHEMA)
-    cols = {r[1] for r in db.execute("PRAGMA table_info(log)")}      # Migration bestehender DBs
-    for col, typ in (("wm_queued", "INTEGER DEFAULT 0"), ("wm_queued_at", "TEXT")):
-        if col not in cols:
-            db.execute(f"ALTER TABLE log ADD COLUMN {col} {typ}")
+    db.executescript(SCHEMA)          # nur CREATE ... IF NOT EXISTS: bestehende Daten bleiben erhalten
+    migrate(db)
     db.executemany("INSERT OR IGNORE INTO grade VALUES(?,?)", [(g, i + 1) for i, g in enumerate(GRADES)])
     db.execute("UPDATE player SET whitelisted=0")
     for acc in whitelist:
@@ -136,7 +155,9 @@ def sync_bosses(db, entries):
 
 def save_log(db, d):
     cols = ",".join(d)
-    db.execute(f"INSERT OR REPLACE INTO log({cols}) VALUES({','.join(':' + k for k in d)})", d)
+    upd = ",".join(f"{k}=excluded.{k}" for k in d if k != "file_hash")
+    db.execute(f"INSERT INTO log({cols}) VALUES({','.join(':' + k for k in d)}) "
+               f"ON CONFLICT(file_hash) DO UPDATE SET {upd}", d)
 
 
 # ---------------------------------------------------------------- Dateien
@@ -193,9 +214,9 @@ def find_new_files(db, root, skip_patterns, skip_ids, limit=None):
 # (ParsePhases, Compute*, ParseCombatReplay ...) bleiben bewusst unangetastet (Defaults der
 # sample.conf), damit der Wingman-Upload (uploadProcessed) vollstaendige Daten bekommt.
 EI_OVERRIDES = {
-    "SaveAtOut": "false", "SaveOutHTML": "false", "SaveOutCSV": "false", "SaveOutJSON": "false",
+    "SaveAtOut": "false", "SaveOutHTML": "false", "SaveOutCSV": "false", "SaveOutJSON": "true",
     "SaveOutTrace": "false", "ApplicationTraces": "false",
-    "UploadToDPSReports": "true", "UploadToWingman": "true", "UploadToRaidar": "false",
+    "UploadToDPSReports": "true", "UploadToWingman": "false", "UploadToRaidar": "false",
     "SendEmbedToWebhook": "false", "SendSimpleMessageToWebhook": "false", "AutoDiscordBatch": "false",
     "ParseMultipleLogs": "false", "SkipFailedTries": "false", "AutoAdd": "false", "AutoParse": "false",
 }
@@ -277,6 +298,52 @@ def parse_meta(meta):
                 when=when, players=players or None)
 
 
+_dump_lock = threading.Lock()
+
+
+def _safe(name):
+    return re.sub(r"[^\w.+-]+", "_", name or "unknown").strip("_") or "unknown"
+
+
+def dump_json(ei_cfg, tmpdir, src, meta):
+    """Raeumt die von EI erzeugte JSON im Temp-Ordner auf (immer) und kopiert sie vorher - falls
+    [ei] json_dump_dir gesetzt ist - in einen festen Ordner: <json_dump_dir>/<Boss[_CM]>/.
+    [ei] json_dump_max_per_boss begrenzt die Anzahl pro Boss (0 = unbegrenzt, Default 2).
+    Laeuft im Worker-Thread; die Datei wird anhand des Log-Dateinamens gefunden, weil alle
+    parallelen Jobs im selben Temp-Ordner schreiben.
+    Hier koennte spaeter auch die Auswertung ansetzen (Pfad des JSON: `j`)."""
+    base = src.name
+    for e in EXTS:
+        if base.lower().endswith(e):
+            base = base[:-len(e)]
+            break
+    found = sorted(Path(tmpdir).glob(glob.escape(base) + "*.json"), key=lambda x: x.stat().st_mtime)
+    if not found:
+        log.warning("Keine EI-JSON fuer %s gefunden (SaveOutJSON/OutLocation pruefen)", src.name)
+        return
+    j = found[-1]
+    try:
+        dump_dir = ei_cfg.get("json_dump_dir", "json_dump")
+        if dump_dir:
+            label = "unknown"
+            if meta:
+                try:
+                    m = parse_meta(meta)
+                    label = _safe(m["boss_name"] or m["boss_key"]) + ("_CM" if m["is_cm"] else "")
+                except Exception:
+                    pass
+            target = Path(dump_dir) / label
+            maxn = int(ei_cfg.get("json_dump_max_per_boss", 2))
+            with _dump_lock:
+                target.mkdir(parents=True, exist_ok=True)
+                if maxn <= 0 or len(list(target.glob("*.json"))) < maxn:
+                    shutil.copy2(j, target / j.name)
+                    log.info("JSON kopiert: %s", target / j.name)
+    finally:
+        for x in found:                             # Temp-Ordner nicht mit grossen JSONs fuellen
+            x.unlink(missing_ok=True)
+
+
 def ei_stage(db, cfg, files, debug, jobs=1):
     """EI-Aufrufe laufen in `jobs` parallelen Threads (je ein dotnet-Prozess); der Netzwerkabruf der
     dps.report-Metadaten ebenfalls. ALLE DB-Zugriffe bleiben im Hauptthread (sqlite3-Verbindung ist
@@ -290,6 +357,7 @@ def ei_stage(db, cfg, files, debug, jobs=1):
             rc, out = run_ei(cfg["ei"], conf, f["path"])
             r = parse_ei_output(out)
             meta = fetch_dps_meta(r["dps_link"]) if r and r["dps_link"] else None
+            dump_json(cfg["ei"], tmp, f["path"], meta)
             return f, rc, out, r, meta
 
         fails = 0
@@ -335,10 +403,7 @@ def ei_store(db, wl, f, rc, out, r, meta):
         dps_status, retry = "error", int(r["dps_tried"] or r["dps_failed"])
         if not r["dps_tried"]:
             log.warning("EI hat nicht zu dps.report hochgeladen - UploadToDPSReports in der Config pruefen")
-    if r and r["wm_refused"]:
-        wm_status = "rejected"
-    elif r and r["wm_failed"]:
-        retry = 1                                   # Wingman hat angenommen, Upload ging schief
+    # Wingman-Upload erfolgt ausschliesslich ueber den dps.report-Link (importLogQueued), nicht ueber EI.
     d = dict(file_hash=f["hash"], path=str(f["path"]), size=f["size"], mtime=f["mtime"],
              dps_url=dps_url, wm_cands=json.dumps([slug] if slug else []), wm_attempts=0,
              attempts=f["attempts"] + 1, ei_output=out[-4000:], created_at=now(),
@@ -608,6 +673,35 @@ def players_stage(db, cfg, touched, force):
             log.error("Spielerdaten fuer %s fehlgeschlagen: %s", acc, e)
 
 
+def backfill_meta(db, cfg):
+    """Holt dps.report-Metadaten fuer Logs nach, bei denen der Abruf frueher fehlschlug
+    (boss_key/players_json leer) - sonst taucht das Log nie auf der Website auf."""
+    wl = {a.casefold() for a in cfg["whitelist"]}
+    rows = db.execute("SELECT file_hash, dps_url FROM log WHERE dps_url IS NOT NULL "
+                      "AND (boss_key IS NULL OR encounter_time IS NULL)").fetchall()
+    if rows:
+        log.info("Metadaten nachholen: %d Logs", len(rows))
+    for r in rows:
+        meta = fetch_dps_meta(r["dps_url"])
+        if not meta:
+            continue
+        m = parse_meta(meta)
+        had = bool(m["players"])
+        players = {k: v for k, v in (m["players"] or {}).items() if k in wl} or None
+        if m["boss_key"] and not db.execute("SELECT 1 FROM boss WHERE key=?", (m["boss_key"],)).fetchone():
+            db.execute("INSERT INTO boss(key,game_id,name,is_cm,enabled) VALUES(?,?,?,?,0)",
+                       (m["boss_key"], m["game_id"], m["boss_name"], m["is_cm"]))
+        db.execute("UPDATE log SET boss_key=?, success=?, encounter_time=?, players_json=?, "
+                   "wm_status=CASE WHEN ? AND NOT ? THEN 'n/a' ELSE wm_status END WHERE file_hash=?",
+                   (m["boss_key"], m["success"], m["when"], json.dumps(players) if players else None,
+                    int(had), int(bool(players)), r["file_hash"]))
+        for p in (players or {}).values():
+            db.execute("INSERT INTO character(name,account,class,last_seen) VALUES(?,?,?,?) "
+                       "ON CONFLICT(name) DO UPDATE SET account=excluded.account, class=excluded.class, "
+                       "last_seen=excluded.last_seen", (p["character"], p["account"], p["class"], m["when"] or now()))
+        db.commit()
+
+
 def finalize(db):
     db.execute("UPDATE log SET process_failed = CASE WHEN "
                "(dps_status IN ('rejected','parse_failed') OR (dps_status='error' AND attempts>=?)) "
@@ -638,6 +732,8 @@ def main():
     ap.add_argument("--refresh-players", action="store_true", help="Gesamtrating+KP fuer alle neu laden")
     ap.add_argument("--requeue-wingman", action="store_true",
                     help="Logs mit wm_status=error/pending erneut bei Wingman anmelden und bewerten")
+    ap.add_argument("--reset-db", action="store_true",
+                    help="DB komplett neu erzeugen (loescht die bestehende DB!). Ohne Flag wird die DB nur erweitert.")
     ap.add_argument("--debug", action="store_true", help="rohe EI-Ausgabe anzeigen")
     a = ap.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -649,7 +745,19 @@ def main():
     root = a.log_dir or cfg["log_dir"]
     bosses_path = Path(a.config).parent / cfg.get("bosses_file", "bosses.toml")
     bosses = load_bosses(bosses_path)
+    if a.reset_db:
+        reset_db_files(cfg["db_path"])
     db = open_db(cfg["db_path"], cfg["whitelist"], bosses)
+    # Altlast: fruehere EI-Direktuploads zu Wingman wurden abgelehnt -> 'rejected'. Jetzt laeuft alles ueber den
+    # dps.report-Link, daher diese Logs fuer den Link-Import freigeben.
+    n = db.execute("UPDATE log SET wm_status='pending', wm_attempts=0, wm_queued=0 WHERE wm_status='rejected' "
+                   "AND dps_url IS NOT NULL AND boss_key IS NOT NULL AND players_json IS NOT NULL "
+                   "AND boss_key IN (SELECT key FROM boss WHERE enabled=1)").rowcount
+    if n:
+        log.info("%d zuvor abgelehnte Logs werden per dps.report-Link neu bei Wingman angemeldet", n)
+    db.commit()
+    if not a.dry_run:
+        backfill_meta(db, cfg)
 
     if a.requeue_wingman:
         n = db.execute("UPDATE log SET wm_status='pending', wm_attempts=0, wm_queued=0, process_failed=0 "

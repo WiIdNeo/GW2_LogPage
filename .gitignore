@@ -2,3 +2,6 @@ config.toml
 *.conf
 *.sqlite
 info.txt
+LEGACY/
+extracted/
+json_dump/

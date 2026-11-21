@@ -7,3 +7,10 @@ th{background:#eee}
 [hidden]{display:none !important}
 .grade{font-weight:bold}
 .pl{white-space:nowrap}
+.crit{color:#b00020}
+.info{color:#555}
+.findings{padding-left:1.2rem}
+section{margin:1.5rem 0;padding-top:.5rem;border-top:1px solid #ddd}
+h2 small{font-weight:normal;color:#555;font-size:.7em}
+details{margin:.5rem 0}
+summary{cursor:pointer}

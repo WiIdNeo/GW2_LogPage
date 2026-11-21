@@ -1,7 +1,5 @@
 *.conf
-*.sqlite
 LEGACY/
 extracted/
 json_dump/
 config.toml
-

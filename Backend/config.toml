@@ -1,0 +1,23 @@
+# Kopieren nach config.toml und anpassen
+log_dir = "/home/wildneo/.steam/debian-installation/steamapps/compatdata/1284210/pfx/drive_c/users/steamuser/Documents/Guild Wars 2/addons/arcdps/arcdps.cbtlogs"      # wird rekursiv durchsucht
+     # wird rekursiv durchsucht
+db_path = "gw2logs.sqlite"
+bosses_file = "bosses.toml"              # Bossliste, relativ zu dieser Datei
+whitelist = ["WiIdNeo.8753", "Darkness.6147", "Silk.2804", "tooscared.7425"]             # Schreibweise wie bei Wingman
+skip_name_patterns = ["golem"]           # Dateien mit diesen Namensteilen werden ignoriert
+
+[ei]
+# Linux laut offiziellem README: dotnet ./GuildWars2EliteInsights-CLI.dll -c [config] [logs]
+command = ["dotnet", "/home/wildneo/Documents/GW2/Webiste/GW2EICLI/GuildWars2EliteInsights-CLI.dll"]
+# Empfohlen: die mitgelieferte Settings/sample.conf (oder eine eigene .conf) als Vorlage.
+# Das Skript ueberschreibt darin nur Upload-/Output-Schluessel, den Rest uebernimmt es.
+conf_template = ""
+dps_user_token = ""
+timeout = 900
+json_dump_dir = "json_dump"      # "" = nichts kopieren (relativ zum Arbeitsverzeichnis, wie db_path)
+# Umgebungsvariablen fuer EI. Noetig, wenn die CLI .NET 8 verlangt, aber nur .NET 10 installiert ist:
+env = { DOTNET_ROLL_FORWARD = "Major" }
+
+[wingman]
+batch_size = 40
+pause = 0.5

@@ -3,7 +3,7 @@ log_dir = "/home/wildneo/.steam/debian-installation/steamapps/compatdata/1284210
      # wird rekursiv durchsucht
 db_path = "gw2logs.sqlite"
 bosses_file = "bosses.toml"              # Bossliste, relativ zu dieser Datei
-whitelist = ["WiIdNeo.8753", "Darkness.6147", "Silk.2804", "tooscared.7425"]             # Schreibweise wie bei Wingman
+whitelist = ["WiIdNeo.8753", "Darkness.6147", "Silk.2804", "tooscared.7425", "esocks.5810", "demonfellow.9234", "Aggi.3782", "Tim.9518", "Electric.1743", "connorthegamer.8016", "AltAcc.9417"]             # Schreibweise wie bei Wingman
 skip_name_patterns = ["golem"]           # Dateien mit diesen Namensteilen werden ignoriert
 
 [ei]

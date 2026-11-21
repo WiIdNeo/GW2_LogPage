@@ -8,7 +8,7 @@ skip_name_patterns = ["golem"]           # Dateien mit diesen Namensteilen werde
 
 [ei]
 # Linux laut offiziellem README: dotnet ./GuildWars2EliteInsights-CLI.dll -c [config] [logs]
-command = ["dotnet", "/home/wildneo/Documents/GW2/Webiste/GW2EICLI/GuildWars2EliteInsights-CLI.dll"]
+command = ["dotnet", "/home/wildneo/Documents/Colin/GW2/Website/GW2EICLI/GuildWars2EliteInsights-CLI.dll"]
 # Empfohlen: die mitgelieferte Settings/sample.conf (oder eine eigene .conf) als Vorlage.
 # Das Skript ueberschreibt darin nur Upload-/Output-Schluessel, den Rest uebernimmt es.
 conf_template = ""

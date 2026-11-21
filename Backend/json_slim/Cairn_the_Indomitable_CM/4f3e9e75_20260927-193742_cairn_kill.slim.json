@@ -1,0 +1,1870 @@
+{
+    "schema": 2,
+    "source_file": "20260927-193742.zevtc",
+    "boss_key": "-17194",
+    "filters_applied": {
+        "whitelist": true,
+        "targets": false,
+        "mechanics": false
+    },
+    "meta": {
+        "eliteInsightsVersion": "3.33.0.0",
+        "gW2Build": 207318,
+        "triggerID": 17194,
+        "isCM": true,
+        "success": true,
+        "durationMS": 170926,
+        "duration": "02m 50s 926ms",
+        "timeStartStd": "2026-09-27 19:34:47 +02:00",
+        "timeEndStd": "2026-09-27 19:37:41 +02:00"
+    },
+    "uploadLinks": [
+        "https://dps.report/8jfP-20260927-193742_cairn"
+    ],
+    "dps_slug": "8jfP-20260927-193742_cairn",
+    "phases": [
+        {
+            "start": 0,
+            "end": 170926,
+            "name": "Full Fight",
+            "targets": [
+                0
+            ],
+            "secondaryTargets": [],
+            "targetPriorities": {
+                "0": "MAIN"
+            },
+            "phaseType": "Encounter",
+            "breakbarPhase": false
+        }
+    ],
+    "main_targets_per_phase": [
+        [
+            0
+        ]
+    ],
+    "targets": [
+        {
+            "index": 0,
+            "id": 17194,
+            "name": "Cairn the Indomitable",
+            "finalHealth": 0,
+            "finalBarrier": 0,
+            "barrierPercent": 0,
+            "healthPercentBurned": 100,
+            "buffs": {
+                "Blind": [
+                    {
+                        "uptime": 55.973,
+                        "presence": 0
+                    }
+                ],
+                "Torment": [
+                    {
+                        "uptime": 70.974,
+                        "presence": 98.877
+                    }
+                ],
+                "Bleeding": [
+                    {
+                        "uptime": 81.258,
+                        "presence": 98.878
+                    }
+                ],
+                "Poison": [
+                    {
+                        "uptime": 33.103,
+                        "presence": 98.878
+                    }
+                ],
+                "Weakness": [
+                    {
+                        "uptime": 98.286,
+                        "presence": 0
+                    }
+                ],
+                "Vulnerability": [
+                    {
+                        "uptime": 24.485,
+                        "presence": 98.486
+                    }
+                ],
+                "Burning": [
+                    {
+                        "uptime": 8.416,
+                        "presence": 98.487
+                    }
+                ],
+                "Immobile": [
+                    {
+                        "uptime": 12.629,
+                        "presence": 0
+                    }
+                ],
+                "Chilled": [
+                    {
+                        "uptime": 93.365,
+                        "presence": 0
+                    }
+                ],
+                "Crippled": [
+                    {
+                        "uptime": 89.947,
+                        "presence": 0
+                    }
+                ],
+                "Justice (Dragonhunter)": [
+                    {
+                        "uptime": 0.281,
+                        "presence": 28.074
+                    }
+                ],
+                "Revealed": [
+                    {
+                        "uptime": 28.074,
+                        "presence": 0
+                    }
+                ],
+                "Painful Bond": [
+                    {
+                        "uptime": 0.292,
+                        "presence": 29.247
+                    }
+                ],
+                "Vampiric Strikes (Minion)": [
+                    {
+                        "uptime": 4.787,
+                        "presence": 0
+                    }
+                ],
+                "Slow": [
+                    {
+                        "uptime": 44.481,
+                        "presence": 0
+                    }
+                ],
+                "Fear": [
+                    {
+                        "uptime": 15.443,
+                        "presence": 0
+                    }
+                ],
+                "Dark Stalker (Ritualist)": [
+                    {
+                        "uptime": 0.325,
+                        "presence": 32.538
+                    }
+                ],
+                "Relic of the Dragonhunter": [
+                    {
+                        "uptime": 0.176,
+                        "presence": 17.573
+                    }
+                ],
+                "Confusion": [
+                    {
+                        "uptime": 6.682,
+                        "presence": 69.58
+                    }
+                ],
+                "Extirpation": [
+                    {
+                        "uptime": 0.07,
+                        "presence": 2.34
+                    }
+                ],
+                "Dark Stalker (Spear)": [
+                    {
+                        "uptime": 0.018,
+                        "presence": 1.768
+                    }
+                ],
+                "Hunter's Mark": [
+                    {
+                        "uptime": 2.925,
+                        "presence": 0
+                    }
+                ]
+            },
+            "buffVolumes": {
+                "Blind": [
+                    {
+                        "incoming": 56.001,
+                        "incomingByExtension": 0,
+                        "incomingByUnknownExtension": 0
+                    }
+                ],
+                "Torment": [
+                    {
+                        "incoming": 71.956,
+                        "incomingByExtension": 0,
+                        "incomingByUnknownExtension": 0
+                    }
+                ],
+                "Bleeding": [
+                    {
+                        "incoming": 84.073,
+                        "incomingByExtension": 0,
+                        "incomingByUnknownExtension": 0
+                    }
+                ],
+                "Poison": [
+                    {
+                        "incoming": 33.297,
+                        "incomingByExtension": 0,
+                        "incomingByUnknownExtension": 0
+                    }
+                ],
+                "Weakness": [
+                    {
+                        "incoming": 99.154,
+                        "incomingByExtension": 0,
+                        "incomingByUnknownExtension": 0
+                    }
+                ],
+                "Vulnerability": [
+                    {
+                        "incoming": 64.705,
+                        "incomingByExtension": 0,
+                        "incomingByUnknownExtension": 0
+                    }
+                ],
+                "Burning": [
+                    {
+                        "incoming": 8.479,
+                        "incomingByExtension": 0,
+                        "incomingByUnknownExtension": 0
+                    }
+                ],
+                "Immobile": [
+                    {
+                        "incoming": 12.638,
+                        "incomingByExtension": 0,
+                        "incomingByUnknownExtension": 0
+                    }
+                ],
+                "Chilled": [
+                    {
+                        "incoming": 100.049,
+                        "incomingByExtension": 0,
+                        "incomingByUnknownExtension": 0
+                    }
+                ],
+                "Crippled": [
+                    {
+                        "incoming": 161.38,
+                        "incomingByExtension": 0,
+                        "incomingByUnknownExtension": 0
+                    }
+                ],
+                "Justice (Dragonhunter)": [
+                    {
+                        "incoming": 0.281,
+                        "incomingByExtension": 0,
+                        "incomingByUnknownExtension": 0
+                    }
+                ],
+                "Revealed": [
+                    {
+                        "incoming": 28.082,
+                        "incomingByExtension": 0,
+                        "incomingByUnknownExtension": 0
+                    }
+                ],
+                "Painful Bond": [
+                    {
+                        "incoming": 0.293,
+                        "incomingByExtension": 0.117,
+                        "incomingByUnknownExtension": 0
+                    }
+                ],
+                "Vampiric Strikes (Minion)": [
+                    {
+                        "incoming": 4.797,
+                        "incomingByExtension": 0,
+                        "incomingByUnknownExtension": 0
+                    }
+                ],
+                "Slow": [
+                    {
+                        "incoming": 44.481,
+                        "incomingByExtension": 0,
+                        "incomingByUnknownExtension": 0
+                    }
+                ],
+                "Fear": [
+                    {
+                        "incoming": 15.448,
+                        "incomingByExtension": 0,
+                        "incomingByUnknownExtension": 0
+                    }
+                ],
+                "Dark Stalker (Ritualist)": [
+                    {
+                        "incoming": 12563.821,
+                        "incomingByExtension": 0,
+                        "incomingByUnknownExtension": 0
+                    }
+                ],
+                "Relic of the Dragonhunter": [
+                    {
+                        "incoming": 0.176,
+                        "incomingByExtension": 0.059,
+                        "incomingByUnknownExtension": 0
+                    }
+                ],
+                "Confusion": [
+                    {
+                        "incoming": 6.884,
+                        "incomingByExtension": 0,
+                        "incomingByUnknownExtension": 0
+                    }
+                ],
+                "Extirpation": [
+                    {
+                        "incoming": 0.07,
+                        "incomingByExtension": 0,
+                        "incomingByUnknownExtension": 0
+                    }
+                ],
+                "Dark Stalker (Spear)": [
+                    {
+                        "incoming": 0.035,
+                        "incomingByExtension": 0,
+                        "incomingByUnknownExtension": 0
+                    }
+                ],
+                "Hunter's Mark": [
+                    {
+                        "incoming": 2.925,
+                        "incomingByExtension": 0,
+                        "incomingByUnknownExtension": 0
+                    }
+                ]
+            }
+        }
+    ],
+    "characters": {
+        "Lkhayn": "WiIdNeo.8753"
+    },
+    "players": [
+        {
+            "account": "WiIdNeo.8753",
+            "name": "Lkhayn",
+            "group": 2,
+            "profession": "Virtuoso",
+            "hasCommanderTag": true,
+            "friendlyNPC": false,
+            "notInSquad": false,
+            "dps_all": [
+                24345
+            ],
+            "targets": {
+                "0": {
+                    "dps": [
+                        {
+                            "dps": 24345,
+                            "condiDps": 17889,
+                            "powerDps": 6456,
+                            "breakbarDamage": 0
+                        }
+                    ],
+                    "stats": [
+                        {
+                            "flankingRate": 393,
+                            "connectedDirectDamageCount": 685,
+                            "killed": 1,
+                            "downed": 0
+                        }
+                    ],
+                    "damage1S": {
+                        "0": [
+                            0,
+                            0,
+                            0,
+                            0,
+                            4032,
+                            17635,
+                            37119,
+                            59850,
+                            99116,
+                            120926,
+                            142516,
+                            165803,
+                            188742,
+                            211778,
+                            235909,
+                            258462,
+                            289328,
+                            315623,
+                            338399,
+                            371675,
+                            403301,
+                            437460,
+                            488330,
+                            527614,
+                            553692,
+                            588356,
+                            616958,
+                            642506,
+                            676114,
+                            702195,
+                            729850,
+                            757434,
+                            795563,
+                            832202,
+                            861344,
+                            885318,
+                            909141,
+                            939739,
+                            968058,
+                            1001014,
+                            1031253,
+                            1055898,
+                            1082421,
+                            1109811,
+                            1144009,
+                            1177883,
+                            1202486,
+                            1235882,
+                            1271485,
+                            1298328,
+                            1338005,
+                            1367442,
+                            1393323,
+                            1414886,
+                            1432454,
+                            1448267,
+                            1472069,
+                            1494080,
+                            1514562,
+                            1531782,
+                            1567215,
+                            1592298,
+                            1609972,
+                            1633306,
+                            1648461,
+                            1661603,
+                            1675461,
+                            1700077,
+                            1720065,
+                            1732157,
+                            1750049,
+                            1769978,
+                            1798142,
+                            1813912,
+                            1835442,
+                            1849461,
+                            1859380,
+                            1875573,
+                            1895530,
+                            1910378,
+                            1925780,
+                            1939782,
+                            1952691,
+                            1984540,
+                            2011521,
+                            2031707,
+                            2067102,
+                            2094688,
+                            2128376,
+                            2162574,
+                            2198462,
+                            2231048,
+                            2264287,
+                            2296775,
+                            2323585,
+                            2344148,
+                            2364421,
+                            2382081,
+                            2399461,
+                            2423716,
+                            2454304,
+                            2481151,
+                            2516072,
+                            2542759,
+                            2574645,
+                            2609452,
+                            2642518,
+                            2673084,
+                            2703541,
+                            2727832,
+                            2748457,
+                            2768821,
+                            2783913,
+                            2795628,
+                            2803863,
+                            2810297,
+                            2815024,
+                            2824219,
+                            2842877,
+                            2856683,
+                            2875648,
+                            2900203,
+                            2919335,
+                            2946948,
+                            2982390,
+                            3021355,
+                            3061322,
+                            3109122,
+                            3139828,
+                            3169263,
+                            3198153,
+                            3233237,
+                            3266217,
+                            3291445,
+                            3323226,
+                            3361308,
+                            3383855,
+                            3422326,
+                            3446269,
+                            3471189,
+                            3493319,
+                            3529087,
+                            3556975,
+                            3581425,
+                            3609963,
+                            3637104,
+                            3662170,
+                            3680100,
+                            3710525,
+                            3727085,
+                            3742038,
+                            3759893,
+                            3778506,
+                            3796554,
+                            3809864,
+                            3826873,
+                            3841164,
+                            3855594,
+                            3869948,
+                            3889775,
+                            3907089,
+                            3922710,
+                            3942794,
+                            3959650,
+                            3981669,
+                            4011334,
+                            4038587,
+                            4077902,
+                            4104681,
+                            4130780,
+                            4154038,
+                            4161232
+                        ]
+                    }
+                }
+            },
+            "dps_targets_total": [
+                {
+                    "dps": 24345,
+                    "condiDps": 17889,
+                    "powerDps": 6456,
+                    "breakbarDamage": 0
+                }
+            ],
+            "support": [
+                {
+                    "resurrects": 0,
+                    "resurrectTime": 0
+                }
+            ],
+            "buffUptimes": {
+                "Countdown": [
+                    {
+                        "uptime": 6.405,
+                        "presence": 95.964
+                    }
+                ],
+                "Signet of Midnight": [
+                    {
+                        "uptime": 99.992,
+                        "presence": 0
+                    }
+                ],
+                "Reinforced Armor": [
+                    {
+                        "uptime": 99.992,
+                        "presence": 0
+                    }
+                ],
+                "Spherified Peppercorn-Spiced Oyster Soup": [
+                    {
+                        "uptime": 99.992,
+                        "presence": 0
+                    }
+                ],
+                "Virtue of Resolve (Battle Presence - Absolute Resolve)": [
+                    {
+                        "uptime": 80.603,
+                        "presence": 0
+                    }
+                ],
+                "Signet of Illusions": [
+                    {
+                        "uptime": 23.25,
+                        "presence": 0
+                    }
+                ],
+                "Toxic Tuning Crystal": [
+                    {
+                        "uptime": 99.992,
+                        "presence": 0
+                    }
+                ],
+                "Signet of Domination": [
+                    {
+                        "uptime": 99.992,
+                        "presence": 0
+                    }
+                ],
+                "Signet of the Ether": [
+                    {
+                        "uptime": 37.72,
+                        "presence": 0
+                    }
+                ],
+                "Virtuoso Blade": [
+                    {
+                        "uptime": 3.049,
+                        "presence": 88.283
+                    }
+                ],
+                "Unseen Burden": [
+                    {
+                        "uptime": 34.252,
+                        "presence": 98.716
+                    }
+                ],
+                "Last Rites": [
+                    {
+                        "uptime": 70.209,
+                        "presence": 0
+                    }
+                ],
+                "Deadly Blades": [
+                    {
+                        "uptime": 94.923,
+                        "presence": 0
+                    }
+                ],
+                "Alacrity": [
+                    {
+                        "uptime": 95.243,
+                        "presence": 0
+                    }
+                ],
+                "Quickness": [
+                    {
+                        "uptime": 96.355,
+                        "presence": 0
+                    }
+                ],
+                "Might": [
+                    {
+                        "uptime": 23.739,
+                        "presence": 98.238
+                    }
+                ],
+                "Resolution": [
+                    {
+                        "uptime": 95.266,
+                        "presence": 0
+                    }
+                ],
+                "Protection": [
+                    {
+                        "uptime": 89.143,
+                        "presence": 0
+                    }
+                ],
+                "Fury": [
+                    {
+                        "uptime": 98.12,
+                        "presence": 0
+                    }
+                ],
+                "Superspeed": [
+                    {
+                        "uptime": 19.586,
+                        "presence": 0
+                    }
+                ],
+                "Relic of the Aristocracy": [
+                    {
+                        "uptime": 4.84,
+                        "presence": 98.12
+                    }
+                ],
+                "Vigor": [
+                    {
+                        "uptime": 84.901,
+                        "presence": 0
+                    }
+                ],
+                "Spider Venom": [
+                    {
+                        "uptime": 0.09,
+                        "presence": 2.01
+                    }
+                ],
+                "Skale Venom": [
+                    {
+                        "uptime": 0.034,
+                        "presence": 1.307
+                    }
+                ],
+                "Compounding Power": [
+                    {
+                        "uptime": 4.829,
+                        "presence": 97.818
+                    }
+                ],
+                "Shrouded": [
+                    {
+                        "uptime": 0.026,
+                        "presence": 2.628
+                    }
+                ],
+                "Rot Wallow Venom": [
+                    {
+                        "uptime": 0.01,
+                        "presence": 0.963
+                    }
+                ],
+                "Fencer's Finesse": [
+                    {
+                        "uptime": 3.71,
+                        "presence": 53.971
+                    }
+                ],
+                "Swiftness": [
+                    {
+                        "uptime": 97.455,
+                        "presence": 0
+                    }
+                ],
+                "Stability": [
+                    {
+                        "uptime": 2.336,
+                        "presence": 55.227
+                    }
+                ],
+                "Gaze Avoidance": [
+                    {
+                        "uptime": 12.46,
+                        "presence": 0
+                    }
+                ],
+                "Dark Aura": [
+                    {
+                        "uptime": 15.201,
+                        "presence": 0
+                    }
+                ],
+                "Celestial Dash": [
+                    {
+                        "uptime": 7.517,
+                        "presence": 0
+                    }
+                ],
+                "Regeneration": [
+                    {
+                        "uptime": 40.64,
+                        "presence": 0
+                    }
+                ],
+                "Shared Agony": [
+                    {
+                        "uptime": 52.876,
+                        "presence": 0
+                    }
+                ],
+                "Light Aura": [
+                    {
+                        "uptime": 21.857,
+                        "presence": 0
+                    }
+                ],
+                "Frost Aura": [
+                    {
+                        "uptime": 1.741,
+                        "presence": 0
+                    }
+                ],
+                "Aegis": [
+                    {
+                        "uptime": 22.709,
+                        "presence": 0
+                    }
+                ],
+                "Distortion": [
+                    {
+                        "uptime": 7.011,
+                        "presence": 0
+                    }
+                ],
+                "Unbroken Lines": [
+                    {
+                        "uptime": 0.038,
+                        "presence": 3.844
+                    }
+                ],
+                "Eternal Oasis": [
+                    {
+                        "uptime": 4.68,
+                        "presence": 0
+                    }
+                ]
+            },
+            "consumables": [
+                {
+                    "name": "Spherified Peppercorn-Spiced Oyster Soup",
+                    "stack": 1,
+                    "duration": 3554361,
+                    "time": 14
+                },
+                {
+                    "name": "Toxic Tuning Crystal",
+                    "stack": 1,
+                    "duration": 1715866,
+                    "time": 14
+                },
+                {
+                    "name": "Reinforced Armor",
+                    "stack": 1,
+                    "duration": 20566968,
+                    "time": 14
+                }
+            ]
+        }
+    ],
+    "mechanics": [
+        {
+            "mechanicsData": [
+                {
+                    "time": 51504,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 51534,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 51588,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 51616,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 51672,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 73872,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 73906,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 73934,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 73990,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 74018,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 74048,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 158490,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 158546,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 158574,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                }
+            ],
+            "id": 16777224,
+            "name": "Knck.Pll",
+            "fullName": "Knocked Back/Pulled",
+            "description": "Knocked Back or Pulled",
+            "isAchievementEligibility": false,
+            "severity": "Sev4"
+        },
+        {
+            "mechanicsData": [
+                {
+                    "time": 92872,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                }
+            ],
+            "id": 16777225,
+            "name": "Flt",
+            "fullName": "Float",
+            "description": "Float",
+            "isAchievementEligibility": false,
+            "severity": "Sev4"
+        },
+        {
+            "mechanicsData": [
+                {
+                    "time": 20530,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 37070,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 39656,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 39692,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 52492,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 52524,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 62386,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 74984,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 79528,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 99730,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 106054,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 130490,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 151614,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 157258,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 169342,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                }
+            ],
+            "id": 16777229,
+            "name": "Miss.Qck",
+            "fullName": "Maybe Missed Quickness",
+            "description": "Triggered when an expected quickness provider has not given the player from their subgroup quickness at the same time as to others. False negatives are possible due to Lively Lute.",
+            "internalCooldown": 50,
+            "isAchievementEligibility": false,
+            "severity": "Sev4"
+        },
+        {
+            "mechanicsData": [
+                {
+                    "time": 40896,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 41076,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 43260,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 120986,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 159532,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 159702,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 160612,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                }
+            ],
+            "id": 16777230,
+            "name": "Miss.Alac",
+            "fullName": "Maybe Missed Alacrity",
+            "description": "Triggered when an expected alacrity provider has not given the player from their alacrity at the same time as to others",
+            "internalCooldown": 50,
+            "isAchievementEligibility": false,
+            "severity": "Sev4"
+        },
+        {
+            "mechanicsData": [
+                {
+                    "time": 143352,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                }
+            ],
+            "id": 33816577,
+            "name": "Port",
+            "fullName": "Orange TP",
+            "description": "Orange Teleport Field",
+            "isAchievementEligibility": false,
+            "severity": "Sev0"
+        },
+        {
+            "mechanicsData": [
+                {
+                    "time": 92872,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                }
+            ],
+            "id": 33816579,
+            "name": "Green.C",
+            "fullName": "Green (lift)",
+            "description": "Green Spatial Manipulation Field (lift)",
+            "isAchievementEligibility": false,
+            "severity": "Sev0"
+        },
+        {
+            "mechanicsData": [
+                {
+                    "time": 51504,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 51534,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 51588,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 51616,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 51672,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 73872,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 73906,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 73934,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 73990,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 74018,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 74048,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 158490,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 158546,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 158574,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                }
+            ],
+            "id": 33816581,
+            "name": "KB",
+            "fullName": "KB Crystal",
+            "description": "Knockback Crystals",
+            "internalCooldown": 1000,
+            "isAchievementEligibility": false,
+            "severity": "Sev0"
+        },
+        {
+            "mechanicsData": [
+                {
+                    "time": 21970,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 142548,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                }
+            ],
+            "id": 33816583,
+            "name": "Agony",
+            "fullName": "Shared Agony",
+            "description": "Shared Agony Debuff Application",
+            "isAchievementEligibility": false,
+            "severity": "Sev0"
+        },
+        {
+            "mechanicsData": [
+                {
+                    "time": 104076,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 129816,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 132826,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                }
+            ],
+            "id": 33816584,
+            "name": "Agony 25",
+            "fullName": "SA dmg 25%",
+            "description": "Shared Agony Damage (25% Player's HP)",
+            "isAchievementEligibility": false,
+            "severity": "Sev1"
+        },
+        {
+            "mechanicsData": [
+                {
+                    "time": 116068,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 150822,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                },
+                {
+                    "time": 153812,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                }
+            ],
+            "id": 33816585,
+            "name": "Agony 50",
+            "fullName": "SA dmg 50%",
+            "description": "Shared Agony Damage (50% Player's HP)",
+            "isAchievementEligibility": false,
+            "severity": "Sev1"
+        },
+        {
+            "mechanicsData": [
+                {
+                    "time": 129376,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                }
+            ],
+            "id": 33816586,
+            "name": "Agony 75",
+            "fullName": "SA dmg 75%",
+            "description": "Shared Agony Damage (75% Player's HP)",
+            "isAchievementEligibility": false,
+            "severity": "Sev1"
+        },
+        {
+            "mechanicsData": [
+                {
+                    "time": 146302,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                }
+            ],
+            "id": 33816587,
+            "name": "Leap",
+            "fullName": "Leap",
+            "description": "Jump between green fields",
+            "internalCooldown": 100,
+            "isAchievementEligibility": false,
+            "severity": "Sev2"
+        },
+        {
+            "mechanicsData": [
+                {
+                    "time": 170059,
+                    "actor": "Lkhayn",
+                    "id": 0,
+                    "instid": 613,
+                    "weight": 1
+                }
+            ],
+            "id": 33816588,
+            "name": "Sweep",
+            "fullName": "Sweep",
+            "description": "Sword Spin (Knockback)",
+            "internalCooldown": 100,
+            "isAchievementEligibility": false,
+            "severity": "Sev1"
+        }
+    ],
+    "buffs_info": {
+        "Torment": {
+            "id": "19426",
+            "classification": "Condition",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Bleeding": {
+            "id": "736",
+            "classification": "Condition",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Poison": {
+            "id": "723",
+            "classification": "Condition",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Burning": {
+            "id": "737",
+            "classification": "Condition",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Painful Bond": {
+            "id": "77128",
+            "classification": "Debuff",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Confusion": {
+            "id": "861",
+            "classification": "Condition",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Blind": {
+            "id": "720",
+            "classification": "Condition",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Weakness": {
+            "id": "742",
+            "classification": "Condition",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Vulnerability": {
+            "id": "738",
+            "classification": "Condition",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Immobile": {
+            "id": "727",
+            "classification": "Condition",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Chilled": {
+            "id": "722",
+            "classification": "Condition",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Crippled": {
+            "id": "721",
+            "classification": "Condition",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Justice (Dragonhunter)": {
+            "id": "30232",
+            "classification": "Debuff",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Revealed": {
+            "id": "890",
+            "classification": "Support",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Vampiric Strikes (Minion)": {
+            "id": "30398",
+            "classification": "Other",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Slow": {
+            "id": "26766",
+            "classification": "Condition",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Fear": {
+            "id": "791",
+            "classification": "Condition",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Dark Stalker (Ritualist)": {
+            "id": "76685",
+            "classification": "Debuff",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Relic of the Dragonhunter": {
+            "id": "70350",
+            "classification": "Debuff",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Extirpation": {
+            "id": "72941",
+            "classification": "Debuff",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Dark Stalker (Spear)": {
+            "id": "73039",
+            "classification": "Debuff",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Hunter's Mark": {
+            "id": "30778",
+            "classification": "Debuff",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Gaze Avoidance": {
+            "id": "37714",
+            "classification": "Other",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Stability": {
+            "id": "1122",
+            "classification": "Boon",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Protection": {
+            "id": "717",
+            "classification": "Boon",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Quickness": {
+            "id": "1187",
+            "classification": "Boon",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Aegis": {
+            "id": "743",
+            "classification": "Boon",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Vigor": {
+            "id": "726",
+            "classification": "Boon",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Alacrity": {
+            "id": "30328",
+            "classification": "Boon",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Last Rites": {
+            "id": "29726",
+            "classification": "Defensive",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Regeneration": {
+            "id": "718",
+            "classification": "Boon",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Virtue of Resolve (Battle Presence - Absolute Resolve)": {
+            "id": "17047",
+            "classification": "Defensive",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Fury": {
+            "id": "725",
+            "classification": "Boon",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Superspeed": {
+            "id": "5974",
+            "classification": "Support",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Swiftness": {
+            "id": "719",
+            "classification": "Boon",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Resolution": {
+            "id": "873",
+            "classification": "Boon",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Might": {
+            "id": "740",
+            "classification": "Boon",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Unbroken Lines": {
+            "id": "43194",
+            "classification": "Defensive",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Countdown": {
+            "id": "38098",
+            "classification": "Other",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Spherified Peppercorn-Spiced Oyster Soup": {
+            "id": "57165",
+            "classification": "Nourishment",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Unseen Burden": {
+            "id": "38153",
+            "classification": "Debuff",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Celestial Dash": {
+            "id": "38217",
+            "classification": "Other",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Spider Venom": {
+            "id": "13036",
+            "classification": "Offensive",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Skale Venom": {
+            "id": "13054",
+            "classification": "Offensive",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Dark Aura": {
+            "id": "39978",
+            "classification": "Support",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Rot Wallow Venom": {
+            "id": "63168",
+            "classification": "Offensive",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Shrouded": {
+            "id": "63093",
+            "classification": "Support",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Light Aura": {
+            "id": "25518",
+            "classification": "Support",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Frost Aura": {
+            "id": "5579",
+            "classification": "Support",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Eternal Oasis": {
+            "id": "44871",
+            "classification": "Defensive",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Shared Agony": {
+            "id": "38049",
+            "classification": "Debuff",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Reinforced Armor": {
+            "id": "9283",
+            "classification": "Other Consumable",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Signet of Midnight": {
+            "id": "10233",
+            "classification": "Other",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Signet of Illusions": {
+            "id": "10246",
+            "classification": "Other",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Toxic Tuning Crystal": {
+            "id": "21828",
+            "classification": "Enhancement",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Signet of Domination": {
+            "id": "10231",
+            "classification": "Other",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Signet of the Ether": {
+            "id": "21751",
+            "classification": "Other",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Virtuoso Blade": {
+            "id": "-25",
+            "classification": "Other",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Deadly Blades": {
+            "id": "63409",
+            "classification": "Other",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Relic of the Aristocracy": {
+            "id": "69795",
+            "classification": "Gear",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Compounding Power": {
+            "id": "49058",
+            "classification": "Other",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Fencer's Finesse": {
+            "id": "30426",
+            "classification": "Other",
+            "stacking": true,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        },
+        "Distortion": {
+            "id": "10243",
+            "classification": "Defensive",
+            "stacking": false,
+            "conversionBasedHealing": false,
+            "hybridHealing": false
+        }
+    }
+}

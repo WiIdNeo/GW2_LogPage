@@ -59,6 +59,12 @@ def link(url, text):
     return f'<a href="{esc(url)}" target="_blank" rel="noopener">{esc(text)}</a>' if url else ""
 
 
+def links_html(*items):
+    """Links in einem Container, der umbricht (am Handy untereinander, breit nebeneinander)."""
+    items = [x for x in items if x]
+    return '<div class="links">' + "".join(items) + "</div>" if items else ""
+
+
 def report_name(l):
     return f"report-{l['file_hash'][:12]}.html"
 
@@ -72,8 +78,8 @@ def result_class(l):
 
 
 def page(title, body, scripts=False, nav=True):
-    navhtml = ('<nav><a href="index.html">Logs</a> | <a href="players.html">Spieler</a> | '
-               '<a href="features.html">Geplante Features</a> | '
+    navhtml = ('<nav><a href="index.html">Logs</a><a href="players.html">Spieler</a>'
+               '<a href="features.html">Geplante Features</a>'
                '<a href="legal.html">Lizenz &amp; Rechtliches</a></nav>') if nav else ""
     js = '<script src="filter.js"></script>' if scripts else ""
     return f"""<!DOCTYPE html>
@@ -81,6 +87,8 @@ def page(title, body, scripts=False, nav=True):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#272a2f">
 <title>{esc(title)}</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -187,9 +195,9 @@ def build_index(entries, players, reports=frozenset()):
     for l, b, plist in entries:
         classes = " ".join(x for x in ["item", boss_classes(b), result_class(l)]
                            + [f"player-{player_slug(p['account'])}" for p in plist] if x)
-        links = " ".join(x for x in [link(l["dps_url"], "dps.report"), link(l["wm_url"], "Wingman"),
-                                     link(l["yt_url"], "YouTube"),
-                                     ilink(report_name(l), "Bewertung") if l["file_hash"] in reports else ""] if x)
+        links = links_html(link(l["dps_url"], "dps.report"), link(l["wm_url"], "Wingman"),
+                           link(l["yt_url"], "YouTube"),
+                           ilink(report_name(l), "Bewertung") if l["file_hash"] in reports else "")
         ok = {1: "✔", 0: "✘"}.get(l["success"], "?")
         rows.append(f'<tr class="{classes}"><td>{fmt_time(l["encounter_time"])}</td>'
                     f'<td>{esc(b["name"])}</td><td>{ok}</td><td>{links}</td></tr>')
@@ -286,12 +294,21 @@ def build_player(db, p, bosses, entries, reports=frozenset()):
     mine = [(l, b) for l, b, pl in entries if any(x["account"] == acc for x in pl)][:20]
     lrows = "".join(
         f'<tr><td>{fmt_time(l["encounter_time"])}</td><td>{esc(b["name"])}</td>'
-        f'<td>{link(l["dps_url"], "dps.report")} {link(l["wm_url"], "Wingman")} '
-        + (ilink(f"{report_name(l)}#p-{ps}", "Bewertung") if l["file_hash"] in reports else "")
+        '<td>' + links_html(link(l["dps_url"], "dps.report"), link(l["wm_url"], "Wingman"),
+                            ilink(f"{report_name(l)}#p-{ps}", "Bewertung") if l["file_hash"] in reports else "")
         + '</td></tr>' for l, b in mine)
     parts.append(f'<h2>Letzte Logs</h2><table><tr><th>Zeit (UTC)</th><th>Boss</th><th>Links</th></tr>'
                  f'{lrows or "<tr><td colspan=3>–</td></tr>"}</table>')
     return page(acc, "\n".join(parts), scripts=True)
+
+
+def kv_list(pairs):
+    """Eine Zeile pro Eintrag: Name links, Wert rechts; auf breiten Schirmen mehrspaltig."""
+    if not pairs:
+        return "<p class=\"muted\">–</p>"
+    return '<ul class="kv">' + "".join(
+        f'<li><span class="k">{esc(k)}</span>' + (f'<span class="v">{esc(v)}</span>' if v != "" else "") + "</li>"
+        for k, v in pairs) + "</ul>"
 
 
 def build_report(l, b, plist, slim, rules):
@@ -300,12 +317,12 @@ def build_report(l, b, plist, slim, rules):
     ph = slim.get("phases") or []
     dur = report_engine.fmt_ms(ph[0].get("end")) if ph else "?"
     ok = {1: "✔ Erfolg", 0: "✘ Niederlage"}.get(l["success"], "?")
-    head = [f'<p><a href="index.html">← Log-Übersicht</a></p>',
-            f'<p>{fmt_time(l["encounter_time"])} UTC · {ok} · Dauer {dur} · '
-            + " ".join(x for x in [link(l["dps_url"], "dps.report"), link(l["wm_url"], "Wingman")] if x) + "</p>"]
     shown = [(p, evals[p["account"].casefold()]) for p in plist if p["account"].casefold() in evals]
-    head.append("<p>Spieler: " + " | ".join(
-        f'<a href="#p-{player_slug(p["account"])}">{esc(p["account"])}</a>' for p, _ in shown) + "</p>")
+    head = ['<p><a href="index.html">← Log-Übersicht</a></p>',
+            f'<p>{fmt_time(l["encounter_time"])} UTC<br>{ok}<br>Dauer {dur}</p>',
+            links_html(link(l["dps_url"], "dps.report"), link(l["wm_url"], "Wingman")),
+            '<p class="muted">Spieler</p><div class="toc">' + "".join(
+                f'<a href="#p-{player_slug(p["account"])}">{esc(p["account"])}</a>' for p, _ in shown) + "</div>"]
     parts = []
     for p, ev in shown:
         fl = ev["findings"]
@@ -313,42 +330,59 @@ def build_report(l, b, plist, slim, rules):
         if fl:
             li = "".join(
                 f'<li class="{"crit" if f["critical"] else "info"}">{"⚠ " if f["critical"] else "ℹ "}{esc(f["text"])}'
-                + (f' <a href="{esc(f["link"])}" target="_blank" rel="noopener">Erklärung</a>' if f.get("link") else "")
+                + (f'<br><a href="{esc(f["link"])}" target="_blank" rel="noopener">Erklärung</a>' if f.get("link") else "")
                 + "</li>" for f in fl)
             body = f'<ul class="findings">{li}</ul>'
         else:
-            body = "<p><i>Keine Auffälligkeiten.</i></p>"
+            body = '<p class="muted"><i>Keine Auffälligkeiten.</i></p>'
         v = ev["values"]
-        rows = [("Mechaniken", ", ".join(f"{esc(n)}: {c}" for n, c in v["mechanics"].items()) or "–"),
-                ("Metriken", ", ".join(f"{esc(report_engine.METRIC_LABEL.get(k, k))}: {report_engine._num(x)}"
-                                       for k, x in v["metrics"].items()) or "–"),
-                ("Buffs (Uptime % bzw. Ø Stacks)", ", ".join(f"{esc(n)}: {report_engine._num(x)}"
-                                                           for n, x in v["buffs"].items()) or "–"),
-                ("Consumables", ", ".join(esc(c) for c in v["consumables"]) or "–")]
-        table = "<table>" + "".join(f"<tr><th>{k}</th><td>{t}</td></tr>" for k, t in rows) + "</table>"
+        num = report_engine._num
+        values = ("<h3>Mechaniken</h3>" + kv_list([(n, str(c)) for n, c in v["mechanics"].items()])
+                  + "<h3>Metriken</h3>" + kv_list([(report_engine.METRIC_LABEL.get(k, k), num(x))
+                                                    for k, x in v["metrics"].items()])
+                  + "<h3>Buffs <small>(Uptime % bzw. Ø Stacks)</small></h3>"
+                  + kv_list([(n, num(x)) for n, x in v["buffs"].items()])
+                  + "<h3>Consumables</h3>" + kv_list([(c, "") for c in v["consumables"]]))
         sub = " – ".join(x for x in [ev.get("character"), ev.get("profession")] if x)
-        parts.append(f'<section id="p-{player_slug(p["account"])}"><h2>{esc(p["account"])} '
-                     f'<small>{esc(sub)}</small>' + (f' <span class="crit">({crit} kritisch)</span>' if crit else "")
-                     + f'</h2>{body}<details><summary>Alle Werte</summary>{table}</details></section>')
+        parts.append(f'<section id="p-{player_slug(p["account"])}"><h2>{esc(p["account"])}'
+                     + (f' <span class="crit badge">{crit} kritisch</span>' if crit else "")
+                     + f'<small>{esc(sub)}</small></h2>{body}<details><summary>Alle Werte</summary>{values}</details></section>')
     return page(f'Bewertung: {b["name"]}', "\n".join(head + parts))
 
 
-CSS = """body{font-family:sans-serif;margin:1rem auto;max-width:1100px;padding:0 1rem}
-nav{margin-bottom:1rem}
+CSS = """:root{color-scheme:dark;--bg:#272a2f;--fg:#e6e8eb;--muted:#a0a6ae;--line:#454a52;--head:#31353b;
+--link:#7cb7ff;--visited:#b9a4ff;--crit:#ff7b7b}
+html{background:var(--bg)}
+body{font-family:sans-serif;line-height:1.45;margin:1rem auto;max-width:1100px;padding:0 1rem;background:var(--bg);color:var(--fg)}
+a{color:var(--link)}
+a:visited{color:var(--visited)}
+nav{display:flex;flex-wrap:wrap;gap:.3rem 1.2rem;margin-bottom:1rem}
 table{border-collapse:collapse;width:100%}
-th,td{border:1px solid #ccc;padding:4px 8px;text-align:left;vertical-align:top}
-th{background:#eee}
+th,td{border:1px solid var(--line);padding:4px 8px;text-align:left;vertical-align:top}
+th{background:var(--head)}
 #filters{margin:1rem 0;display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+select{background:var(--head);color:var(--fg);border:1px solid var(--line);border-radius:4px;padding:3px 6px}
 [hidden]{display:none !important}
 .grade{font-weight:bold}
 .pl{white-space:nowrap}
-.crit{color:#b00020}
-.info{color:#555}
+.muted{color:var(--muted)}
+.badge{font-size:.6em;font-weight:normal;margin-left:.4rem}
+.crit{color:var(--crit)}
+.info{color:var(--muted)}
+.links{display:flex;flex-wrap:wrap;gap:.15rem 1rem}
+.toc{display:flex;flex-wrap:wrap;gap:.3rem 1rem;margin-bottom:1rem}
 .findings{padding-left:1.2rem}
-section{margin:1.5rem 0;padding-top:.5rem;border-top:1px solid #ddd}
-h2 small{font-weight:normal;color:#555;font-size:.7em}
+.findings li{margin:.35rem 0}
+section{margin:1.5rem 0;padding-top:.5rem;border-top:1px solid var(--line)}
+h2 small{display:block;font-weight:normal;color:var(--muted);font-size:.7em}
+h3{margin:1rem 0 .3rem;font-size:1rem}
+h3 small{font-weight:normal;color:var(--muted)}
 details{margin:.5rem 0}
 summary{cursor:pointer}
+.kv{list-style:none;padding:0;margin:.2rem 0;column-width:17rem;column-gap:2rem}
+.kv li{display:flex;justify-content:space-between;gap:.8rem;border-bottom:1px solid var(--line);padding:2px 0;break-inside:avoid}
+.kv .v{white-space:nowrap;font-variant-numeric:tabular-nums}
+@media (max-width:600px){.links{flex-direction:column}}
 """
 
 JS = """// Generischer Filter: <select data-filter id="x"> -> value = CSS-Klasse, die ein .item haben muss.

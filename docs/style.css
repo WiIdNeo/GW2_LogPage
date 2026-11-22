@@ -1,16 +1,33 @@
-body{font-family:sans-serif;margin:1rem auto;max-width:1100px;padding:0 1rem}
-nav{margin-bottom:1rem}
+:root{color-scheme:dark;--bg:#272a2f;--fg:#e6e8eb;--muted:#a0a6ae;--line:#454a52;--head:#31353b;
+--link:#7cb7ff;--visited:#b9a4ff;--crit:#ff7b7b}
+html{background:var(--bg)}
+body{font-family:sans-serif;line-height:1.45;margin:1rem auto;max-width:1100px;padding:0 1rem;background:var(--bg);color:var(--fg)}
+a{color:var(--link)}
+a:visited{color:var(--visited)}
+nav{display:flex;flex-wrap:wrap;gap:.3rem 1.2rem;margin-bottom:1rem}
 table{border-collapse:collapse;width:100%}
-th,td{border:1px solid #ccc;padding:4px 8px;text-align:left;vertical-align:top}
-th{background:#eee}
+th,td{border:1px solid var(--line);padding:4px 8px;text-align:left;vertical-align:top}
+th{background:var(--head)}
 #filters{margin:1rem 0;display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+select{background:var(--head);color:var(--fg);border:1px solid var(--line);border-radius:4px;padding:3px 6px}
 [hidden]{display:none !important}
 .grade{font-weight:bold}
 .pl{white-space:nowrap}
-.crit{color:#b00020}
-.info{color:#555}
+.muted{color:var(--muted)}
+.badge{font-size:.6em;font-weight:normal;margin-left:.4rem}
+.crit{color:var(--crit)}
+.info{color:var(--muted)}
+.links{display:flex;flex-wrap:wrap;gap:.15rem 1rem}
+.toc{display:flex;flex-wrap:wrap;gap:.3rem 1rem;margin-bottom:1rem}
 .findings{padding-left:1.2rem}
-section{margin:1.5rem 0;padding-top:.5rem;border-top:1px solid #ddd}
-h2 small{font-weight:normal;color:#555;font-size:.7em}
+.findings li{margin:.35rem 0}
+section{margin:1.5rem 0;padding-top:.5rem;border-top:1px solid var(--line)}
+h2 small{display:block;font-weight:normal;color:var(--muted);font-size:.7em}
+h3{margin:1rem 0 .3rem;font-size:1rem}
+h3 small{font-weight:normal;color:var(--muted)}
 details{margin:.5rem 0}
 summary{cursor:pointer}
+.kv{list-style:none;padding:0;margin:.2rem 0;column-width:17rem;column-gap:2rem}
+.kv li{display:flex;justify-content:space-between;gap:.8rem;border-bottom:1px solid var(--line);padding:2px 0;break-inside:avoid}
+.kv .v{white-space:nowrap;font-variant-numeric:tabular-nums}
+@media (max-width:600px){.links{flex-direction:column}}

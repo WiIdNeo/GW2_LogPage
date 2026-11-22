@@ -7,6 +7,7 @@ Wird von gw2logs.py importiert, laeuft aber auch allein:
     python extract_log.py log.json --indent 1 --report   -> lesbar + Groessen pro Abschnitt
     python extract_log.py log.json --whitelist-from config.toml --filter analysis_filter.toml
     python extract_log.py json_dump/ --catalog           -> analysis_filter.toml anlegen bzw. NUR Neues ergaenzen
+    python extract_log.py /pfad/arcdps.cbtlogs --catalog -> parst die Logs selbst (EI-CLI aus config.toml), siehe --help
 
 Konventionen im Ausgabeformat:
   * Alles, was die EI-JSON pro Phase liefert, bleibt eine Liste mit Phasen-Index (wie "phases").
@@ -22,9 +23,13 @@ import argparse
 import datetime
 import gzip
 import json
+import os
 import re
+import shlex
 import shutil
+import subprocess
 import sys
+import tempfile
 import tomllib
 from pathlib import Path
 
@@ -517,6 +522,146 @@ def write_catalog(cat, path, dry_run=False):
     return [f"{path} neu angelegt ({len(cat)} Boss(e))"]
 
 
+# ----------------------------------------------------------------------------- Katalog direkt aus Logs
+LOG_EXTS = (".zevtc", ".evtc", ".evtc.zip")
+CATALOG_CONF = {                                # EI-Einstellungen fuers Katalogisieren: nur JSON, kein Upload
+    "SaveAtOut": "false", "SaveOutJSON": "true", "SaveOutHTML": "false", "SaveOutCSV": "false",
+    "SaveOutTrace": "false", "ApplicationTraces": "false", "IndentJSON": "false", "CompressRaw": "false",
+    "RawTimelineArrays": "false", "ParseCombatReplay": "false", "ParsePhases": "true", "ComputeMechanics": "true",
+    "UploadToDPSReports": "false", "UploadToWingman": "false", "UploadToRaidar": "false",
+    "SendEmbedToWebhook": "false", "SendSimpleMessageToWebhook": "false", "AutoDiscordBatch": "false",
+    "ParseMultipleLogs": "false", "SkipFailedTries": "false", "AutoAdd": "false", "AutoParse": "false",
+}
+
+
+def split_inputs(paths, skip_patterns=()):
+    """Trennt Eingaben in (EI-Logs, JSON-Dateien). Ordner werden rekursiv durchsucht."""
+    logs, jsons = [], []
+    for p in map(Path, paths):
+        cands = sorted(x for x in p.rglob("*") if x.is_file()) if p.is_dir() else [p]
+        for x in cands:
+            n = x.name.lower()
+            if any(sp.lower() in str(x).lower() for sp in skip_patterns):
+                continue
+            if n.endswith(LOG_EXTS):
+                logs.append(x)
+            elif (n.endswith(".json") or n.endswith(".json.gz")) and not n.endswith(".slim.json"):
+                jsons.append(x)
+    return logs, jsons
+
+
+def load_ei_settings(config_path, ei_command):
+    """EI-Kommando, Umgebung, Timeout, Skip-Muster und aktivierte Boss-IDs aus config.toml (oder --ei-command)."""
+    cp = Path(config_path) if config_path else Path("config.toml")
+    cfg = tomllib.loads(cp.read_text(encoding="utf-8")) if cp.exists() else {}
+    ei = cfg.get("ei", {})
+    command = shlex.split(ei_command) if ei_command else ei.get("command")
+    enabled = None
+    bf = cfg.get("bosses_file")
+    if bf and (cp.parent / bf).exists():
+        enabled = set()
+        for b in tomllib.loads((cp.parent / bf).read_text(encoding="utf-8")).get("boss", []):
+            if b.get("enabled"):
+                enabled.update([abs(b["id"]), *map(abs, b.get("aliases", []))])
+    return {"command": command, "env": ei.get("env", {}), "timeout": ei.get("timeout", 900),
+            "skip": cfg.get("skip_name_patterns", ["golem"]), "enabled_ids": enabled}
+
+
+def filter_enabled_bosses(logs, enabled_ids):
+    """Behaelt nur Logs aus Ordnern 'Boss (ID)' mit aktiviertem Boss; Ordner ohne erkennbare ID bleiben."""
+    if enabled_ids is None:
+        return logs
+    keep = []
+    for p in logs:
+        m = re.search(r"\((\d+)\)\s*$", p.parent.name)
+        if not m or int(m.group(1)) in enabled_ids:
+            keep.append(p)
+    return keep
+
+
+def sample_even(items, n):
+    """Gleichmaessig ueber die (nach Zeit sortierte) Liste verteilte Stichprobe."""
+    if n <= 0 or len(items) <= n:
+        return items
+    step = len(items) / n
+    return [items[int(i * step)] for i in range(n)]
+
+
+def merge_cat(acc, other):
+    for key, c in other.items():
+        a = acc.setdefault(key, {"name": c["name"], "logs": 0, "targets": {}, "mechanics": {}})
+        a["logs"] += c["logs"]
+        a["name"] = a["name"] or c["name"]
+        for tid, e in c["targets"].items():
+            t = a["targets"].setdefault(tid, {"name": e["name"], "in_phases": False})
+            t["in_phases"] = t["in_phases"] or e["in_phases"]
+        for name, e in c["mechanics"].items():
+            m = a["mechanics"].setdefault(name, {"description": e["description"], "events": 0})
+            m["events"] = max(m["events"], e["events"])
+
+
+def _sig(p):
+    st = p.stat()
+    return f"{p.resolve()}|{st.st_size}|{int(st.st_mtime)}"
+
+
+def catalog_from_logs(logs, ei, filter_path, batch=20, per_boss=0, state_path="catalog_state.json",
+                      dry_run=False, redo=False):
+    """Parst Logs in Paketen mit der EI-CLI (JSON nur im Temp-Ordner), ergaenzt nach JEDEM Paket die
+    Filterdatei und merkt sich fertige Logs in state_path, damit ein Abbruch/Neustart dort weitermacht."""
+    state = set()
+    if state_path and Path(state_path).exists() and not redo:
+        state = set(json.loads(Path(state_path).read_text(encoding="utf-8")))
+    if per_boss > 0:
+        groups = {}
+        for p in sorted(logs, key=lambda x: (x.parent.name, x.stat().st_mtime)):
+            groups.setdefault(p.parent, []).append(p)
+        logs = [x for g in groups.values() for x in sample_even(g, per_boss)]
+    todo = [p for p in logs if _sig(p) not in state]
+    print(f"{len(logs)} Log(s) gefunden, {len(todo)} noch nicht katalogisiert")
+    if not todo:
+        return {}
+    path = Path(filter_path)
+    if path.exists() and not dry_run:                     # Sicherung einmal pro Lauf (nicht pro Paket)
+        shutil.copy2(path, path.with_name(path.name + ".bak"))
+    env = {**os.environ, **{k: str(v) for k, v in ei["env"].items()}}
+    acc = {}
+    for i in range(0, len(todo), batch):
+        chunk = todo[i:i + batch]
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "json"
+            out.mkdir()
+            conf = Path(tmp) / "catalog.conf"
+            conf.write_text("\n".join(f"{k}={v}" for k, v in {**CATALOG_CONF, "OutLocation": str(out)}.items()),
+                            encoding="utf-8")
+            cmd = [*ei["command"], "-c", str(conf), *map(str, chunk)]
+            try:
+                cp = subprocess.run(cmd, capture_output=True, text=True, errors="replace", env=env,
+                                    timeout=ei["timeout"] * len(chunk))
+            except subprocess.TimeoutExpired:
+                print(f"  ! Zeitueberschreitung im Paket ab Log {i + 1} - uebersprungen", file=sys.stderr)
+                continue
+            except FileNotFoundError:
+                sys.exit(f"EI-Kommando nicht gefunden: {ei['command']}")
+            jsons = sorted(out.glob("*.json"))
+            if not jsons:
+                tail = (cp.stderr or cp.stdout or "").strip()[-400:]
+                print(f"  ! Paket ab Log {i + 1}: keine JSON erzeugt (Exit {cp.returncode}). {tail}", file=sys.stderr)
+            cat = build_catalog(jsons)
+        merge_cat(acc, cat)
+        added = []
+        if cat and not dry_run:
+            added = write_catalog(cat, path)
+        if not dry_run:
+            state.update(_sig(p) for p in chunk)
+            if state_path:
+                Path(state_path).write_text(json.dumps(sorted(state)), encoding="utf-8")
+        print(f"[{min(i + batch, len(todo))}/{len(todo)}] {len(jsons)} JSON verarbeitet")
+        for m in added:
+            print("  " + m)
+    return acc
+
+
 # ----------------------------------------------------------------------------- CLI
 def collect_inputs(paths):
     files = []
@@ -554,22 +699,47 @@ def main():
     ap.add_argument("--catalog", nargs="?", const="analysis_filter.toml", metavar="FILTER.toml",
                     help="statt zu extrahieren: Ziele/Mechaniken je Boss in die Filterdatei schreiben "
                          "(Default analysis_filter.toml). Existiert sie, werden nur NEUE Eintraege ergaenzt")
-    ap.add_argument("--dry-run", action="store_true", help="mit --catalog: nur anzeigen, was ergaenzt wuerde")
+    ap.add_argument("--dry-run", action="store_true", help="mit --catalog: nur anzeigen, was ergaenzt wuerde "
+                                                           "(bei Logs wird trotzdem geparst, aber nichts gespeichert)")
+    ap.add_argument("--config", metavar="config.toml", help="fuer --catalog mit Logs: EI-Kommando/Bossliste (Default ./config.toml)")
+    ap.add_argument("--ei-command", metavar="CMD", help='EI-Kommando statt config.toml, z. B. "dotnet /pfad/GuildWars2EliteInsights-CLI.dll"')
+    ap.add_argument("--batch", type=int, default=20, help="Logs pro EI-Aufruf bei --catalog (Default 20)")
+    ap.add_argument("--per-boss", type=int, default=0, metavar="N",
+                    help="bei --catalog: hoechstens N gleichmaessig verteilte Logs je Ordner (Default 0 = alle)")
+    ap.add_argument("--all-bosses", action="store_true", help="bei --catalog auch Bosse mit enabled=false in bosses.toml")
+    ap.add_argument("--state", default="catalog_state.json", help="Merkdatei bereits katalogisierter Logs")
+    ap.add_argument("--redo", action="store_true", help="bei --catalog: Merkdatei ignorieren, alles neu parsen")
     a = ap.parse_args()
 
-    files = collect_inputs(a.inputs)
-    if not files:
-        sys.exit("Keine JSON-Dateien gefunden.")
-
     if a.catalog:
-        cat = build_catalog(files)
-        msgs = write_catalog(cat, a.catalog, a.dry_run)
-        print(f"{len(files)} Datei(en), {len(cat)} Boss(e) -> {a.catalog}" + (" (Trockenlauf)" if a.dry_run else ""))
+        ei = load_ei_settings(a.config, a.ei_command)
+        logs, jsons = split_inputs(a.inputs, ei["skip"])
+        if not a.all_bosses:
+            logs = filter_enabled_bosses(logs, ei["enabled_ids"])
+        if not logs and not jsons:
+            sys.exit("Weder EI-Logs (.zevtc/.evtc) noch JSON-Dateien gefunden.")
+        cat, msgs = {}, []
+        if jsons:
+            cat = build_catalog(jsons)
+            msgs = write_catalog(cat, a.catalog, a.dry_run)
+        if logs:
+            if not ei["command"]:
+                sys.exit("Kein EI-Kommando: [ei] command in config.toml setzen oder --ei-command angeben.")
+            acc = catalog_from_logs(logs, ei, a.catalog, a.batch, a.per_boss, a.state, a.dry_run, a.redo)
+            merge_cat(cat, acc)
+            if a.dry_run and acc:
+                msgs += write_catalog(acc, a.catalog, True)
+        files = jsons or logs
+        print(f"{len(logs)} Log(s), {len(jsons)} JSON(s), {len(cat)} Boss(e) -> {a.catalog}" + (" (Trockenlauf)" if a.dry_run else ""))
         for key, c in sorted(cat.items(), key=lambda kv: abs(int(kv[0]))):
             print(f"  {key:>8}  {c['name'] or '?':32} Logs {c['logs']:4}  Ziele {len(c['targets']):2}  Mechaniken {len(c['mechanics']):3}")
         for m in msgs:
             print("  " + m)
         return
+
+    files = collect_inputs(a.inputs)
+    if not files:
+        sys.exit("Keine JSON-Dateien gefunden.")
 
     whitelist = None
     if a.whitelist:

@@ -14,7 +14,7 @@ mechanics = [
   "Cannon",  # max 9 Ereignisse | Cannon Barrage (stood in AoE)
   "Dead",  # max 9 Ereignisse | Dead
   "Sap Bomb",  # max 4 Ereignisse | Got a Sapper Bomb
-  "Timed Bomb",  # max 4 Ereignisse | Got a Timed Bomb (Expanding circle)
+  #"Timed Bomb",  # max 4 Ereignisse | Got a Timed Bomb (Expanding circle)
   "Launched",  # max 3 Ereignisse | Shell-Shocked (launched up to cannons)
   "DC",  # max 1 Ereignisse | DC
   "Lckt",  # max 1 Ereignisse | Lockout
@@ -25,7 +25,7 @@ mechanics = [
 [boss."15429"]
 targets = [
   15429,  # Gorseval the Multifarious
-  15434,  # Charged Soul NW 1
+  #15434,  # Charged Soul NW 1
 ]
 mechanics = [
   "Black",  # max 275 Ereignisse | Hit by Black Goo
@@ -53,9 +53,9 @@ mechanics = [
   "Boss TP",  # max 46 Ereignisse | Unstable Magic Spike (Boss Teleport)
   "Orbs",  # max 19 Ereignisse | Bullet Storm (Orbs during split)
   #"Attune B",  # max 14 Ereignisse | Pylon Attunement: Blue
-  #"Floor B",  # max 14 Ereignisse | Unstable Pylon (Blue Floor dmg)
+  "Floor B",  # max 14 Ereignisse | Unstable Pylon (Blue Floor dmg)
   #"Green",  # max 12 Ereignisse | Distributed Magic (Stood in Green)
-  #"Floor G",  # max 10 Ereignisse | Unstable Pylon (Green Floor dmg)
+  "Floor G",  # max 10 Ereignisse | Unstable Pylon (Green Floor dmg)
   "Downed",  # max 9 Ereignisse | Downed
   "Got up",  # max 9 Ereignisse | Got up
   "Res",  # max 9 Ereignisse | Res
@@ -72,7 +72,7 @@ mechanics = [
 # Matthias Gabrel  (2 Log(s))
 [boss."16115"]
 targets = [
-  -9,  # Sacrificed 1 Serana Schwarzblatt
+  #-9,  # Sacrificed 1 Serana Schwarzblatt
   16115,  # Matthias Gabrel
 ]
 mechanics = [
@@ -84,7 +84,7 @@ mechanics = [
   "Jump Shards",  # max 65 Ereignisse | Shards of Rage (Jump)
   #"Rmv.Sh.Stck",  # max 54 Ereignisse | Removed Blood Shield (protective bubble) Stack
   "Tornado.M",  # max 54 Ereignisse | Fiery Vortex (Tornado Matthias)
-  "Bombs",  # max 38 Ereignisse | Zealous Benediction (Expanding bombs)
+  #"Bombs",  # max 38 Ereignisse | Zealous Benediction (Expanding bombs)
   #"Knck.Pll",  # max 34 Ereignisse | Knocked Back or Pulled
   "Well dmg",  # max 31 Ereignisse | Unstable Blood Magic AoE hit
   "Res",  # max 28 Ereignisse | Res
@@ -99,8 +99,8 @@ mechanics = [
   "Well",  # max 6 Ereignisse | Unstable Blood Magic application
   "Corruption",  # max 5 Ereignisse | Corruption Application
   #"Lost Bubble",  # max 3 Ereignisse | Lost Blood Shield (protective bubble)
-  "Sacrifice",  # max 2 Ereignisse | Sacrifice (Breakbar)
-  "CC.End",  # max 2 Ereignisse | Sacrifice (Breakbar) ended
+  #"Sacrifice",  # max 2 Ereignisse | Sacrifice (Breakbar)
+  #"CC.End",  # max 2 Ereignisse | Sacrifice (Breakbar) ended
   "DC",  # max 1 Ereignisse | DC
 ]
 
@@ -171,7 +171,7 @@ targets = [
   17335,  # Gambler
 ]
 mechanics = [
-  "Oil",  # max 63 Ereignisse | Rapid Decay (Black expanding oil)
+  #"Oil",  # max 63 Ereignisse | Rapid Decay (Black expanding oil)
   "Weak Mind",  # max 45 Ereignisse | Weak Minded (Debuff after Mind Crush)
   "TP",  # max 44 Ereignisse | Teleport to/from Demonic Realm
   "Tear",  # max 14 Ereignisse | Collected a Demonic Tear
@@ -179,7 +179,7 @@ mechanics = [
   #"TP CC",  # max 6 Ereignisse | Off Balance (Saul TP Breakbar)
   "10% Smash",  # max 6 Ereignisse | Knockback in 10% Phase
   #"TP CC Fail",  # max 5 Ereignisse | Failed Saul TP CC
-  "Green.D",  # max 5 Ereignisse | Chosen by the Eye of Janthir
+  #"Green.D",  # max 5 Ereignisse | Chosen by the Eye of Janthir
   "Downed",  # max 4 Ereignisse | Downed
   #"Thief CC",  # max 4 Ereignisse | Boon Thief (Saul Breakbar)
   #"Thief CCed",  # max 4 Ereignisse | Boon Thief CCed
@@ -201,7 +201,7 @@ targets = [
   17335,  # Gambler
 ]
 mechanics = [
-  "Oil",  # max 143 Ereignisse | Rapid Decay (Black expanding oil)
+  #"Oil",  # max 143 Ereignisse | Rapid Decay (Black expanding oil)
   "TP",  # max 62 Ereignisse | Teleport to/from Demonic Realm
   "Weak Mind",  # max 23 Ereignisse | Weak Minded (Debuff after Mind Crush)
   "Pizza",  # max 22 Ereignisse | Annihilate (Cascading Pizza attack)
@@ -268,9 +268,9 @@ mechanics = [
 # Samarog CM  (1 Log(s))
 [boss."-17188"]
 targets = [
-  17124,  # Rigom 1
+  #17124,  # Rigom 1
   17188,  # Samarog
-  17208,  # Guldhem 1
+  #17208,  # Guldhem 1
 ]
 mechanics = [
   "S.Pls",  # max 38 Ereignisse | Effigy Pulse (Stood in Spear AoE)
@@ -301,9 +301,9 @@ mechanics = [
 # Samarog  (2 Log(s))
 [boss."17188"]
 targets = [
-  17124,  # Rigom 1
+  #17124,  # Rigom 1
   17188,  # Samarog
-  17208,  # Guldhem 1
+  #17208,  # Guldhem 1
 ]
 mechanics = [
   "Lckt",  # max 19 Ereignisse | Lockout
@@ -387,8 +387,8 @@ targets = [
 mechanics = [
   "Echo PU",  # max 109 Ereignisse | Picked up by Ender's Echo
   "Dead",  # max 10 Ereignisse | Dead
-  "Enf.Swipe",  # max 6 Ereignisse | Hit by Dhuum's Enforcer Rending Swipe
-  "Golem.D",  # max 5 Ereignisse | Hateful Ephemera (Golem AoE dmg)
+  #"Enf.Swipe",  # max 6 Ereignisse | Hit by Dhuum's Enforcer Rending Swipe
+  #"Golem.D",  # max 5 Ereignisse | Hateful Ephemera (Golem AoE dmg)
   "Mess Fix",  # max 4 Ereignisse | Fixated by Messenger
   "Downed",  # max 1 Ereignisse | Downed
   "Res",  # max 1 Ereignisse | Res
@@ -405,20 +405,20 @@ targets = [
   #19681,  # Dhuum's Enforcer 1
 ]
 mechanics = [
-  "Bomb dmg",  # max 75 Ereignisse | Arcing Affliction (Bomb) hit
+  #"Bomb dmg",  # max 75 Ereignisse | Arcing Affliction (Bomb) hit
   "Mark",  # max 29 Ereignisse | Necro Marks during Scythe attack
   "Shackles dmg",  # max 25 Ereignisse | Soul Shackle (Tether) dmg ticks
   #"SupSpeed.Orb",  # max 19 Ereignisse | Gained Superspeed from Desmina (Walked over orb)
   #"Mess Fix",  # max 16 Ereignisse | Fixated by Messenger
   "Golem.D",  # max 11 Ereignisse | Hateful Ephemera (Golem AoE dmg)
   "Dead",  # max 10 Ereignisse | Dead
-  "Bomb",  # max 10 Ereignisse | Arcing Affliction (Bomb) application
+  #"Bomb",  # max 10 Ereignisse | Arcing Affliction (Bomb) application
   "Orb CD",  # max 8 Ereignisse | Applied when taking green
   #"KB dmg",  # max 8 Ereignisse | Knockback damage during Greater Deathmark (mid port)
   "Downed",  # max 7 Ereignisse | Downed
-  "Shackles",  # max 6 Ereignisse | Soul Shackle (Tether) application
+  #"Shackles",  # max 6 Ereignisse | Soul Shackle (Tether) application
   "Res",  # max 2 Ereignisse | Res
-  "Bomb Trig",  # max 2 Ereignisse | Arcing Affliction (Bomb) manualy triggered
+  #"Bomb Trig",  # max 2 Ereignisse | Arcing Affliction (Bomb) manualy triggered
   "Got up",  # max 1 Ereignisse | Got up
   "Lckt",  # max 1 Ereignisse | Lockout
   "Crack",  # max 1 Ereignisse | Cull (Fearing Fissures)
@@ -435,7 +435,7 @@ targets = [
 ]
 mechanics = [
   "Spin.SH",  # max 133 Ereignisse | Corrupt the Living (Torment+Poison Spin)
-  "Necrosis",  # max 91 Ereignisse | Necrosis (Tanking Debuff)
+  #"Necrosis",  # max 91 Ereignisse | Necrosis (Tanking Debuff)
   #"Spit",  # max 39 Ereignisse | Wurm Spit
   "Donut In",  # max 29 Ereignisse | Vortex Slash (Inner Donut hit)
   "8Slice",  # max 28 Ereignisse | Death Bloom (8 Slices)
@@ -443,7 +443,7 @@ mechanics = [
   #"NecDancer.Achiv.L",  # max 10 Ereignisse | Achievement Eligibility: Necro Dancer Lost
   "Res",  # max 9 Ereignisse | Res
   #"Donut Out",  # max 7 Ereignisse | Vortex Slash (Outer Donut hit)
-  #"Fixate",  # max 6 Ereignisse | Fixated (Special Action Key)
+  "Fixate",  # max 6 Ereignisse | Fixated (Special Action Key)
   "Scythe",  # max 5 Ereignisse | Spinning Slash (hit by Scythe)
   "4Slice",  # max 4 Ereignisse | Quad Slash (4 Slices)
   "Golem.SH",  # max 4 Ereignisse | Soul Rift (stood in Golem Aoe)
@@ -464,11 +464,11 @@ mechanics = [
   "Spin.SH",  # max 91 Ereignisse | Corrupt the Living (Torment+Poison Spin)
   #"Spit",  # max 49 Ereignisse | Wurm Spit
   "Golem.SH",  # max 33 Ereignisse | Soul Rift (stood in Golem Aoe)
-  "Necrosis",  # max 27 Ereignisse | Necrosis (Tanking Debuff)
+  #"Necrosis",  # max 27 Ereignisse | Necrosis (Tanking Debuff)
   #"8Slice",  # max 19 Ereignisse | Death Bloom (8 Slices)
   "Res",  # max 18 Ereignisse | Res
   "Immob.Golem",  # max 10 Ereignisse | Immobilized Golem
-  #"Fixate",  # max 7 Ereignisse | Fixated (Special Action Key)
+  "Fixate",  # max 7 Ereignisse | Fixated (Special Action Key)
   #"NecDancer.Achiv.L",  # max 5 Ereignisse | Achievement Eligibility: Necro Dancer Lost
   #"NecDancer.Achiv.K",  # max 5 Ereignisse | Achievement Eligibility: Necro Dancer Kept
   #"Donut In",  # max 5 Ereignisse | Vortex Slash (Inner Donut hit)
@@ -579,7 +579,7 @@ mechanics = [
   "Steal",  # max 5 Ereignisse | Vapor Jet (Boon Steal)
   "Dead",  # max 4 Ereignisse | Dead
   "Got up",  # max 1 Ereignisse | Got up
-  "Enrage",  # max 1 Ereignisse | Enraged
+  #"Enrage",  # max 1 Ereignisse | Enraged
 ]
 
 # Twin Largos  (1 Log(s))
@@ -730,7 +730,7 @@ mechanics = [
   "Downed",  # max 4 Ereignisse | Downed
   "R.Blind",  # max 4 Ereignisse | Unremovable blindness
   "Lnch",  # max 1 Ereignisse | Launched
-  "Perilous Pulse",  # max 1 Ereignisse | Perilous Pulse
+  #"Perilous Pulse",  # max 1 Ereignisse | Perilous Pulse
 ]
 
 # Cardinal Adina 1  (2 Log(s))

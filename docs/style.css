@@ -15,6 +15,7 @@ select{background:var(--head);color:var(--fg);border:1px solid var(--line);borde
 .pl{white-space:nowrap}
 .muted{color:var(--muted)}
 .badge{font-size:.6em;font-weight:normal;margin-left:.4rem}
+.roles{list-style:none;padding:0;margin:.3rem 0 .6rem}
 .crit{color:var(--crit)}
 .info{color:var(--muted)}
 .links{display:flex;flex-wrap:wrap;gap:.15rem 1rem}

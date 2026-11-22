@@ -20,6 +20,7 @@ Konventionen im Ausgabeformat:
     Schluessel: Boss-ID, bei Challenge Mode negativ (wie in bosses.toml), z. B. [boss."-17194"].
 """
 import argparse
+import collections
 import datetime
 import gzip
 import json
@@ -34,7 +35,7 @@ import tomllib
 from pathlib import Path
 
 # ----------------------------------------------------------------------------- Konfiguration
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 4
 META_FIELDS = ("eliteInsightsVersion", "gW2Build", "triggerID", "isCM", "success",
                "durationMS", "duration", "timeStartStd", "timeEndStd")
 PLAYER_FIELDS = ("account", "name", "group", "profession", "hasCommanderTag", "friendlyNPC", "notInSquad")
@@ -199,6 +200,35 @@ def extract(root, graph="full", keep_zero=False, source_name=None, whitelist=Non
     players = []
     characters = {}
     main_per_phase = [[i for i in main_targets_of_phase(ph, n_t) if i in rel_set] for ph in phases]
+
+    # ---- Gruppenwerte ueber ALLE Spieler (auch Nicht-Whitelist). Nur Zahlen, keine Namen.
+    real = [pl for pl in raw_players if not pl.get("friendlyNPC")]
+    owner = {pl["name"]: i for i, pl in enumerate(real) if pl.get("name")}
+    mech_wl_g = flt.get("mechanics")
+    owners_by_mech = {}
+    for m in root.get("mechanics") or []:
+        label = mech_label(m)
+        if mech_wl_g and label not in mech_wl_g and m.get("fullName") not in mech_wl_g:
+            continue
+        owners_by_mech.setdefault(label, []).extend(
+            owner[e.get("actor")] for e in (m.get("mechanicsData") or []) if e.get("actor") in owner)
+    g_mech = {}
+    for n, o in owners_by_mech.items():
+        if o:                                   # counts: Wert JEDES Spielers (inkl. 0), absteigend, ohne Namen -> Rang/Anteil
+            c = collections.Counter(o)
+            g_mech[n] = {"count": len(o), "players": len(c),
+                         "counts": sorted((c.get(i, 0) for i in range(len(real))), reverse=True)}
+    metric_values = {"dps": [], "breakbar_damage": [], "resurrects": []}
+    for pl in real:
+        dps_t = pl.get("dpsTargets") or []
+        o_g0 = orient_of(dps_t, n_t, n_ph)
+        tot = sum_dicts(pick(at(dps_t, t, 0, o_g0) or {}, DPS_FIELDS) for t in (main_per_phase[0] if main_per_phase else []))
+        metric_values["dps"].append(tot.get("dps", 0))
+        metric_values["breakbar_damage"].append(tot.get("breakbarDamage", 0))
+        metric_values["resurrects"].append(((pl.get("support") or [{}])[0] or {}).get("resurrects", 0) or 0)
+    g_metrics = {k: sum(v) for k, v in metric_values.items()}
+    group = {"player_count": len(real), "mechanics": g_mech, "metrics": g_metrics,
+             "metric_values": {k: sorted(v, reverse=True) for k, v in metric_values.items()}}
     for pl in raw_players:
         if wl is not None and (pl.get("account") or "").casefold() not in wl:
             continue
@@ -321,6 +351,7 @@ def extract(root, graph="full", keep_zero=False, source_name=None, whitelist=Non
         "main_targets_per_phase": main_per_phase,
         "targets": targets,
         "characters": characters,
+        "group": group,
         "players": players,
         "mechanics": mechanics,
         "buffs_info": buffs_info,
@@ -710,6 +741,12 @@ def main():
     ap.add_argument("--state", default="catalog_state.json", help="Merkdatei bereits katalogisierter Logs")
     ap.add_argument("--redo", action="store_true", help="bei --catalog: Merkdatei ignorieren, alles neu parsen")
     a = ap.parse_args()
+
+    missing = [x for x in a.inputs if not Path(x).exists()]
+    for x in missing:
+        print(f"! Pfad nicht gefunden: {x}", file=sys.stderr)
+    if missing:
+        print("  Tipp: Pfade mit Leerzeichen (z. B. \"Guild Wars 2\") muessen in Anfuehrungszeichen stehen.", file=sys.stderr)
 
     if a.catalog:
         ei = load_ei_settings(a.config, a.ei_command)

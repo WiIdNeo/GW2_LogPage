@@ -809,46 +809,46 @@ targets = [
 mechanics = [
   "SulfAcid.A",  # max 209 Ereignisse | Received Sulfuric Acid
   "ToxGeyser.H",  # max 168 Ereignisse | Hit by Toxic Geyser
-  "SulfFroth.H",  # max 71 Ereignisse | Hit by Sulfuric Froth (Acid Projectile from Ura)
+  #"SulfFroth.H",  # max 71 Ereignisse | Hit by Sulfuric Froth (Acid Projectile from Ura)
   "Ste.Prison.H",  # max 58 Ereignisse | Hit by Steam Prison
   "Rising Pressure",  # max 45 Ereignisse | Applied Rising Pressure
   "ErupVent.H",  # max 45 Ereignisse | Hit by Eruption Vent (Geyser Shockwave)
-  "Exposed",  # max 40 Ereignisse | Exposed Applied (Increased incoming damage)
+  #"Exposed",  # max 40 Ereignisse | Exposed Applied (Increased incoming damage)
   "Res",  # max 37 Ereignisse | Res
   "ScalAura.H",  # max 36 Ereignisse | Hit by Scalding Aura (Ura's Hitbox)
   "Pres.Blast.Up",  # max 28 Ereignisse | Lifted in a bubble by Pressure Blast
-  "SulfErup.H",  # max 28 Ereignisse | Hit by Sulfuric Eruption (Geyser Spawn)
+  #"SulfErup.H",  # max 28 Ereignisse | Hit by Sulfuric Eruption (Geyser Spawn)
   "Titn.BrkDmg",  # max 27 Ereignisse | Breakbar Damage done against Titanspawn Geysers
-  "UraJump.H",  # max 26 Ereignisse | Hit by Create Titanspawn Geyser AoE (Ura jump in place)
+  #"UraJump.H",  # max 26 Ereignisse | Hit by Create Titanspawn Geyser AoE (Ura jump in place)
   "Dispel.P",  # max 26 Ereignisse | Dispelled Player (Removed Pressure Blast)
-  "FullSteam.H",  # max 25 Ereignisse | Hit by Full Steam (Fumaroller Dash)
+  #"FullSteam.H",  # max 25 Ereignisse | Hit by Full Steam (Fumaroller Dash)
   "Pres.Blast.T",  # max 20 Ereignisse | Targeted by Pressure Blast (Bubbles)
-  "Brk.Brkn",  # max 19 Ereignisse | Got Exposed (Broke Breakbar)
-  "Toxc.BrkDmg",  # max 19 Ereignisse | Breakbar Damage done against Toxic Geysers
+  #"Brk.Brkn",  # max 19 Ereignisse | Got Exposed (Broke Breakbar)
+  #"Toxc.BrkDmg",  # max 19 Ereignisse | Breakbar Damage done against Toxic Geysers
   "Pick-up Shard",  # max 18 Ereignisse | Picked up the Bloodstone Shard
   "Dispel",  # max 14 Ereignisse | Used Dispel (SAK)
   "Downed",  # max 12 Ereignisse | Downed
   "Got up",  # max 11 Ereignisse | Got up
   "Lnch",  # max 10 Ereignisse | Launched
-  "UraJump.CC",  # max 10 Ereignisse | CC by Create Titanspawn Geyser AoE (Ura jump in place)
-  "MantGrind.H",  # max 10 Ereignisse | Hit by Mantle Grinder (Fumaroller Roll)
+  #"UraJump.CC",  # max 10 Ereignisse | CC by Create Titanspawn Geyser AoE (Ura jump in place)
+  #"MantGrind.H",  # max 10 Ereignisse | Hit by Mantle Grinder (Fumaroller Roll)
   "Lckt",  # max 7 Ereignisse | Lockout
   "Ste.Prison.T",  # max 6 Ereignisse | Targeted by Steam Prison (Ring)
   "Dead",  # max 5 Ereignisse | Dead
   "Knck.Pll",  # max 5 Ereignisse | Knocked Back or Pulled
-  "SulfGey.T",  # max 5 Ereignisse | Targeted by Sulfuric Geyser (Spawn)
+  #"SulfGey.T",  # max 5 Ereignisse | Targeted by Sulfuric Geyser (Spawn)
   "Knck.Dwn",  # max 2 Ereignisse | Knocked Down
   "DC",  # max 1 Ereignisse | DC
   "Flt",  # max 1 Ereignisse | Float
-  "Return",  # max 1 Ereignisse | Ura returned to the center
+  #"Return",  # max 1 Ereignisse | Ura returned to the center
 ]
 
 # Greer, the Blightbringer  (2 Log(s))
 [boss."26725"]
 targets = [
   26725,  # Greer, the Blightbringer
-  26742,  # Reeg, the Blighter
-  26771,  # Gree, the Bringer
+  #26742,  # Reeg, the Blighter
+  #26771,  # Gree, the Bringer
 ]
 mechanics = [
   "BoonCorrupt",  # max 306 Ereignisse | Boons corrupted (any)
@@ -864,7 +864,7 @@ mechanics = [
   "Lnch",  # max 44 Ereignisse | Launched
   "EnfMiasma.H",  # max 43 Ereignisse | Hit by Enfeebling Miasma
   "Res",  # max 36 Ereignisse | Res
-  "Empowered",  # max 32 Ereignisse | Gained Empowered
+  #"Empowered",  # max 32 Ereignisse | Gained Empowered
   "Sweep.H",  # max 28 Ereignisse | Hit by Sweep the Mold
   "Knck.Pll",  # max 27 Ereignisse | Knocked Back or Pulled
   "NoxBlight.H",  # max 24 Ereignisse | Hit by Noxious Blight
@@ -874,14 +874,14 @@ mechanics = [
   "Got up",  # max 13 Ereignisse | Got up
   "Knck.Dwn",  # max 12 Ereignisse | Knocked Down
   "Dead",  # max 10 Ereignisse | Dead
-  "ErupRot.T",  # max 9 Ereignisse | Targeted by Eruption of Rot (Green)
+  #"ErupRot.T",  # max 9 Ereignisse | Targeted by Eruption of Rot (Green)
   "BlobBlight.T",  # max 9 Ereignisse | Targeted by Blob of Blight
   "BlobBlight.H",  # max 6 Ereignisse | Hit by Blob of Blight
   "DC",  # max 6 Ereignisse | DC
   "Lckt",  # max 5 Ereignisse | Lockout
   "PlagueRot",  # max 5 Ereignisse | Received Plague Rot
   "InfRot.T",  # max 4 Ereignisse | Targeted by Infectious Rot (Hit by Noxious Blight)
-  "Brk.Brkn",  # max 3 Ereignisse | Got Exposed (Broke Breakbar)
+  #"Brk.Brkn",  # max 3 Ereignisse | Got Exposed (Broke Breakbar)
 ]
 
 # Decima, the Stormsinger  (2 Log(s))
@@ -895,7 +895,7 @@ mechanics = [
   "ChorThun.H",  # max 57 Ereignisse | Hit by Chorus of Thunder (Spreads AoE / Conduit AoE)
   "SparkAura2.H",  # max 46 Ereignisse | Sparking Aura (Absorbed Tier 2 Green Damage)
   "SparkAura3.H",  # max 45 Ereignisse | Sparking Aura (Absorbed Tier 3 Green Damage)
-  "ChorThun.T",  # max 41 Ereignisse | Targeted by Chorus of Thunder (Spreads)
+  #"ChorThun.T",  # max 41 Ereignisse | Targeted by Chorus of Thunder (Spreads)
   "SeisCrash.H",  # max 40 Ereignisse | Hit by Seismic Crash (Concentric Rings)
   "Res",  # max 33 Ereignisse | Res
   "Fluxlance.T",  # max 33 Ereignisse | Targeted by Fluxlance
@@ -903,19 +903,19 @@ mechanics = [
   "FluxFusi.H",  # max 26 Ereignisse | Hit by Fluxlance Fusillade (Sequential Orange Arrows)
   "FluxInc.H",  # max 23 Ereignisse | Hit by Fluxlance with Harmonic Sensitivity
   "Charge",  # max 21 Ereignisse | Charge Stacks
-  "FluxOrder.T",  # max 20 Ereignisse | Targeted by Fluxlance (Target Order)
+  #"FluxOrder.T",  # max 20 Ereignisse | Targeted by Fluxlance (Target Order)
   "FluxRed.T",  # max 17 Ereignisse | Targeted by FluxlANCE (Red Arrow)
   "Downed",  # max 11 Ereignisse | Downed
   "Dead",  # max 9 Ereignisse | Dead
-  "Exposed",  # max 9 Ereignisse | Exposed Applied (Increased incoming damage)
+  #"Exposed",  # max 9 Ereignisse | Exposed Applied (Increased incoming damage)
   "FulAura.H",  # max 6 Ereignisse | Hit by Fulgent Aura (Conduit AoE)
   "Got up",  # max 5 Ereignisse | Got up
-  "SeisCrash.CC",  # max 5 Ereignisse | CC by Seismic Crash (Concentric Rings)
-  "Fluxlance.H",  # max 5 Ereignisse | Hit by Fluxlance (Single Orange Arrow)
-  "FulFence.H",  # max 5 Ereignisse | Hit by Fulgent Fence (Barriers between Conduits)
+  #"SeisCrash.CC",  # max 5 Ereignisse | CC by Seismic Crash (Concentric Rings)
+  #"Fluxlance.H",  # max 5 Ereignisse | Hit by Fluxlance (Single Orange Arrow)
+  #"FulFence.H",  # max 5 Ereignisse | Hit by Fulgent Fence (Barriers between Conduits)
   "Lnch",  # max 2 Ereignisse | Launched
   "Lckt",  # max 2 Ereignisse | Lockout
-  "Brk.Brkn",  # max 2 Ereignisse | Got Exposed (Broke Breakbar)
+  "#Brk.Brkn",  # max 2 Ereignisse | Got Exposed (Broke Breakbar)
   "SeisCrash.Dwn",  # max 1 Ereignisse | Downed by Seismic Crash (Hitbox)
   "Earthrend.Dwn",  # max 1 Ereignisse | Downed by Earthrend (Hitbox)
 ]

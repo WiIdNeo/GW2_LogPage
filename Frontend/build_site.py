@@ -9,7 +9,7 @@ Seiten:
   style.css, filter.js
 
 Jeder filterbare Container hat die Klasse 'item' plus Klassen wie
-  player-<slug>  boss-<short>  mode-cm|mode-normal
+  player-<slug>  boss-<short>  mode-normal|mode-cm|mode-lcm
 Das JS blendet Items per `hidden` aus, wenn sie die gewaehlte Klasse nicht haben.
 
 Aufruf:  python3 build_site.py [--db gw2logs.sqlite] [--out site]
@@ -41,8 +41,15 @@ def boss_slug(b):
     return slug(b["short"] or f"id{abs(b['game_id'])}")
 
 
+def boss_mode(b):
+    """normal | cm | lcm. LCM erkennt man am Wingman-Schluessel mit doppeltem Minus ('--25989')."""
+    if str(b["key"]).startswith("--"):
+        return "lcm"
+    return "cm" if b["is_cm"] else "normal"
+
+
 def boss_classes(b):
-    return f"boss-{boss_slug(b)} mode-{'cm' if b['is_cm'] else 'normal'}"
+    return f"boss-{boss_slug(b)} mode-{boss_mode(b)}"
 
 
 def fmt_time(t):
@@ -186,7 +193,7 @@ def build_index(entries, players, reports=frozenset()):
     filters = f"""<div id="filters">
 <label>Spieler <select id="player" data-filter>{options(player_opts, "Alle")}</select></label>
 <label>Boss <select id="boss" data-filter>{options(boss_opts, "Alle")}</select></label>
-<label>Modus <select id="mode" data-filter>{options([("mode-normal", "Normal"), ("mode-cm", "CM")], "Alle")}</select></label>
+<label>Modus <select id="mode" data-filter>{options([("mode-normal", "Normal"), ("mode-cm", "CM"), ("mode-lcm", "LCM")], "Alle")}</select></label>
 <label>Ergebnis <select id="result" data-filter>{options([("result-ok", "Erfolg"), ("result-fail", "Niederlage")], "Alle")}</select></label>
 <span id="count"></span>
 </div>"""
@@ -278,7 +285,7 @@ def build_player(db, p, bosses, entries, reports=frozenset()):
     parts.append(
         '<h2>Bossspezifisch</h2><div id="filters">'
         f'<label>Boss <select id="boss" data-filter>{options(boss_opts, "Alle")}</select></label>'
-        f'<label>Modus <select id="mode" data-filter>{options([("mode-normal", "Normal"), ("mode-cm", "CM")], "Alle")}</select></label>'
+        f'<label>Modus <select id="mode" data-filter>{options([("mode-normal", "Normal"), ("mode-cm", "CM"), ("mode-lcm", "LCM")], "Alle")}</select></label>'
         '</div><table><thead><tr><th>Boss</th>'
         + "".join(f"<th>{CAT_SHORT[c]}</th>" for c in CATS)
         + f'</tr></thead><tbody>{"".join(rows) or "<tr><td colspan=6>Noch keine Daten</td></tr>"}</tbody></table>')
@@ -311,6 +318,54 @@ def kv_list(pairs):
         for k, v in pairs) + "</ul>"
 
 
+def stat_value(shown, st):
+    """'2 · 66.7 % · Platz 1/3' - Wert, Anteil an der Gruppensumme und Rang unter allen Spielern."""
+    if not st or st.get("total", 0) <= 0:                # Summe 0: Rang waere bedeutungslos
+        return str(shown)
+    parts = [str(shown)]
+    if st.get("share") is not None:
+        parts.append(f"{st['share']:g} %")
+    parts.append(f"Platz {st['rank']}/{st['n']}")
+    return " · ".join(parts)
+
+
+def roles_html(roles):
+    if not roles:
+        return ""
+    return '<ul class="roles">' + "".join(
+        f'<li><b>{esc(r["name"])}</b>'
+        + (f' <span class="muted">({esc("; ".join(r["why"]))})</span>' if r.get("why") else "") + "</li>"
+        for r in roles) + "</ul>"
+
+
+def findings_html(fl):
+    if not fl:
+        return '<p class="muted"><i>Keine Auffälligkeiten.</i></p>'
+    li = "".join(
+        f'<li class="{"crit" if f["critical"] else "info"}">{"⚠ " if f["critical"] else "ℹ "}{esc(f["text"])}'
+        + (f'<br><a href="{esc(f["link"])}" target="_blank" rel="noopener">Erklärung</a>' if f.get("link") else "")
+        + "</li>" for f in fl)
+    return f'<ul class="findings">{li}</ul>'
+
+
+def group_section(slim, boss_key, rules):
+    """Abschnitt 'Gruppe': Regeln mit compare = "total" und Gruppensummen (ueber alle Spieler im Log)."""
+    g = report_engine.evaluate_group(slim, boss_key, rules)
+    v = g["values"]
+    if not slim.get("group"):
+        return ""                                       # aeltere Analyse ohne Gruppenwerte
+    crit = sum(1 for f in g["findings"] if f["critical"])
+    num = report_engine._num
+    values = ("<h3>Mechaniken <small>(Summe, betroffene Spieler)</small></h3>"
+              + kv_list([(n, f"{i['count']} ({i['players']})") for n, i in sorted(v["mechanics"].items())])
+              + "<h3>Metriken (Summe)</h3>"
+              + kv_list([(report_engine.METRIC_LABEL.get(k, k), num(x)) for k, x in v["metrics"].items()]))
+    return ('<section id="gruppe"><h2>Gruppe'
+            + (f' <span class="crit badge">{crit} kritisch</span>' if crit else "")
+            + f'<small>{v["player_count"]} Spieler im Log</small></h2>{findings_html(g["findings"])}'
+            f'<details><summary>Alle Werte</summary>{values}</details></section>')
+
+
 def build_report(l, b, plist, slim, rules):
     """Eine Seite je Log: alle Whitelist-Spieler des Logs, je Spieler die Auffaelligkeiten laut Regeln."""
     evals = {e["account"].casefold(): e for e in report_engine.evaluate(slim, l["boss_key"], rules)}
@@ -321,24 +376,20 @@ def build_report(l, b, plist, slim, rules):
     head = ['<p><a href="index.html">← Log-Übersicht</a></p>',
             f'<p>{fmt_time(l["encounter_time"])} UTC<br>{ok}<br>Dauer {dur}</p>',
             links_html(link(l["dps_url"], "dps.report"), link(l["wm_url"], "Wingman")),
-            '<p class="muted">Spieler</p><div class="toc">' + "".join(
-                f'<a href="#p-{player_slug(p["account"])}">{esc(p["account"])}</a>' for p, _ in shown) + "</div>"]
-    parts = []
+            '<p class="muted">Springe zu</p><div class="toc">'
+            + ('<a href="#gruppe">Gruppe</a>' if slim.get("group") else "")
+            + "".join(f'<a href="#p-{player_slug(p["account"])}">{esc(p["account"])}</a>' for p, _ in shown) + "</div>"]
+    parts = [group_section(slim, l["boss_key"], rules)]
     for p, ev in shown:
         fl = ev["findings"]
         crit = sum(1 for f in fl if f["critical"])
-        if fl:
-            li = "".join(
-                f'<li class="{"crit" if f["critical"] else "info"}">{"⚠ " if f["critical"] else "ℹ "}{esc(f["text"])}'
-                + (f'<br><a href="{esc(f["link"])}" target="_blank" rel="noopener">Erklärung</a>' if f.get("link") else "")
-                + "</li>" for f in fl)
-            body = f'<ul class="findings">{li}</ul>'
-        else:
-            body = '<p class="muted"><i>Keine Auffälligkeiten.</i></p>'
+        body = findings_html(fl)
         v = ev["values"]
         num = report_engine._num
-        values = ("<h3>Mechaniken</h3>" + kv_list([(n, str(c)) for n, c in v["mechanics"].items()])
-                  + "<h3>Metriken</h3>" + kv_list([(report_engine.METRIC_LABEL.get(k, k), num(x))
+        ms, xs = v.get("mechanic_stats") or {}, v.get("metric_stats") or {}
+        values = ("<h3>Mechaniken <small>(Anzahl · Anteil an allen Spielern · Platz)</small></h3>"
+                  + kv_list([(n, stat_value(c, ms.get(n))) for n, c in v["mechanics"].items()])
+                  + "<h3>Metriken</h3>" + kv_list([(report_engine.METRIC_LABEL.get(k, k), stat_value(num(x), xs.get(k)))
                                                     for k, x in v["metrics"].items()])
                   + "<h3>Buffs <small>(Uptime % bzw. Ø Stacks)</small></h3>"
                   + kv_list([(n, num(x)) for n, x in v["buffs"].items()])
@@ -346,7 +397,7 @@ def build_report(l, b, plist, slim, rules):
         sub = " – ".join(x for x in [ev.get("character"), ev.get("profession")] if x)
         parts.append(f'<section id="p-{player_slug(p["account"])}"><h2>{esc(p["account"])}'
                      + (f' <span class="crit badge">{crit} kritisch</span>' if crit else "")
-                     + f'<small>{esc(sub)}</small></h2>{body}<details><summary>Alle Werte</summary>{values}</details></section>')
+                     + f'<small>{esc(sub)}</small></h2>{roles_html(ev.get("roles"))}{body}<details><summary>Alle Werte</summary>{values}</details></section>')
     return page(f'Bewertung: {b["name"]}', "\n".join(head + parts))
 
 
@@ -367,6 +418,7 @@ select{background:var(--head);color:var(--fg);border:1px solid var(--line);borde
 .pl{white-space:nowrap}
 .muted{color:var(--muted)}
 .badge{font-size:.6em;font-weight:normal;margin-left:.4rem}
+.roles{list-style:none;padding:0;margin:.3rem 0 .6rem}
 .crit{color:var(--crit)}
 .info{color:var(--muted)}
 .links{display:flex;flex-wrap:wrap;gap:.15rem 1rem}

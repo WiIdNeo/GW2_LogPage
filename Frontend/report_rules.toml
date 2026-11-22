@@ -13,12 +13,91 @@
 #   text_if_listed_not_critical   Text, wenn nur informativ gelistet
 #   link                          Link zur Erklaerung
 #   professions = ["Firebrand"]   Regel nur fuer diese Professionen / Elite-Spezialisierungen
+#   compare = "player"|"total"|"share"   (nur mechanic und metric; Metrik nur dps, breakbar_damage, resurrects)
+#       player  Wert des Spielers (Default)
+#       total   Summe ueber ALLE Spieler im Log, auch Randoms; Ergebnis steht einmal im Abschnitt "Gruppe"
+#       share   Anteil des Spielers an dieser Summe in %; Ergebnis je Spieler
+#   min_total = 3                 bei share: nur anwenden, wenn die Gruppensumme >= 3 ist
+#   of = "Dead"                   Quelle, falls der Regelname abweicht -> mehrere Regeln pro Mechanik moeglich
 # Platzhalter: {value} {count} {threshold} {rule} {player} {account} {character} {time} {times}
+#   bei total/share zusaetzlich: {total} (Gruppensumme) {players} (betroffene Spieler) {player_count} {share}
+#   Rang (wenn Gruppenwerte vorhanden): {rank} (Platz von oben, 1 = meiste) {rank_bottom} (von unten) {share} {total}
+#   {roles} = erkannte Rollen des Spielers
+#   roles = ["Tank"] / not_roles = ["Tank"]  Regel nur fuer / nicht fuer Spieler mit dieser Rolle
 #   {time} = erstes Auftreten (m:ss), {times} = bis zu 5 Zeitpunkte
 # Metriken: dps, breakbar_damage, flanking_percent, resurrects  (Phase 0, Hauptziele)
 # Mechaniken (Name) siehe analysis_filter.toml - sie stehen immer in den Daten, auch ohne Regel.
 
 # --- Beispiele (Namen bitte gegen analysis_filter.toml / buffs_info pruefen) ---
+[mechanic."Dead"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du bist {value}x gestorben (zuerst bei {time})."
+
+# [mechanic."Beispiel-Mechanik"]
+# critical = 1
+# link = "https://wiki.guildwars2.com/wiki/..."
+# text_if_listed_critical = "Du wurdest {value}x von Beispiel-Mechanik getroffen ({times}). Das sollte dich nie treffen."
+
+# [buff."Might"]
+# critical_below = 15
+# text_if_listed_critical = "Wenig Macht ({value} Ø Stacks, erwartet mind. {threshold})."
+
+# [metric.flanking_percent]
+# critical_below = 50
+# professions = ["Weaver"]
+# text_if_listed_critical = "Nur {value}% Flankentreffer."
+
+# [consumables]
+# critical_below = 2
+# text_if_listed_critical = "Nur {value} Consumable(s) aktiv (Food + Utility erwartet)."
+
+# [boss."-17194".mechanic."Slam"]
+# critical = 2
+
+# --- Gruppenwerte (Gesamtmenge ueber alle Spieler; erst fuer Logs, die nach dem Update analysiert wurden) ---
+# [mechanic."Dead (Gruppe)"]
+# of = "Dead"
+# compare = "total"
+# critical = 3
+# text_if_listed_critical = "Die Gruppe ist {value}x gestorben ({players} von {player_count} Spielern)."
+
+# [mechanic."Dead (Anteil)"]
+# of = "Dead"
+# compare = "share"
+# min_total = 3
+# critical = 50
+# text_if_listed_critical = "Du hast {share}% aller Tode verursacht ({count} von {total})."
+
+# [metric."DPS-Anteil"]
+# of = "dps"
+# compare = "share"
+# critical_below = 5
+# text_if_listed_critical = "Nur {value}% des Gruppenschadens."
+
+# --- Rollen: aus dem Vergleich mit ALLEN Spielern im Log (Platz und Anteil werden beim Einlesen berechnet) ---
+# [role."Tank"]
+# description = "bekommt die meisten Treffer ab"
+# match = "any"                    # any (Default) = ein Kriterium reicht, all = alle muessen zutreffen
+# criteria = [
+#   { source = "mechanic", name = "Beispiel-Mechanik", top = 1, min_total = 4 },   # Platz 1 von oben, Summe >= 4
+#   { source = "mechanic", name = "Andere-Mechanik", share_min = 40 },             # mindestens 40 % aller Ereignisse
+# ]
+#   Bedingungen: top = N (Platz <= N von oben, Wert > 0) | bottom = N (Platz <= N von unten, Nullen zaehlen mit)
+#                share_min / share_max (in %) | min_total (Gruppensumme mindestens, Default 1)
+#   source = "metric": dps, breakbar_damage, resurrects
+# Boss-spezifisch: [boss."-17194".role."Tank"]
+# Die Rolle steht im Bericht mit Beleg (z. B. "Beispiel-Mechanik: 5, 55.6 %, Platz 1 von 10"). Regeln koennen sie
+# mit roles / not_roles nutzen, z. B.:
+# [mechanic."Beispiel-Mechanik (Tank)"]
+# of = "Beispiel-Mechanik"
+# roles = ["Tank"]
+# critical = 10
+# text_if_listed_critical = "Als Tank {value}x getroffen (Platz {rank} von {player_count})."
+
+
+
+
 [mechanic."Dead"]
 critical = 1
 list_if_not_critical = false
@@ -29,24 +108,92 @@ critical = 1
 list_if_not_critical = false
 text_if_listed_critical = "Du bist {value}x gedownt."
 
+[mechanic."Launched"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest geworfen."
+
+[mechanic."DC"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du bist disconectet, kauf dir mal ordentliches Internet!"
+
+[mechanic."Lckt"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du hast im Kampf umgeloggt."
+
+[mechanic."Knck.Pll"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest geschubst oder gezogen."
+
+# Sabetha
+
+[boss."15375".role."Flak Kite"]
+description = "hat das Flak aus der Gruppe herausgekitet"
+criteria = [
+  { source = "mechanic", name = "Flak", top = 1, min_total = 10 },
+]
+
+[boss."15375".mechanic."Flak"]
+critical = 3
+not_roles = ["Flak Kite"]
+list_if_not_critical = false
+text_if_listed_critical = "Du hast übermäßig viel im Flak gestanden. Achte daruaf, dass du nicht in den Flak-AoEs stehst."
+
+[boss."15375".mechanic."Cannon"]
+critical = 2
+list_if_not_critical = false
+text_if_listed_critical = "Du hast übermäßig viel in den Kanonenschüssen gestanden."
+
+[boss."15375".mechanic."Sap Bomb (Kite)"]
+of = "Sap Bomb"
+compare = "share"                # Wert = Anteil des Spielers an allen Flak-Treffern in %
+roles = ["Flak Kite"]            # nur für Spieler mit dieser Rolle
+min_total = 5                   # nur bewerten, wenn die Gruppe insgesamt mind. 10 Treffer hatte
+critical_below = 75              # Meldung, wenn der Anteil UNTER 60 % liegt
+text_if_listed_critical = "Als Flak Kite nur {share} % der Sap Bombs abbekommen ({count} von {total}, Platz {rank}) Achte darauf, dass du näher am Kite Spot Richtung Kreis-Marker stehst."
+
+[boss."15375".mechanic."Kick Bomb"]
+of = "Kick Bomb"
+compare = "share"                # Wert = Anteil des Spielers an allen Flak-Treffern in %
+critical_below = 8              # Meldung, wenn der Anteil UNTER 60 % liegt
+text_if_listed_critical = "Du hast weniger als 8% der Bomben weggetreten. Achte darauf, dass du sie wegtrittst, wenn du sie bemerkst."
+
+
+# Gorseval
+
+[boss."15429".mechanic."Black"]
+critical = 7
+list_if_not_critical = true
+min_total = 1
+text_if_listed_critical = "Ihr wurdet von mehr als 6 Blacks getroffen. Das nächste mal solltet ihr mehr CC machen!"
+
+[boss."15429".mechanic."Orb Debuff"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du hast in dem AoE des Blauen Orbs gestanden, sieh dir den Abschnitt zu Phase 2 nochmal genauer an."
+link = "https://snowcrows.com/guides/raids/spirit-vale/gorseval"
+
+[boss."15429".mechanic."Slam"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest vom Slam getroffen, achte darauf, dass du nahe genug stehst, um Stabbi zu erhalten."
+
+[boss."15429".mechanic."Egg"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest ge-eggt. Achte darauf rechtzeitig zu dodgen, wenn unter allen SPielern AoEs auftauchen."
+
+
+# Vale Guardian
+
+[boss."15438".mechanic."Seeker"]
+critical = 5
+list_if_not_critical = true
+text_if_listed_critical = "Du hast relativ lang in den Seeker-AoEs gestanden. Achte darauf, dass du nicht in Roten AoEs stehst"
 
 
 
 
-
-# [mechanic."Beispiel-Mechanik"]
-# critical = 1
-# link = "https://wiki.guildwars2.com/wiki/..."
-# text_if_listed_critical = "Du wurdest {value}x von Beispiel-Mechanik getroffen ({times}). Das sollte dich nie treffen."
-
-# [metric.flanking_percent]
-# critical_below = 50
-# professions = ["Weaver"]
-# text_if_listed_critical = "Du hast nur {value} Sekunden geflankt. Wenn du kein Tank warst, solltest du mehr darauf achten hinter dem Boss zu stehen."
-
-# [consumables]
-# critical_below = 2
-# text_if_listed_critical = "Nur {value} Consumable(s) aktiv (Food + Utility erwartet)."
-
-# [boss."-17194".mechanic."Slam"]
-# critical = 2

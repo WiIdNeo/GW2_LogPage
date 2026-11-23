@@ -1134,3 +1134,181 @@ critical = 1
 list_if_not_critical = false
 text_if_listed_critical = "Du hast in einem kleinen magma-Feld gestanden."
 
+[boss."-22000".mechanic."Magma.F"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du hast in einem großen Magma-Feld gestanden."
+
+[boss."-22000".role."Pylon"]
+description = "Du hast Pylon gespielt."
+criteria = [
+  { source = "mechanic", name = "Orb caught", top = 3 },
+]
+
+[boss."-22000".role."Tank"]
+description = "Du hast den Boss getankt."
+criteria = [
+  { source = "mechanic", name = "Flux Disruptor Activated", not_roles = "Pylon", top = 1 },
+]
+
+[boss."-220000".mechanic."Entropic.Expl"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Eine Anormalie ist explodiert. Sorge das nächste Mal dafür, dass sie stirbt!"
+
+[boss."-220000".mechanic."Dome.KB"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von der Dome um Qadim gepusht. Dies endet schnell im Tod an den Feuerfeldern."
+
+[boss."-220000".mechanic."K.KB"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von der Pylon-Explosion gepusht. Dies endet schnell im Tod an den Feuerfeldern."
+
+[boss."-220000".mechanic."A.Prj.H"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest vom Pfeil getroffen."
+
+[boss."-220000".mechanic."A.Prj.E"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von der Explosion des Pfeils getroffen. Achte darauf, dass du genügend abstand zu den Leuten hälst, die vom Pfeil anvisiert wurden."
+
+[boss."-220000".mechanic."Rush.H"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von Qadim überfahren."
+
+
+# Qadim the Peerless
+
+[boss."22000".mechanic."Lightning"]
+of = ["S.Lght.H", "Lght.H" ]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von einem Blitz getroffen. Achte auf den Leuchtenden Bildschirmrand und weiche ihm aus."
+
+[boss."22000".mechanic."S.Magma.F"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du hast in einem kleinen magma-Feld gestanden."
+
+[boss."22000".mechanic."Magma.F"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du hast in einem großen Magma-Feld gestanden."
+
+[boss."22000".role."Pylon"]
+description = "Du hast Pylon gespielt."
+criteria = [
+  { source = "mechanic", name = "Orb caught", top = 3 },
+]
+
+[boss."22000".role."Tank"]
+description = "Du hast den Boss getankt."
+criteria = [
+  { source = "mechanic", name = "Flux Disruptor Activated", not_roles = "Pylon", top = 1 },
+]
+
+[boss."22000".mechanic."Entropic.Expl"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Eine Anormalie ist explodiert. Sorge das nächste Mal dafür, dass sie stirbt!"
+
+[boss."22000".mechanic."Dome.KB"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von der Dome um Qadim gepusht. Dies endet schnell im Tod an den Feuerfeldern."
+
+[boss."22000".mechanic."K.KB"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von der Pylon-Explosion gepusht. Dies endet schnell im Tod an den Feuerfeldern."
+
+[boss."22000".mechanic."A.Prj.H"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest vom Pfeil getroffen."
+
+[boss."22000".mechanic."A.Prj.E"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von der Explosion des Pfeils getroffen. Achte darauf, dass du genügend abstand zu den Leuten hälst, die vom Pfeil anvisiert wurden."
+
+[boss."22000".mechanic."Rush.H"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von Qadim überfahren."
+
+
+# Greer
+
+[boss."26725".mechanic."AuraCorr.H"]
+critical = 10
+list_if_not_critical = false
+text_if_listed_critical = "Du hast für {value} Sekunden in der HitBox gestanden, das ist wesentlich mehr, als notwendig."
+
+[boss."26725".mechanic."EnfMiasma.H"]
+critical = 10
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von der Tripple Cone Attack getroffen. Achte darauf das nächste mal schneller durch die Hitbox abzuhauen."
+
+[boss."26725".mechanic."PleagueRot"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du hast dich mit Corona infiziert."
+
+[boss."26725".mechanic."Cage.H"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von einem Pfeil getroffen."
+
+[boss."26725".mechanic."BlobBlight.H"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von einem Orb getroffen. Dodge das nächste mal, um es zu löschen!"
+
+
+# Decima
+
+[boss."26774".mechanic."SparkAura"]
+of = ["SparkAura1.H", "SparkAura2.H", "SparkAura3.H"]
+critical_below = 10
+list_if_not_critical = false
+text_if_listed_critical = "Du hast keine 10 Ticks lang Greens gesammelt, mach das nächste Mal mehr!"
+
+[boss."26774".mechanic."ChorThun.H"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest vom Spread getroffen. Bleibe das nächste mal auf der Gruppe und dodge im richtigen Moment seitwärts!"
+
+[boss."26774".role."Range Group"]
+description = "Du warst in der Range Gruppe."
+criteria = [
+  { source = "mechanic", name = "Fluxlance.T", top = 5 },
+]
+
+[boss."26774".role."Red Kite"]
+description = "Du hast den Roten Pfeil gekitet."
+criteria = [
+  { source = "mechanic", name = "FluxRed.T", top = 1 },
+]
+
+[boss."26774".role."Range Group"]
+description = "Du warst in der melee Gruppe."
+criteria = [
+  { not_roles = "Range Group", },
+]
+
+[boss."26774".mechanic."Hitbox-Down"]
+of = ["Earthrend.Dwn", "SeisCrash.Dwn", "Earthrend.D"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest in der Hitbox gedownt. Gewöhne dir für alle Wing 8 Bosse an, nicht in der HitBox zu stehen!"
+
+
+# Ura
+
+

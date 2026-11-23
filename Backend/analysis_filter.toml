@@ -1162,7 +1162,7 @@ mechanics = [
   "Shck.KB",  # max 3 Ereignisse | Pushed by Shockwave
   #"Up",  # max 3 Ereignisse | Player lifted up
   "Dome.KB",  # max 2 Ereignisse | Pushed by Dome Shield Knockback
-  "Got up",  # max 2 Ereignisse | Got up
+  #"Got up",  # max 2 Ereignisse | Got up
   "P.KB",  # max 2 Ereignisse | Pushed by Pylon Knockback
   "P.Magma",  # max 2 Ereignisse | Hit by Pylon Magma
   "Rush.H",  # max 2 Ereignisse | Hit by Qadim Rush
@@ -1229,16 +1229,16 @@ targets = [
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
-  "Miss.Alac",  # max 881 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Alac",  # max 881 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   "AuraCorr.H",  # max 699 Ereignisse | Hit by Aura of Corruption (Hitbox)
-  "BoonCorrupt",  # max 609 Ereignisse | Boons corrupted (any)
+  #"BoonCorrupt",  # max 609 Ereignisse | Boons corrupted (any)
   "Stomp.H",  # max 280 Ereignisse | Hit by Stomp the Growth
-  "Miss.Qck",  # max 275 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Qck",  # max 275 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "ScatSpore.H",  # max 251 Ereignisse | Hit by Scattering Sporeblast
   "BlobBlight.H",  # max 164 Ereignisse | Hit by Blob of Blight
   "RotWorld.H",  # max 162 Ereignisse | Hit by Rot the World (Breakbar AoEs)
   "EnfMiasma.H",  # max 116 Ereignisse | Hit by Enfeebling Miasma
-  "Empowered.Gr",  # max 108 Ereignisse | Greer Gained Empowered
+  #"Empowered.Gr",  # max 108 Ereignisse | Greer Gained Empowered
   "Res",  # max 95 Ereignisse | Res
   "Cage.H",  # max 87 Ereignisse | Hit by Cage of Decay
   "ErupRot.S",  # max 70 Ereignisse | Stood in Eruption of Rot (Green)
@@ -1252,7 +1252,7 @@ mechanics = [
   "WaveCor.H",  # max 27 Ereignisse | Hit by Wave of Corruption
   "NoxBlight.H",  # max 26 Ereignisse | Hit by Noxious Blight
   "RippRot.H",  # max 24 Ereignisse | Hit by Ripples of Rot
-  "Got up",  # max 23 Ereignisse | Got up
+  #"Got up",  # max 23 Ereignisse | Got up
   "BlobBlight.T",  # max 20 Ereignisse | Targeted by Blob of Blight
   "Rake.H",  # max 19 Ereignisse | Hit by Rake the Rot
   #"ErupRot.T",  # max 18 Ereignisse | Targeted by Eruption of Rot (Green)
@@ -1278,9 +1278,9 @@ targets = [
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
-  "Miss.Alac",  # max 475 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Alac",  # max 475 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   "SparkAura1.H",  # max 388 Ereignisse | Sparking Aura (Absorbed Tier 1 Green Damage)
-  "Miss.Qck",  # max 182 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Qck",  # max 182 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "SparkAura3.H",  # max 132 Ereignisse | Sparking Aura (Absorbed Tier 3 Green Damage)
   "ChorThun.H",  # max 81 Ereignisse | Hit by Chorus of Thunder (Spreads AoE / Conduit AoE)
   "SparkAuraInc.H",  # max 60 Ereignisse | Hit by Sparking Aura with Galvanic Sensitivity
@@ -1298,7 +1298,7 @@ mechanics = [
   #"Exposed",  # max 18 Ereignisse | Exposed Applied (Increased incoming damage)
   "Charge",  # max 17 Ereignisse | Charge Stacks
   "FluxRed.T",  # max 17 Ereignisse | Targeted by FluxlANCE (Red Arrow)
-  "Got up",  # max 16 Ereignisse | Got up
+  #"Got up",  # max 16 Ereignisse | Got up
   "FulAura.H",  # max 11 Ereignisse | Hit by Fulgent Aura (Conduit AoE)
   "Dead",  # max 10 Ereignisse | Dead
   #"SeisCrash.CC",  # max 10 Ereignisse | CC by Seismic Crash (Concentric Rings)

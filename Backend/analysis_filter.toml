@@ -14,8 +14,8 @@ targets = [
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
-  "Miss.Alac",  # max 437 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
-  "Miss.Qck",  # max 252 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Alac",  # max 437 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Qck",  # max 252 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "Seeker",  # max 127 Ereignisse | Magic Pulse (Hit by Seeker)
   "Floor B",  # max 51 Ereignisse | Unstable Pylon (Blue Floor dmg)
   "Boss TP",  # max 42 Ereignisse | Unstable Magic Spike (Boss Teleport)
@@ -51,9 +51,9 @@ targets = [
 mechanics = [
   # --- neu am 2026-11-22 ---
   "Black",  # max 800 Ereignisse | Hit by Black Goo
-  "Miss.Alac",  # max 193 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Alac",  # max 193 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   "Orb Debuff",  # max 110 Ereignisse | Spectral Darkness (Stood in Orb AoE)
-  "Miss.Qck",  # max 106 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Qck",  # max 106 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   #"Knck.Pll",  # max 26 Ereignisse | Knocked Back or Pulled
   "Slam",  # max 24 Ereignisse | Spectral Impact (KB Slam)
   "Egg",  # max 16 Ereignisse | Ghastly Prison (Egged)
@@ -73,7 +73,7 @@ mechanics = [
 [boss."15375"]
 targets = [
   # --- neu am 2026-11-22 ---
-  -16,  # North Cannon  [in keiner Phase]
+  #-16,  # North Cannon  [in keiner Phase]
   15372,  # Kernan
   15375,  # Sabetha the Saboteur 1
   15404,  # "Knuckles"
@@ -83,8 +83,8 @@ mechanics = [
   # --- neu am 2026-11-22 ---
   "Flak",  # max 379 Ereignisse | Flak Shot (Fire Patches)
   "Cannon",  # max 145 Ereignisse | Cannon Barrage (stood in AoE)
-  "Miss.Qck",  # max 73 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
-  "Miss.Alac",  # max 64 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Qck",  # max 73 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Alac",  # max 64 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   "Karde Flame",  # max 35 Ereignisse | Flame Blast (Karde's Flamethrower)
   #"Timed Bomb",  # max 14 Ereignisse | Got a Timed Bomb (Expanding circle)
   "Sap Bomb",  # max 13 Ereignisse | Got a Sapper Bomb
@@ -94,12 +94,12 @@ mechanics = [
   "Kick Bomb",  # max 5 Ereignisse | Kicked Heavy Bomb
   "Got up",  # max 4 Ereignisse | Got up
   "Launched",  # max 4 Ereignisse | Shell-Shocked (launched up to cannons)
-  "CC.K",  # max 2 Ereignisse | Platform Quake (Breakbar)
-  "CCed.K",  # max 2 Ereignisse | Platform Quake (Breakbar broken)
-  "Kick.B",  # max 2 Ereignisse | Kicked by Bandit
+  #"CC.K",  # max 2 Ereignisse | Platform Quake (Breakbar)
+  #"CCed.K",  # max 2 Ereignisse | Platform Quake (Breakbar broken)
+  #"Kick.B",  # max 2 Ereignisse | Kicked by Bandit
   "Knck.Pll",  # max 2 Ereignisse | Knocked Back or Pulled
-  "TimeB Down",  # max 2 Ereignisse | Downed by Time Bomb
-  "TimeB Kill",  # max 1 Ereignisse | Killed by Time Bomb
+  #"TimeB Down",  # max 2 Ereignisse | Downed by Time Bomb
+  #"TimeB Kill",  # max 1 Ereignisse | Killed by Time Bomb
   # --- neu am 2026-11-22 ---
   "Lnch",  # max 5 Ereignisse | Launched
   "DC",  # max 1 Ereignisse | DC
@@ -117,8 +117,8 @@ targets = [
 mechanics = [
   # --- neu am 2026-11-22 ---
   "Floor",  # max 513 Ereignisse | Toxic Cloud (stood in green floor poison)
-  "Miss.Alac",  # max 352 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
-  "Miss.Qck",  # max 133 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Alac",  # max 352 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Qck",  # max 133 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "Breath",  # max 119 Ereignisse | Halitosis (Flame Breath)
   "Tantrum",  # max 66 Ereignisse | Tantrum (Triple Circles after Ground slamming)
   "Shake",  # max 65 Ereignisse | Spore Release (Coconut Shake)
@@ -147,9 +147,9 @@ targets = [
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
-  "Miss.Alac",  # max 387 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Alac",  # max 387 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   "Tornado.M",  # max 213 Ereignisse | Fiery Vortex (Tornado Matthias)
-  "Miss.Qck",  # max 207 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Qck",  # max 207 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "Refl.Shards",  # max 140 Ereignisse | Blood Shard projectiles reflected during bubble
   #"Knck.Pll",  # max 138 Ereignisse | Knocked Back or Pulled
   "Corr. dmg",  # max 136 Ereignisse | Hit by Corruption AoE
@@ -197,8 +197,8 @@ targets = [
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
-  "Miss.Alac",  # max 712 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
-  "Miss.Qck",  # max 332 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Alac",  # max 712 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Qck",  # max 332 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "Pizza",  # max 286 Ereignisse | Phantasmal Blades (rotating Attack)
   #"Core Hit",  # max 87 Ereignisse | Core was Hit by Player
   "GR.Orb",  # max 64 Ereignisse | Good Red Orb
@@ -213,34 +213,34 @@ mechanics = [
   #"M.B.# 66%",  # max 16 Ereignisse | Magic Blast (Orbs eaten by KC) at 66%
   "Res",  # max 15 Ereignisse | Res
   "Dead",  # max 10 Ereignisse | Dead
-  "Got up",  # max 6 Ereignisse | Got up
+  #"Got up",  # max 6 Ereignisse | Got up
   "BR.Orb",  # max 5 Ereignisse | Bad Red Orb
   "Knck.Dwn",  # max 5 Ereignisse | Knocked Down
   #"Rift#",  # max 5 Ereignisse | Compromised (Pushed Orb through Rifts)
   "BW.Orb",  # max 4 Ereignisse | Bad White Orb
-  "Merge",  # max 2 Ereignisse | Insidious Projection spawn (2 Statue merge)
+  #"Merge",  # max 2 Ereignisse | Insidious Projection spawn (2 Statue merge)
 ]
 
 # Xera  (13 Log(s))
 [boss."16246"]
 targets = [
   # --- neu am 2026-11-22 ---
-  -33,  # Button Bloodstone Shard 1
-  -32,  # Rift Bloodstone Shard 1
-  -12,  # Charged Bloodstone 1
-  -11,  # Phase 2 Bloodstone Shard 1
-  -1,  # Xera Pre Event  [in keiner Phase]
+  #-33,  # Button Bloodstone Shard 1
+  #-32,  # Rift Bloodstone Shard 1
+  #-12,  # Charged Bloodstone 1
+  #-11,  # Phase 2 Bloodstone Shard 1
+  #-1,  # Xera Pre Event  [in keiner Phase]
   16246,  # Xera
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
   "Stacks",  # max 861 Ereignisse | Derangement (Stacking Debuff)
-  "Miss.Alac",  # max 210 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
-  "Miss.Qck",  # max 209 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
-  "Orb Aoe",  # max 137 Ereignisse | Temporal Shred (Stood in Orb Aoe)
-  "Button2",  # max 38 Ereignisse | Bending Chaos (Stood on 2nd Button)
-  "Button1",  # max 35 Ereignisse | Bending Chaos (Stood on 1st Button)
-  "Button3",  # max 33 Ereignisse | Bending Chaos (Stood on 3rd Button)
+  #"Miss.Alac",  # max 210 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Qck",  # max 209 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Orb Aoe",  # max 137 Ereignisse | Temporal Shred (Stood in Orb Aoe)
+  #"Button2",  # max 38 Ereignisse | Bending Chaos (Stood on 2nd Button)
+  #"Button1",  # max 35 Ereignisse | Bending Chaos (Stood on 1st Button)
+  #"Button3",  # max 33 Ereignisse | Bending Chaos (Stood on 3rd Button)
   "Res",  # max 22 Ereignisse | Res
   "Orb",  # max 20 Ereignisse | Temporal Shred (Hit by Red Orb)
   "Downed",  # max 14 Ereignisse | Downed
@@ -249,12 +249,12 @@ mechanics = [
   "TP Back",  # max 10 Ereignisse | Hero's Return (Teleport back)
   "TP Out",  # max 10 Ereignisse | Hero's Departure (Teleport to Platform)
   "Dead",  # max 9 Ereignisse | Dead
-  "Got up",  # max 8 Ereignisse | Got up
+  #"Got up",  # max 8 Ereignisse | Got up
   "Gravity Half",  # max 5 Ereignisse | Half-platform Gravity Well
-  "Shield",  # max 4 Ereignisse | Intervention (got Special Action Key)
-  "CC.X",  # max 3 Ereignisse | Summon Fragment (Xera Breakbar)
-  "CCed.X",  # max 3 Ereignisse | Summon Fragment (Breakbar broken)
-  "CC.X Fail",  # max 1 Ereignisse | Summon Fragment (Failed CC)
+  #"Shield",  # max 4 Ereignisse | Intervention (got Special Action Key)
+  #"CC.X",  # max 3 Ereignisse | Summon Fragment (Xera Breakbar)
+  #"CCed.X",  # max 3 Ereignisse | Summon Fragment (Breakbar broken)
+  #"CC.X Fail",  # max 1 Ereignisse | Summon Fragment (Failed CC)
 ]
 
 # Cairn CM  (4 Log(s))
@@ -263,9 +263,9 @@ targets = [
   17194,  # Cairn the Indomitable
 ]
 mechanics = [
-  "Miss.Alac",  # max 284 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Alac",  # max 284 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   "KB",  # max 112 Ereignisse | Knockback Crystals
-  "Miss.Qck",  # max 93 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Qck",  # max 93 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "Knck.Pll",  # max 92 Ereignisse | Knocked Back or Pulled
   #"Agony 25",  # max 47 Ereignisse | Shared Agony Damage (25% Player's HP)
   #"Agony 50",  # max 25 Ereignisse | Shared Agony Damage (50% Player's HP)
@@ -277,10 +277,10 @@ mechanics = [
   "Lnch",  # max 10 Ereignisse | Launched
   "Port",  # max 10 Ereignisse | Orange Teleport Field
   "Res",  # max 9 Ereignisse | Res
-  "Agony",  # max 8 Ereignisse | Shared Agony Debuff Application
+  #"Agony",  # max 8 Ereignisse | Shared Agony Debuff Application
   "Downed",  # max 7 Ereignisse | Downed
   "Dead",  # max 5 Ereignisse | Dead
-  "Got up",  # max 5 Ereignisse | Got up
+  #"Got up",  # max 5 Ereignisse | Got up
   "Sweep",  # max 5 Ereignisse | Sword Spin (Knockback)
   "Refl.KB",  # max 4 Ereignisse | Reflected Knockback Crystals
   # --- aus Normalmodus uebernommen (CM enthaelt alle Normalmodus-Mechaniken) ---
@@ -330,9 +330,9 @@ targets = [
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
-  "Miss.Alac",  # max 452 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Alac",  # max 452 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   #"Jade",  # max 137 Ereignisse | Jade Soldier's Aura hit
-  "Miss.Qck",  # max 100 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Qck",  # max 100 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   #"Jade Expl",  # max 32 Ereignisse | Jade Soldier's Death Explosion
   "Dead",  # max 10 Ereignisse | Dead
   "Dispel",  # max 7 Ereignisse | Dispelled Jade Soldier Shield
@@ -340,7 +340,7 @@ mechanics = [
   #"Shield.L",  # max 7 Ereignisse | Jade Soldier Shield Lost
   "Downed",  # max 4 Ereignisse | Downed
   "Res",  # max 4 Ereignisse | Res
-  "Got up",  # max 3 Ereignisse | Got up
+  #"Got up",  # max 3 Ereignisse | Got up
   "Claim (SAK)",  # max 2 Ereignisse | Took claim
   "Dispel (SAK)",  # max 1 Ereignisse | Took dispel
   "Lckt",  # max 1 Ereignisse | Lockout
@@ -358,16 +358,16 @@ targets = [
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
-  "Miss.Alac",  # max 119 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Alac",  # max 119 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   #"Jade",  # max 78 Ereignisse | Jade Soldier's Aura hit
-  "Miss.Qck",  # max 48 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Qck",  # max 48 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   #"Jade Expl",  # max 30 Ereignisse | Jade Soldier's Death Explosion
   "Res",  # max 9 Ereignisse | Res
   #"Shield",  # max 7 Ereignisse | Jade Soldier Shield
   #"Shield.L",  # max 7 Ereignisse | Jade Soldier Shield Lost
   "Dispel",  # max 6 Ereignisse | Dispelled Jade Soldier Shield
   "Downed",  # max 4 Ereignisse | Downed
-  "Got up",  # max 4 Ereignisse | Got up
+  #"Got up",  # max 4 Ereignisse | Got up
   "Dead",  # max 3 Ereignisse | Dead
   "Lckt",  # max 3 Ereignisse | Lockout
   "Claim (SAK)",  # max 1 Ereignisse | Took claim
@@ -387,8 +387,8 @@ targets = [
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
-  "Miss.Alac",  # max 101 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
-  "Miss.Qck",  # max 99 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Alac",  # max 101 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Qck",  # max 99 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "S.Pls",  # max 66 Ereignisse | Effigy Pulse (Stood in Spear AoE)
   "Lckt",  # max 34 Ereignisse | Lockout
   "Res",  # max 28 Ereignisse | Res
@@ -433,12 +433,12 @@ targets = [
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
-  "Miss.Alac",  # max 347 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
-  "Miss.Qck",  # max 126 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Alac",  # max 347 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Qck",  # max 126 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "Lckt",  # max 33 Ereignisse | Lockout
   "Stun",  # max 23 Ereignisse | Anguished Bolt (AoE Stun Circle by Guldhem)
   "Res",  # max 14 Ereignisse | Res
-  "S.Fix",  # max 12 Ereignisse | Fixated by Samarog
+  #"S.Fix",  # max 12 Ereignisse | Fixated by Samarog
   "B.Gr",  # max 10 Ereignisse | Big Green (friends mechanic)
   "S.Gr",  # max 10 Ereignisse | Small Green (friends mechanic)
   "Brtlzd",  # max 9 Ereignisse | Brutalized (jumped upon by Samarog->Breakbar)
@@ -452,7 +452,7 @@ mechanics = [
   "Dead",  # max 4 Ereignisse | Dead
   "Downed",  # max 4 Ereignisse | Downed
   #"G.Fix",  # max 4 Ereignisse | Fixated by Guldhem
-  "Got up",  # max 4 Ereignisse | Got up
+  #"Got up",  # max 4 Ereignisse | Got up
   "Shck.Wv Ctr",  # max 4 Ereignisse | Impaling Stab (hit by Spears causing Shockwave)
   "S.Spwn",  # max 3 Ereignisse | Spear Impact (hit by spawning Spear)
   "Slam",  # max 3 Ereignisse | Bludgeon (vertical Slam)
@@ -480,9 +480,9 @@ targets = [
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
-  "Miss.Qck",  # max 95 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Qck",  # max 95 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "TP",  # max 80 Ereignisse | Teleport to/from Demonic Realm
-  "Miss.Alac",  # max 56 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Alac",  # max 56 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   #"Weak Mind",  # max 54 Ereignisse | Weak Minded (Debuff after Mind Crush)
   #"Oil",  # max 45 Ereignisse | Rapid Decay (Black expanding oil)
   "Res",  # max 27 Ereignisse | Res
@@ -492,7 +492,7 @@ mechanics = [
   "Dead",  # max 9 Ereignisse | Dead
   "Mind Crush",  # max 9 Ereignisse | Hit by Mind Crush without Bubble Protection
   #"TP CC",  # max 6 Ereignisse | Off Balance (Saul TP Breakbar)
-  "Got up",  # max 4 Ereignisse | Got up
+  #"Got up",  # max 4 Ereignisse | Got up
   #"Green.D",  # max 4 Ereignisse | Chosen by the Eye of Janthir
   "Lckt",  # max 4 Ereignisse | Lockout
   #"TP CCed",  # max 4 Ereignisse | Saul TP CCed
@@ -522,8 +522,8 @@ targets = [
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
-  "Miss.Qck",  # max 421 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
-  "Miss.Alac",  # max 346 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Qck",  # max 421 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Alac",  # max 346 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   #"Oil",  # max 75 Ereignisse | Rapid Decay (Black expanding oil)
   "TP",  # max 72 Ereignisse | Teleport to/from Demonic Realm
   "Res",  # max 29 Ereignisse | Res
@@ -532,7 +532,7 @@ mechanics = [
   "Tear",  # max 12 Ereignisse | Collected a Demonic Tear
   "Downed",  # max 10 Ereignisse | Downed
   "10% Smash",  # max 9 Ereignisse | Knockback in 10% Phase
-  "Got up",  # max 9 Ereignisse | Got up
+  #"Got up",  # max 9 Ereignisse | Got up
   #"DMG Debuff",  # max 6 Ereignisse | Double Damage Debuff on Deimos
   "Green.D",  # max 6 Ereignisse | Chosen by the Eye of Janthir
   #"TP CC",  # max 6 Ereignisse | Off Balance (Saul TP Breakbar)
@@ -547,7 +547,7 @@ mechanics = [
   #"TP CC Fail",  # max 1 Ereignisse | Failed Saul TP CC
   # --- neu am 2026-11-22 ---
   "Knck.Pll",  # max 2 Ereignisse | Knocked Back or Pulled
-  "Thief CC Fail",  # max 2 Ereignisse | Failed Boon Thief CC
+  #"Thief CC Fail",  # max 2 Ereignisse | Failed Boon Thief CC
   "DC",  # max 1 Ereignisse | DC
 ]
 
@@ -560,10 +560,10 @@ targets = [
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
-  "Miss.Alac",  # max 283 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Alac",  # max 283 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   #"Necrosis",  # max 177 Ereignisse | Necrosis (Tanking Debuff)
   "Spin.SH",  # max 151 Ereignisse | Corrupt the Living (Torment+Poison Spin)
-  "Miss.Qck",  # max 106 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Qck",  # max 106 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   #"Spit",  # max 86 Ereignisse | Wurm Spit
   "Golem.SH",  # max 67 Ereignisse | Soul Rift (stood in Golem Aoe)
   "Immob.Golem",  # max 38 Ereignisse | Immobilized Golem
@@ -576,7 +576,7 @@ mechanics = [
   #"NecDancer.Achiv.L",  # max 10 Ereignisse | Achievement Eligibility: Necro Dancer Lost
   #"Donut Out",  # max 8 Ereignisse | Vortex Slash (Outer Donut hit)
   "Fixate",  # max 8 Ereignisse | Fixated (Special Action Key)
-  "Got up",  # max 8 Ereignisse | Got up
+  #"Got up",  # max 8 Ereignisse | Got up
   "Lckt",  # max 7 Ereignisse | Lockout
   "4Slice",  # max 4 Ereignisse | Quad Slash (4 Slices)
   #"CC.SH",  # max 3 Ereignisse | Howling Death (Breakbar)
@@ -598,9 +598,9 @@ mechanics = [
   # --- neu am 2026-11-22 ---
   "Spin.SH",  # max 53 Ereignisse | Corrupt the Living (Torment+Poison Spin)
   #"Spit",  # max 52 Ereignisse | Wurm Spit
-  "Miss.Qck",  # max 40 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Qck",  # max 40 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   #"Necrosis",  # max 16 Ereignisse | Necrosis (Tanking Debuff)
-  "Miss.Alac",  # max 13 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Alac",  # max 13 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   "Golem.SH",  # max 10 Ereignisse | Soul Rift (stood in Golem Aoe)
   #"NecDancer.Achiv.L",  # max 10 Ereignisse | Achievement Eligibility: Necro Dancer Lost
   #"8Slice",  # max 9 Ereignisse | Death Bloom (8 Slices)
@@ -613,7 +613,7 @@ mechanics = [
   "Fixate",  # max 2 Ereignisse | Fixated (Special Action Key)
   #"CC.SH",  # max 1 Ereignisse | Howling Death (Breakbar)
   "CC.SH Fail",  # max 1 Ereignisse | Howling Death (Breakbar failed)
-  "Got up",  # max 1 Ereignisse | Got up
+  #"Got up",  # max 1 Ereignisse | Got up
   # --- neu am 2026-11-22 ---
   "Scythe",  # max 35 Ereignisse | Spinning Slash (hit by Scythe)
   "Lckt",  # max 16 Ereignisse | Lockout
@@ -628,14 +628,14 @@ targets = [
   # --- neu am 2026-11-22 ---
   19450,  # Dhuum
   #19628,  # Ender's Echo
-  19681,  # Dhuum's Enforcer 1
-  19831,  # Underworld Reaper 1  [in keiner Phase]
+  #19681,  # Dhuum's Enforcer 1
+  #19831,  # Underworld Reaper 1  [in keiner Phase]
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
-  "Miss.Qck",  # max 251 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Qck",  # max 251 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "Echo PU",  # max 180 Ereignisse | Picked up by Ender's Echo
-  "Miss.Alac",  # max 106 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Alac",  # max 106 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   #"Bomb dmg",  # max 40 Ereignisse | Arcing Affliction (Bomb) hit
   #"SupSpeed.Orb",  # max 17 Ereignisse | Gained Superspeed from Desmina (Walked over orb)
   "Mess Fix",  # max 15 Ereignisse | Fixated by Messenger
@@ -648,25 +648,25 @@ mechanics = [
   "Orb CD",  # max 5 Ereignisse | Applied when taking green
   "Downed",  # max 2 Ereignisse | Downed
   #"Echo.BrkCndApp1",  # max 2 Ereignisse | Applied Fear, Taunt, Immobile, Slow against Ender's Echo breakbar while a player is picked
-  "Got up",  # max 2 Ereignisse | Got up
+  #"Got up",  # max 2 Ereignisse | Got up
   #"Echo.BrkCndApp2",  # max 1 Ereignisse | Applied Chilled, Blind, Weakness, Crippled against Ender's Echo breakbar while a player is
   "Echo.BrkDmg",  # max 1 Ereignisse | Breakbar damage done against Ender's Echo while a player is picked
   # --- aus Skeleton uebernommen ---
   "DC",  # max 1 Ereignisse | DC
   # --- aus Normalmodus uebernommen (CM enthaelt alle Normalmodus-Mechaniken) ---
   "Dip",  # max 20 Ereignisse | Lesser Death Mark hit (Dip into ground)  [aus Normalmodus]
-  "Shackles dmg",  # max 20 Ereignisse | Soul Shackle (Tether) dmg ticks  [aus Normalmodus]
+  #"Shackles dmg",  # max 20 Ereignisse | Soul Shackle (Tether) dmg ticks  [aus Normalmodus]
   #"KB dmg",  # max 17 Ereignisse | Knockback damage during Greater Deathmark (mid port)  [aus Normalmodus]
   #"Shackles",  # max 10 Ereignisse | Soul Shackle (Tether) application  [aus Normalmodus]
-  "10%",  # max 9 Ereignisse | Lifted by Pure Oblivion  [aus Normalmodus]
+  #"10%",  # max 9 Ereignisse | Lifted by Pure Oblivion  [aus Normalmodus]
   "Crack",  # max 9 Ereignisse | Cull (Fearing Fissures)  [aus Normalmodus]
-  "Eth.Seal.I",  # max 7 Ereignisse | Succesfully interacted with an Ethereal Seal  [aus Normalmodus]
-  "Eth.Seal.S",  # max 7 Ereignisse | Started channeling an Ethereal Seal  [aus Normalmodus]
+  #"Eth.Seal.I",  # max 7 Ereignisse | Succesfully interacted with an Ethereal Seal  [aus Normalmodus]
+  #"Eth.Seal.S",  # max 7 Ereignisse | Started channeling an Ethereal Seal  [aus Normalmodus]
   "Lckt",  # max 5 Ereignisse | Lockout  [aus Normalmodus]
   "Suck dmg",  # max 5 Ereignisse | Damage when sucked to close to middle  [aus Normalmodus]
   #"Bomb Trig",  # max 3 Ereignisse | Arcing Affliction (Bomb) manualy triggered  [aus Normalmodus]
   "Cone",  # max 1 Ereignisse | Boon ripping Cone Attack  [aus Normalmodus]
-  "Eth.Seal.F",  # max 3 Ereignisse | Failed to interact with an Ethereal Seal  [aus Normalmodus]
+  #"Eth.Seal.F",  # max 3 Ereignisse | Failed to interact with an Ethereal Seal  [aus Normalmodus]
   "Resp",  # max 1 Ereignisse | Resp  [aus Normalmodus]
 ]
 
@@ -676,12 +676,12 @@ targets = [
   # --- neu am 2026-11-22 ---
   19450,  # Dhuum
   #19681,  # Dhuum's Enforcer 1
-  19831,  # Underworld Reaper 1  [in keiner Phase]
+  #19831,  # Underworld Reaper 1  [in keiner Phase]
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
-  "Miss.Qck",  # max 472 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
-  "Miss.Alac",  # max 360 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Qck",  # max 472 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Alac",  # max 360 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   #"Bomb dmg",  # max 88 Ereignisse | Arcing Affliction (Bomb) hit
   "Mark",  # max 54 Ereignisse | Necro Marks during Scythe attack
   #"SupSpeed.Orb",  # max 38 Ereignisse | Gained Superspeed from Desmina (Walked over orb)
@@ -696,15 +696,15 @@ mechanics = [
   "Dead",  # max 10 Ereignisse | Dead
   "Downed",  # max 10 Ereignisse | Downed
   #"Shackles",  # max 10 Ereignisse | Soul Shackle (Tether) application
-  "10%",  # max 9 Ereignisse | Lifted by Pure Oblivion
+  #"10%",  # max 9 Ereignisse | Lifted by Pure Oblivion
   "Crack",  # max 9 Ereignisse | Cull (Fearing Fissures)
-  "Got up",  # max 8 Ereignisse | Got up
-  "Eth.Seal.I",  # max 7 Ereignisse | Succesfully interacted with an Ethereal Seal
-  "Eth.Seal.S",  # max 7 Ereignisse | Started channeling an Ethereal Seal
+  #"Got up",  # max 8 Ereignisse | Got up
+  #"Eth.Seal.I",  # max 7 Ereignisse | Succesfully interacted with an Ethereal Seal
+  #"Eth.Seal.S",  # max 7 Ereignisse | Started channeling an Ethereal Seal
   "Lckt",  # max 5 Ereignisse | Lockout
   "Suck dmg",  # max 5 Ereignisse | Damage when sucked to close to middle
   #"Bomb Trig",  # max 3 Ereignisse | Arcing Affliction (Bomb) manualy triggered
-  "Enf.Swipe",  # max 1 Ereignisse | Hit by Dhuum's Enforcer Rending Swipe
+  #"Enf.Swipe",  # max 1 Ereignisse | Hit by Dhuum's Enforcer Rending Swipe
   # --- neu am 2026-11-22 ---
   "Cone",  # max 1 Ereignisse | Boon ripping Cone Attack
   # --- neu am 2026-11-22 ---
@@ -725,22 +725,22 @@ mechanics = [
   # --- neu am 2026-11-22 ---
   "Shield.C",  # max 293 Ereignisse | Collected Shield
   "Sword.C",  # max 207 Ereignisse | Collected Sword
-  "Shielded",  # max 41 Ereignisse | Shielded
-  "Miss.Qck",  # max 39 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Shielded",  # max 41 Ereignisse | Shielded
+  #"Miss.Qck",  # max 39 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "Balls",  # max 38 Ereignisse | Junk Absorption (Purple Balls during collect)
-  "Miss.Alac",  # max 36 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
-  "Sword.Cst",  # max 27 Ereignisse | Conjured Slash (Special action sword)
-  "Arm Slam",  # max 26 Ereignisse | Pulverize (Arm Slam)
+  #"Miss.Alac",  # max 36 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Sword.Cst",  # max 27 Ereignisse | Conjured Slash (Special action sword)
+  #"Arm Slam",  # max 26 Ereignisse | Pulverize (Arm Slam)
   "Junk",  # max 26 Ereignisse | Junk Fall (Falling Debris)
   "Tremor",  # max 24 Ereignisse | Tremor (Field adjacent to Arm Slam)
   "Res",  # max 20 Ereignisse | Res
-  "Shield.Cst",  # max 14 Ereignisse | Conjured Protection (Special action shield)
-  "Stab.Slam",  # max 11 Ereignisse | Pulverize (Arm Slam) while affected by stability
+  #"Shield.Cst",  # max 14 Ereignisse | Conjured Protection (Special action shield)
+  #"Stab.Slam",  # max 11 Ereignisse | Pulverize (Arm Slam) while affected by stability
   "Augmented Power",  # max 10 Ereignisse | Augmented Power
   "Downed",  # max 10 Ereignisse | Downed
-  "Got up",  # max 9 Ereignisse | Got up
+  #"Got up",  # max 9 Ereignisse | Got up
   "Knck.Dwn",  # max 7 Ereignisse | Knocked Down
-  "Ground",  # max 2 Ereignisse | Ruptured Ground (Relics after Junk Wall)
+  #"Ground",  # max 2 Ereignisse | Ruptured Ground (Relics after Junk Wall)
   "Dead",  # max 1 Ereignisse | Dead
   # --- neu am 2026-11-22 ---
   "Lckt",  # max 3 Ereignisse | Lockout
@@ -760,22 +760,22 @@ mechanics = [
   # --- neu am 2026-11-22 ---
   "Shield.C",  # max 338 Ereignisse | Collected Shield
   "Sword.C",  # max 257 Ereignisse | Collected Sword
-  "Miss.Alac",  # max 115 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
-  "Miss.Qck",  # max 76 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
-  "Ground",  # max 67 Ereignisse | Ruptured Ground (Relics after Junk Wall)
+  #"Miss.Alac",  # max 115 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Qck",  # max 76 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Ground",  # max 67 Ereignisse | Ruptured Ground (Relics after Junk Wall)
   "Arm Slam",  # max 42 Ereignisse | Pulverize (Arm Slam)
   "Balls",  # max 42 Ereignisse | Junk Absorption (Purple Balls during collect)
-  "Shielded",  # max 30 Ereignisse | Shielded
-  "Stab.Slam",  # max 22 Ereignisse | Pulverize (Arm Slam) while affected by stability
+  #"Shielded",  # max 30 Ereignisse | Shielded
+  #"Stab.Slam",  # max 22 Ereignisse | Pulverize (Arm Slam) while affected by stability
   "Res",  # max 20 Ereignisse | Res
-  "Sword.Cst",  # max 17 Ereignisse | Conjured Slash (Special action sword)
+  #"Sword.Cst",  # max 17 Ereignisse | Conjured Slash (Special action sword)
   "Junk",  # max 14 Ereignisse | Junk Fall (Falling Debris)
   "Tremor",  # max 13 Ereignisse | Tremor (Field adjacent to Arm Slam)
   "Downed",  # max 12 Ereignisse | Downed
   "Augmented Power",  # max 11 Ereignisse | Augmented Power
   "Dead",  # max 10 Ereignisse | Dead
-  "Got up",  # max 7 Ereignisse | Got up
-  "Shield.Cst",  # max 7 Ereignisse | Conjured Protection (Special action shield)
+  #"Got up",  # max 7 Ereignisse | Got up
+  #"Shield.Cst",  # max 7 Ereignisse | Conjured Protection (Special action shield)
   "Knck.Dwn",  # max 6 Ereignisse | Knocked Down
   "Lckt",  # max 1 Ereignisse | Lockout
 ]
@@ -789,8 +789,8 @@ targets = [
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
-  "Miss.Qck",  # max 536 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
-  "Miss.Alac",  # max 465 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Qck",  # max 536 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Alac",  # max 465 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   #"Nik Aura",  # max 127 Ereignisse | Increasing Damage Debuff on Nikare's Last Platform
   #"Ken Aura",  # max 115 Ereignisse | Increasing Damage Debuff on Kenut's Last Platform
   #"Debuff",  # max 77 Ereignisse | Waterlogged (stacking water debuff)
@@ -811,7 +811,7 @@ mechanics = [
   #"CCed.L",  # max 7 Ereignisse | Breakbar broken
   "Res",  # max 6 Ereignisse | Res
   "Steal",  # max 6 Ereignisse | Vapor Jet (Boon Steal)
-  "Got up",  # max 3 Ereignisse | Got up
+  #"Got up",  # max 3 Ereignisse | Got up
   "DC",  # max 1 Ereignisse | DC
   #"Enrage",  # max 1 Ereignisse | Enraged
   "Resp",  # max 1 Ereignisse | Resp
@@ -826,8 +826,8 @@ targets = [
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
-  "Miss.Alac",  # max 277 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
-  "Miss.Qck",  # max 176 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Alac",  # max 277 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Qck",  # max 176 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   #"Nik Aura",  # max 98 Ereignisse | Increasing Damage Debuff on Nikare's Last Platform
   #"Debuff",  # max 90 Ereignisse | Waterlogged (stacking water debuff)
   #"Ken Aura",  # max 77 Ereignisse | Increasing Damage Debuff on Kenut's Last Platform
@@ -846,7 +846,7 @@ mechanics = [
   #"CCed.L",  # max 4 Ereignisse | Breakbar broken
   "Res",  # max 4 Ereignisse | Res
   "Downed",  # max 2 Ereignisse | Downed
-  "Got up",  # max 2 Ereignisse | Got up
+  #"Got up",  # max 2 Ereignisse | Got up
   "Steal",  # max 2 Ereignisse | Vapor Jet (Boon Steal)
   "Enrage",  # max 1 Ereignisse | Enraged
   "Lckt",  # max 1 Ereignisse | Lockout
@@ -868,8 +868,8 @@ targets = [
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
-  "Miss.Alac",  # max 593 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
-  "Miss.Qck",  # max 587 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Alac",  # max 593 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Qck",  # max 587 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "Res",  # max 49 Ereignisse | Res
   "Claw",  # max 36 Ereignisse | Claw (Reaper of Flesh attack)
   "Knck.Pll",  # max 20 Ereignisse | Knocked Back or Pulled
@@ -878,7 +878,7 @@ mechanics = [
   #"P.AoE",  # max 16 Ereignisse | Body of Flame (Pyre Ground AoE (CM))
   "KB",  # max 14 Ereignisse | Flame Wave (Knockback Frontal Beam)
   "F.Dance",  # max 13 Ereignisse | Fiery Dance (Fire running along metal edges)
-  "Got up",  # max 13 Ereignisse | Got up
+  #"Got up",  # max 13 Ereignisse | Got up
   "W.Breath",  # max 13 Ereignisse | Fire Breath (Wyvern)
   "Slash",  # max 11 Ereignisse | Wyvern Slash (Double attack: knock into pin down)
   "Dead",  # max 10 Ereignisse | Dead
@@ -912,13 +912,13 @@ mechanics = [
   "D.Stomp",  # max 2 Ereignisse | Seismic Stomp (Destroyer Stomp)
   "DC",  # max 2 Ereignisse | DC
   "D.Pizza",  # max 1 Ereignisse | Wave of Force (Destroyer Pizza)
-  "Wyv CC Fail",  # max 1 Ereignisse | Platform Destruction (Patriarch Breakbar failed)
+  #"Wyv CC Fail",  # max 1 Ereignisse | Platform Destruction (Patriarch Breakbar failed)
   # --- aus Normalmodus uebernommen (CM enthaelt alle Normalmodus-Mechaniken) ---
   "Hydra Breath",  # max 1 Ereignisse | Elemental Breath (Hydra Breath)  [aus Normalmodus]
   "Stun",  # max 1 Ereignisse | Shattering Impact (Stunning flame bolt)  [aus Normalmodus]
   "D.Spwn",  # max 10 Ereignisse | Summon (Destroyer Trolls summoned)  [aus Normalmodus]
   "NoCC Attack",  # max 3 Ereignisse | Riposte (Attack if CC on Qadim failed)  [aus Normalmodus]
-  "Q.CC Fail",  # max 1 Ereignisse | Qadim Breakbar failed  [aus Normalmodus]
+  #"Q.CC Fail",  # max 1 Ereignisse | Qadim Breakbar failed  [aus Normalmodus]
   "Resp",  # max 1 Ereignisse | Resp  [aus Normalmodus]
 ]
 
@@ -940,8 +940,8 @@ targets = [
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
-  "Miss.Alac",  # max 455 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
-  "Miss.Qck",  # max 279 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Alac",  # max 455 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Qck",  # max 279 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "Claw",  # max 54 Ereignisse | Claw (Reaper of Flesh attack)
   "Q.Hitbox",  # max 39 Ereignisse | Sea of Flame (Stood in Qadim Hitbox)
   "Knck.Pll",  # max 26 Ereignisse | Knocked Back or Pulled
@@ -957,7 +957,7 @@ mechanics = [
   "Taking Turns.G",  # max 10 Ereignisse | Achievement Eligibility: Taking Turns Gained
   #"Taking Turns.N.G",  # max 10 Ereignisse | Achievement Eligibility: Taking Turns not Gained
   "Q.Wave",  # max 8 Ereignisse | Fire Wave (Shockwave after Qadim's Mace attack)
-  "Got up",  # max 7 Ereignisse | Got up
+  #"Got up",  # max 7 Ereignisse | Got up
   "Lamp",  # max 7 Ereignisse | Power of the Lamp (Returned from the Lamp)
   "Mace",  # max 7 Ereignisse | Big Hit (Mace Impact)
   "D.Wave",  # max 6 Ereignisse | Fire Wave (Shockwave after Destroyer's Jump or Stomp)
@@ -996,14 +996,14 @@ mechanics = [
 [boss."-22006"]
 targets = [
   # --- neu am 2026-11-22 ---
-  -3,  # Hand of Eruption NE 1
-  -2,  # Hand of Erosion NW 1
+  #-3,  # Hand of Eruption NE 1
+  #-2,  # Hand of Erosion NW 1
   22006,  # Cardinal Adina
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
-  "Miss.Qck",  # max 253 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
-  "Miss.Alac",  # max 234 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Qck",  # max 253 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Alac",  # max 234 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   "Curse",  # max 96 Ereignisse | Stacking damage debuff from Hand of Erosion
   "Slctd.Pillar",  # max 46 Ereignisse | Selected for dropping a Pillar
   "R.Blind",  # max 16 Ereignisse | Unremovable blindness
@@ -1012,7 +1012,7 @@ mechanics = [
   "Downed",  # max 10 Ereignisse | Downed
   "Res",  # max 10 Ereignisse | Res
   "Eye",  # max 6 Ereignisse | Looked at Eye
-  "Got up",  # max 4 Ereignisse | Got up
+  #"Got up",  # max 4 Ereignisse | Got up
   "Knck.Dwn",  # max 4 Ereignisse | Knocked Down
   "Mines",  # max 4 Ereignisse | Hit by mines
   "DC",  # max 1 Ereignisse | DC
@@ -1036,8 +1036,8 @@ targets = [
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
-  "Miss.Alac",  # max 275 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
-  "Miss.Qck",  # max 260 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Alac",  # max 275 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Qck",  # max 260 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "Curse",  # max 125 Ereignisse | Stacking damage debuff from Hand of Erosion
   "Slctd.Pillar",  # max 55 Ereignisse | Selected for dropping a Pillar
   "R.Blind",  # max 44 Ereignisse | Unremovable blindness
@@ -1047,7 +1047,7 @@ mechanics = [
   "Eye",  # max 14 Ereignisse | Looked at Eye
   "Downed",  # max 12 Ereignisse | Downed
   "Knck.Dwn",  # max 11 Ereignisse | Knocked Down
-  "Got up",  # max 10 Ereignisse | Got up
+  #"Got up",  # max 10 Ereignisse | Got up
   "Dead",  # max 9 Ereignisse | Dead
   "Mines",  # max 7 Ereignisse | Hit by mines
   "Lnch",  # max 2 Ereignisse | Launched
@@ -1066,9 +1066,9 @@ targets = [
 mechanics = [
   # --- neu am 2026-11-22 ---
   #"Storm's Edge",  # max 237 Ereignisse | Hit by Storm's Edge
-  "Miss.Qck",  # max 228 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Qck",  # max 228 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   #"Chain Lightning",  # max 152 Ereignisse | Hit by Chain Lightning
-  "Miss.Alac",  # max 121 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Alac",  # max 121 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   "Res",  # max 25 Ereignisse | Res
   "Knck.Pll",  # max 13 Ereignisse | Knocked Back or Pulled
   #"Electrospark",  # max 11 Ereignisse | Hit by Electrospark
@@ -1079,7 +1079,7 @@ mechanics = [
   "Shockwave",  # max 5 Ereignisse | Hit by Shockwave
   "Rot.KB",  # max 4 Ereignisse | Pushed by rotating breakbar
   "Arena AoE",  # max 3 Ereignisse | Hit by Arena wide AoE
-  "Got up",  # max 3 Ereignisse | Got up
+  #"Got up",  # max 3 Ereignisse | Got up
   #"Rot.Breakbar",  # max 3 Ereignisse | Rotating Breakbar
   #"Rot.Breakbar Brkn",  # max 3 Ereignisse | Rotating Breakbar Broken
   "Dead",  # max 2 Ereignisse | Dead
@@ -1101,14 +1101,14 @@ targets = [
 mechanics = [
   # --- neu am 2026-11-22 ---
   #"Storm's Edge",  # max 205 Ereignisse | Hit by Storm's Edge
-  "Miss.Qck",  # max 171 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Qck",  # max 171 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   #"Chain Lightning",  # max 150 Ereignisse | Hit by Chain Lightning
-  "Miss.Alac",  # max 113 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Alac",  # max 113 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   "Res",  # max 21 Ereignisse | Res
   "Downed",  # max 13 Ereignisse | Downed
   "Knck.Pll",  # max 11 Ereignisse | Knocked Back or Pulled
   #"Charged Winds K",  # max 8 Ereignisse | Achievement Elegibility: Charged Winds Kept
-  "Got up",  # max 8 Ereignisse | Got up
+  #"Got up",  # max 8 Ereignisse | Got up
   #"Electrospark",  # max 7 Ereignisse | Hit by Electrospark
   "Shockwave",  # max 6 Ereignisse | Hit by Shockwave
   "Dead",  # max 5 Ereignisse | Dead
@@ -1131,13 +1131,13 @@ mechanics = [
 targets = [
   # --- neu am 2026-11-22 ---
   21973,  # Entropic Distortion 1  [in keiner Phase]
-  21996,  # Pylon (SE)  [in keiner Phase]
+  #21996,  # Pylon (SE)  [in keiner Phase]
   22000,  # Qadim the Peerless
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
-  "Miss.Alac",  # max 1040 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
-  "Miss.Qck",  # max 577 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Alac",  # max 1040 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Qck",  # max 577 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "S.Magma.F",  # max 156 Ereignisse | Hit by Small Magma Field
   "B.Tether",  # max 76 Ereignisse | 25% damage reduction
   #"P.Rect",  # max 65 Ereignisse | Hit by Purple Rectangle

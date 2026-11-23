@@ -224,6 +224,28 @@ compare = "share"                # Wert = Anteil des Spielers an allen Flak-Tref
 critical_below = 8              # Meldung, wenn der Anteil UNTER 60 % liegt
 text_if_listed_critical = "Du hast weniger als 8% der Bomben weggetreten. Achte darauf, dass du sie wegtrittst, wenn du sie bemerkst."
 
+[boss."15375".mechanic."Karde Flame"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von Kardes Flammenwerfer getroffen. Achte darauf ihn zu side-steppen."
+
+[boss."15375".mechanic."Jumper"]
+of = ["Launched", "Lnch"]
+critical = 1
+
+
+[boss."15375".role."Cannon"]
+description = "Hat die Kanonen zerstört."
+criteria = [
+  { source = "mechanic", name = "Jumper", top = 2, min_total = 3 },
+]
+
+[boss."15375".role."Cannon (BU)"]
+not_roles = "Cannon"
+description = "Hat die Kanonen als BU zerstört."
+criteria = [
+  { source = "mechanic", name = "Jumper", min_total = 1 },
+]
 
 # Slothar
 
@@ -247,6 +269,16 @@ description = "hat sich in einen Slubling verwandelt, um der Gruppe den Weg frei
 criteria = [
   { source = "mechanic", name = "Slub", min_total = 1 },
 ]
+
+[boss."16123".mechanic."Shake"]
+list_if_not_critical = false
+critical = 1
+text_if_listed_critical = "Du wurdest vom Shake getroffen. Achte darauf, dass du dodged, wenn er sich schüttelt."
+
+[boss."16123".mechanic."Poison dmg"]
+list_if_not_critical = false
+critical = 1
+text_if_listed_critical = "Du standest im SAK-Gift."
 
 
 # Mathias
@@ -293,6 +325,11 @@ text_if_listed_critical = "Du hast mehr als 10 Stacks Unbalanced erreicht. Versu
 critical = 1
 list_if_not_critical = false
 text_if_listed_critical = "Du wurdest von {value} ticks des Walkers getroffen. Achte darauf, ihm nicht im Weg zu stehen!"
+
+[boss."16115".mechanic."Icy KD"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du bist im Eis-Feld ausgerutscht. Pass auf nicht in eines hineinzugehen!"
 
 
 # Keep Construct CM
@@ -358,6 +395,15 @@ text_if_listed_critical = "Du wurdest von den Trümmern getroffen, die KC nach d
 
 # Xera
 
+[boss."16246".mechanic."Stacks"]
+list_if_not_critical = true
+text_if_listed_not_critical = "Du hast {value} Stacks ihres Debuffs gesammelt."
+
+[boss."16246".mechanic."Gravity Half"]
+list_if_not_critical = false
+critical = 1
+text_if_listed_not_critical = "Du hast im Gravity Well gestanden."
+
 
 # Cairn CM
 
@@ -386,6 +432,15 @@ critical = 1
 list_if_not_critical = false
 text_if_listed_critical = "Du wurdest gefloatet. Achte auf die Anzahl der Punkte über dem Green, das ist die mindestanzahl der Spieler die darins tehen müssen!"
 
+[boss."-17194".mechanic."Sweep"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest vom Clock-Angriff getroffen."
+
+[boss."-17194".mechanic."Donut"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest vom Donut-Angriff getroffen. Bleibe in seiner Hitbox, um das zu vermeiden."
 
 # Cairn
 
@@ -413,6 +468,16 @@ text_if_listed_critical = "Reflectete Kristalle bleiben feindlich und können vi
 critical = 1
 list_if_not_critical = false
 text_if_listed_critical = "Du wurdest gefloatet. Achte auf die Anzahl der Punkte über dem Green, das ist die mindestanzahl der Spieler die darins tehen müssen!"
+
+[boss."17194".mechanic."Sweep"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest vom Clock-Angriff getroffen."
+
+[boss."17194".mechanic."Donut"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest vom Donut-Angriff getroffen. Bleibe in seiner Hitbox, um das zu vermeiden."
 
 
 # MO CM
@@ -735,6 +800,11 @@ criteria = [
   { source = "mechanic", name = "Orb CD", min_total = 1, not_roles = "Green Springer" },
 ]
 
+[boss."-19450".mechanic."Cone"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Achte darauf nicht in dem Cone-Attack von Dhuum zu stehen."
+
 
 # Dhuum
 
@@ -776,6 +846,60 @@ criteria = [
   { source = "mechanic", name = "Orb CD", min_total = 1, not_roles = "Green Springer" },
 ]
 
+[boss."19450".mechanic."Cone"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Achte darauf nicht in dem Cone-Attack von Dhuum zu stehen."
+
+
+# Conjured Amalgamit CM
+
+[boss."-43974".role."Collector (Shield)"]
+description = "Du hast Schilde gesammelt"
+criteria = [
+  { source = "mechanic", name = "Shield.C", min_total = 10, top = 2 },
+]
+
+[boss."-43974".role."Collector (Sword)"]
+description = "Du hast Scherter gesammelt"
+criteria = [
+  { source = "mechanic", name = "Sword.C", min_total = 10, top = 2 },
+]
+
+[boss."-43974".mechanic."Balls"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du hast während der Sammelphase Violette Orbs gesammelt, vermeide dies, um eingehenden Schaden zu vermeiden."
+
+[boss."-43974".mechanic."Junk"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von herabfallendem Müll getroffen. Meide AoEs."
+
+
+# Conjured Amalgamit
+
+[boss."43974".role."Collector (Shield)"]
+description = "Du hast Schilde gesammelt"
+criteria = [
+  { source = "mechanic", name = "Shield.C", min_total = 10, top = 2 },
+]
+
+[boss."43974".role."Collector (Sword)"]
+description = "Du hast Scherter gesammelt"
+criteria = [
+  { source = "mechanic", name = "Sword.C", min_total = 10, top = 2 },
+]
+
+[boss."43974".mechanic."Balls"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du hast während der Sammelphase Violette Orbs gesammelt, vermeide dies, um eingehenden Schaden zu vermeiden."
+
+[boss."43974".mechanic."Junk"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von herabfallendem Müll getroffen. Meide AoEs."
 
 
 # Twin Largos CM
@@ -856,7 +980,7 @@ text_if_listed_critical = "Achte darauf, dass du nicht auf halben weg zu den Spi
 [boss."-20934".mechanic."Q.Wave"]
 critical = 1
 list_if_not_critical = false
-text_if_listed_critical = "Du wurdest von der Schockwelle getroffen."
+text_if_listed_critical = "Du wurdest von der Schockwelle von Qadim getroffen."
 
 [boss."-20934".role."Lamp"]
 description = "Du hast die Lampe gespielt."
@@ -868,6 +992,12 @@ criteria = [
 critical = 1
 list_if_not_critical = false
 text_if_listed_critical = "Du wurdest von den Adds teleportiert. Achte auf den Leuchtenden Bildschirmrand. Du kannst den Teleport dodgen."
+
+[boss."-20934".mechanic."D.Wave"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von der Schockwelle des Destroyers getroffen."
+
 
 
 # Qadim
@@ -890,7 +1020,7 @@ text_if_listed_critical = "Achte darauf, dass du nicht auf halben weg zu den Spi
 [boss."20934".mechanic."Q.Wave"]
 critical = 1
 list_if_not_critical = false
-text_if_listed_critical = "Du wurdest von der Schockwelle getroffen."
+text_if_listed_critical = "Du wurdest von der Schockwelle von Qadim getroffen."
 
 [boss."20934".role."Lamp"]
 description = "Du hast die Lampe gespielt."
@@ -903,6 +1033,46 @@ critical = 1
 list_if_not_critical = false
 text_if_listed_critical = "Du wurdest von den Adds teleportiert. Achte auf den Leuchtenden Bildschirmrand. Du kannst den Teleport dodgen."
 
+[boss."20934".mechanic."D.Wave"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von der Schockwelle des Destroyers getroffen."
+
+
+# Adina CM
+
+[boss."-22006".mechanic."R.Blind"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von dem Leuchten von Adinas Aufstieg geblendet."
+
+[boss."-22006".mechanic."Mines"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du bist durch eine Mine gelaufen."
+
+[boss."-22006".mechanic."S.Thrower"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest vom Sandstrahl eingeholt (oder ein Troll hat dir Super Speed gegeben)."
+
+
+# Adina
+
+[boss."22006".mechanic."R.Blind"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von dem Leuchten von Adinas Aufstieg geblendet."
+
+[boss."22006".mechanic."Mines"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du bist durch eine Mine gelaufen."
+
+[boss."22006".mechanic."S.Thrower"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest vom Sandstrahl eingeholt (oder ein Troll hat dir Super Speed gegeben)."
 
 
 # Sabir CM
@@ -953,7 +1123,14 @@ text_if_listed_critical = "Du wurdest vom Arena AoE getroffen, gehe das nächste
 
 # Qadim the Peerless CM
 
-[boss."-22000".mechanic."S.Light.H"]
+[boss."-22000".mechanic."Lightning"]
+of = ["S.Lght.H", "Lght.H" ]
 critical = 1
 list_if_not_critical = false
-text_if_listed_critical =
+text_if_listed_critical = "Du wurdest von einem Blitz getroffen. Achte auf den Leuchtenden Bildschirmrand und weiche ihm aus."
+
+[boss."-22000".mechanic."S.Magma.F"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du hast in einem kleinen magma-Feld gestanden."
+

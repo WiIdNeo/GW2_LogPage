@@ -391,6 +391,9 @@ def build_report(l, b, plist, slim, rules):
                   + kv_list([(n, stat_value(c, ms.get(n))) for n, c in v["mechanics"].items()])
                   + "<h3>Metriken</h3>" + kv_list([(report_engine.METRIC_LABEL.get(k, k), stat_value(num(x), xs.get(k)))
                                                     for k, x in v["metrics"].items()])
+                  + ("<h3>Boons an die Gruppe <small>(Ø Uptime/Stacks · Anteil · Platz)</small></h3>"
+                     + kv_list([(n, stat_value(num(x), (v.get("generation_stats") or {}).get(n)))
+                                for n, x in (v.get("generation") or {}).items()]) if v.get("generation") else "")
                   + "<h3>Buffs <small>(Uptime % bzw. Ø Stacks)</small></h3>"
                   + kv_list([(n, num(x)) for n, x in v["buffs"].items()])
                   + "<h3>Consumables</h3>" + kv_list([(c, "") for c in v["consumables"]]))

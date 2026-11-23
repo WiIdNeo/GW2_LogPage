@@ -128,6 +128,69 @@ critical = 1
 list_if_not_critical = false
 text_if_listed_critical = "Du wurdest geschubst oder gezogen."
 
+[mechanic."Res"]
+critical = 1
+list_if_not_critical = true
+text_if_listed_critical = "Du hast {value}x wiederbelebt. Insgesamt gab es {gruppe[Got Up]} Downs in der Gruppe."
+
+
+# DPS: Add to each boss!
+#
+#[boss."15375".metric.dps]
+#critical_below = 12000
+#text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+
+# Vale Guardian
+
+[boss."15438".mechanic."Seeker"]
+critical = 5
+list_if_not_critical = true
+text_if_listed_critical = "Du hast relativ lang in den Seeker-AoEs gestanden. Achte darauf, dass du nicht in Roten AoEs stehst"
+
+[boss."15438".mechanic."Leuchtende Bodenplatten"]
+of = ["Floor R", "Floor B", "Floor G"]
+critical = 2
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest {value}x von leuchtenden Bodenplatten getroffen. Achte darauf dich schneller zu bewegen."
+
+[boss."15438".mechanic."Orbs"]
+critical = 5
+list_if_not_critical = true
+text_if_listed_critical = "Du hast relativ lang in den Seeker-AoEs gestanden. Achte darauf, dass du nicht in Roten AoEs stehst"
+
+[boss."15438".mechanic."Blues"]
+of = ["Boss TP", "Split TP"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest Teleportiert! Achte das nächste mal mehr auf die Blauen AoEs"
+
+
+# Gorseval
+
+[boss."15429".mechanic."Black"]
+critical = 7
+list_if_not_critical = true
+min_total = 1
+text_if_listed_critical = "Ihr wurdet von mehr als 6 Blacks getroffen. Das nächste mal solltet ihr mehr CC machen!"
+
+[boss."15429".mechanic."Orb Debuff"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du hast in dem AoE des Blauen Orbs gestanden, sieh dir den Abschnitt zu Phase 2 nochmal genauer an."
+link = "https://snowcrows.com/guides/raids/spirit-vale/gorseval"
+
+[boss."15429".mechanic."Slam"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest vom Slam getroffen, achte darauf, dass du nahe genug stehst, um Stabbi zu erhalten."
+
+[boss."15429".mechanic."Egg"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest ge-eggt. Achte darauf rechtzeitig zu dodgen, wenn unter allen SPielern AoEs auftauchen."
+
+
 # Sabetha
 
 [boss."15375".role."Flak Kite"]
@@ -162,38 +225,735 @@ critical_below = 8              # Meldung, wenn der Anteil UNTER 60 % liegt
 text_if_listed_critical = "Du hast weniger als 8% der Bomben weggetreten. Achte darauf, dass du sie wegtrittst, wenn du sie bemerkst."
 
 
-# Gorseval
+# Slothar
 
-[boss."15429".mechanic."Black"]
-critical = 7
+[boss."16123".mechanic."Floor"]
+list_if_not_critical = false
+critical = 10
+text_if_listed_critical = "Du hast mehr als 10 Sekunden auf dem Gift-Boden der Arne gestanden, versuche das zu vermeiden!"
+
+[boss."16123".mechanic."Tantrum"]
+list_if_not_critical = false
+critical = 1
+text_if_listed_critical = "Du wurdest vom Tantrum getroffen. Achte darauf, dass du kurz nachdem der zweite AoE unter dich gelegt wurde dodgst!"
+
+[boss."16123".mechanic."Breath"]
+list_if_not_critical = false
+critical = 1
+text_if_listed_critical = "Du wurdest vom Feueratem von Slothasor getroffen. Achte darauf, dass du den Sidestepst."
+
+[boss."16123".role."Slubling"]
+description = "hat sich in einen Slubling verwandelt, um der Gruppe den Weg frei zu essen"
+criteria = [
+  { source = "mechanic", name = "Slub", min_total = 1 },
+]
+
+
+# Mathias
+
+[boss."16115".mechanic."Corr. dmg"]
+critical = 10
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von {value} ticks der Corruption getroffen. Achte darauf, dass wenn du als einziger einen AoE unter dir hast, ihn schnell in einen Brunnen bringst. Achte auch darauf, dass du nicht zu lange in den corruption-Aoes von anderen stehst."
+
+[boss."16115".role."Reflect"]
+description = "Hat einen wesentlichen Anteil an Shards reflected"
+criteria = [
+  { source = "mechanic", name = "Refl.Shards", share_min = 40 },
+]
+
+[boss."16115".mechanic."Tornado.M"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von {value} ticks der Feuertornados getroffen. Achte darauf, nicht im Weg von Feuertornados zu stehen!"
+
+[boss."16115".mechanic."Tornado.M"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von {value} ticks der Feuertornados getroffen. Achte darauf, nicht im Weg von Feuertornados zu stehen!"
+
+[boss."15375".mechanic."SAK-Hits"]
+of = "Well dmg"            # Zähler: die Treffer des Spielers
+compare = "ratio"
+per = "Well"           # Nenner: Anzahl der Applies
+critical_above = 5         # kritisch, wenn die Quote größer als 0.5 ist
+text_if_listed_critical = "Du wurdest {value}x vom SAK-Debuff/AoE getroffen  ({per} Applies) achte darauf, dass du ihn schneller ablegen gehst und nicht zu lange in solchen AoEs stehst!"
+
+[boss."16115".mechanic."Storm"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von {value} ticks der Stürme getroffen. Achte darauf, nicht im Weg von Stürmen zu stehen!"
+
+[boss."16115".mechanic."KD"]
+critical = 10
+list_if_not_critical = false
+text_if_listed_critical = "Du hast mehr als 10 Stacks Unbalanced erreicht. Versuche das laufen in der Sturm-Phase zu minimieren!"
+
+[boss."16115".mechanic."Spirit"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von {value} ticks des Walkers getroffen. Achte darauf, ihm nicht im Weg zu stehen!"
+
+
+# Keep Construct CM
+
+[boss."-16235".mechanic."Pizza"]
+list_if_not_critical = false
+critical = 1
+text_if_listed_critical = "Du wurdest {value}x von der Pizza getroffen. Achte darauf, dass du weder im AoE unter dem Boss, noch in den Cones stehst (diese Mechanik ist schwierig zu umgehen, geringe Werte können unkritisch/unvermeidbar sein)"
+
+[boss."-16235".mechanic."Richtige Orbs"]
+of = ["GW.Orb", "GR.Orb"]
+critical_below = 5
 list_if_not_critical = true
-min_total = 1
-text_if_listed_critical = "Ihr wurdet von mehr als 6 Blacks getroffen. Das nächste mal solltet ihr mehr CC machen!"
+text_if_listed_critical = "Du hast weniger als 5 richtige Orbs gesammelt. Sammel das nächtes mal die Orbs der Farbe üer deinem Kopf."
+text_if_listed_not_critical = "Du hast {value} korrekte Orbs gesammelt"
 
-[boss."15429".mechanic."Orb Debuff"]
+[boss."-16235".mechanic."falsche Orbs"]
+of = ["BW.Orb", "BR.Orb"]
 critical = 1
 list_if_not_critical = false
-text_if_listed_critical = "Du hast in dem AoE des Blauen Orbs gestanden, sieh dir den Abschnitt zu Phase 2 nochmal genauer an."
-link = "https://snowcrows.com/guides/raids/spirit-vale/gorseval"
+text_if_listed_critical = "Du hast Orbs der falschen farbe eingesammelt. Achte uf die farbe über seinem Kopf, sie kann pro Sammelphase variieren!"
 
-[boss."15429".mechanic."Slam"]
+[boss."-16235".mechanic."Jump"]
 critical = 1
 list_if_not_critical = false
-text_if_listed_critical = "Du wurdest vom Slam getroffen, achte darauf, dass du nahe genug stehst, um Stabbi zu erhalten."
+text_if_listed_critical = "Du wurdest von seinem Sprung getroffen. Achte darauf, dass du diesen Angriff ausweichst, du kannst den Boss sowieso erst danach angreifen."
 
-[boss."15429".mechanic."Egg"]
+[boss."-16235".mechanic."Debris"]
 critical = 1
 list_if_not_critical = false
-text_if_listed_critical = "Du wurdest ge-eggt. Achte darauf rechtzeitig zu dodgen, wenn unter allen SPielern AoEs auftauchen."
+text_if_listed_critical = "Du wurdest von den Trümmern getroffen, die KC nach der Gruppe wirft, wenn er an der Decke ist. Versuche das zu vermeiden."
 
 
-# Vale Guardian
+# Keep Construct
 
-[boss."15438".mechanic."Seeker"]
-critical = 5
+[boss."16235".mechanic."Pizza"]
+list_if_not_critical = false
+critical = 1
+text_if_listed_critical = "Du wurdest {value}x von der Pizza getroffen. Achte darauf, dass du weder im AoE unter dem Boss, noch in den Cones stehst (diese Mechanik ist schwierig zu umgehen, geringe Werte können unkritisch/unvermeidbar sein)"
+
+[boss."16235".mechanic."Richtige Orbs"]
+of = ["GW.Orb", "GR.Orb"]
+critical_below = 5
 list_if_not_critical = true
-text_if_listed_critical = "Du hast relativ lang in den Seeker-AoEs gestanden. Achte darauf, dass du nicht in Roten AoEs stehst"
+text_if_listed_critical = "Du hast weniger als 5 richtige Orbs gesammelt. Sammel das nächtes mal die Orbs der Farbe üer deinem Kopf."
+text_if_listed_not_critical = "Du hast {value} korrekte Orbs gesammelt"
+
+[boss."16235".mechanic."falsche Orbs"]
+of = ["BW.Orb", "BR.Orb"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du hast Orbs der falschen farbe eingesammelt. Achte uf die farbe über seinem Kopf, sie kann pro Sammelphase variieren!"
+
+[boss."16235".mechanic."Jump"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von seinem Sprung getroffen. Achte darauf, dass du diesen Angriff ausweichst, du kannst den Boss sowieso erst danach angreifen."
+
+[boss."16235".mechanic."Debris"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von den Trümmern getroffen, die KC nach der Gruppe wirft, wenn er an der Decke ist. Versuche das zu vermeiden."
+
+# Xera
+
+
+# Cairn CM
+
+[boss."-17194".mechanic."KB"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Bleib innerhalb des Musters!"
+
+[boss."-17194".mechanic."KB"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Bleib innerhalb des Musters!"
+
+[boss."-17194".mechanic."Port"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest teleportiert. Achte auf den Orangenen Bildschirmrand!"
+
+[boss."-17194".mechanic."Refl.KB"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Reflectete Kristalle bleiben feindlich und können viel Chaos anrichten. Achte darauf, dass du keine Reflects spielst (auch Magnetaura)!"
+
+[boss."-17194".mechanic."Flt"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest gefloatet. Achte auf die Anzahl der Punkte über dem Green, das ist die mindestanzahl der Spieler die darins tehen müssen!"
+
+
+# Cairn
+
+[boss."17194".mechanic."KB"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Bleib innerhalb des Musters!"
+
+[boss."17194".mechanic."KB"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Bleib innerhalb des Musters!"
+
+[boss."17194".mechanic."Port"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest teleportiert. Achte auf den Orangenen Bildschirmrand!"
+
+[boss."17194".mechanic."Refl.KB"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Reflectete Kristalle bleiben feindlich und können viel Chaos anrichten. Achte darauf, dass du keine Reflects spielst (auch Magnetaura)!"
+
+[boss."17194".mechanic."Flt"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest gefloatet. Achte auf die Anzahl der Punkte über dem Green, das ist die mindestanzahl der Spieler die darins tehen müssen!"
+
+
+# MO CM
+
+[boss."-17172".mechanic."Dispel"]
+role = "Took Dispel"
+critical_below = 5
+text_if_listed_critical = "If your group was not incredibile fast, you did not dispell enough!"
+
+[boss."-17172".role."Took Dispel"]
+description = "Hat die Rolle das Dispel übernommen."
+criteria = [
+  { source = "mechanic", name = "Dispel (SAK)", min_total = 1 },
+]
+
+[boss."-17172".role."Took Protect"]
+description = "Hat die Rolle das Protect übernommen."
+criteria = [
+  { source = "mechanic", name = "Protect (SAK)", min_total = 1 },
+]
+
+[boss."-17172".role."Took Claim"]
+description = "Hat die Rolle das Claim übernommen."
+criteria = [
+  { source = "mechanic", name = "Claim (SAK)", min_total = 1 },
+]
+
+
+# MO
+
+[boss."17172".mechanic."Dispel"]
+role = "Took Dispel"
+critical_below = 5
+text_if_listed_critical = "If your group was not incredibile fast, you did not dispell enough!"
+
+[boss."17172".role."Took Dispel"]
+description = "Hat die Rolle das Dispel übernommen."
+criteria = [
+  { source = "mechanic", name = "Dispel (SAK)", min_total = 1 },
+]
+
+[boss."17172".role."Took Protect"]
+description = "Hat die Rolle das Protect übernommen."
+criteria = [
+  { source = "mechanic", name = "Protect (SAK)", min_total = 1 },
+]
+
+[boss."17172".role."Took Claim"]
+description = "Hat die Rolle das Claim übernommen."
+criteria = [
+  { source = "mechanic", name = "Claim (SAK)", min_total = 1 },
+]
 
 
 
+# Samarog CM
 
+[boss."-17188".mechanic."S.Pls"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Do never walk over Spears! They can Fear you into Spear Wall or perma-Taunt you!"
+
+[boss."-17188".mechanic."Schk.Wv"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von einer Schockwelle getroffen. Gewöhn dir an, darüber zu springen, vetrau nicht auf Stabbilität."
+
+[boss."-17188".mechanic."Swp"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von Samarogs Swipe getroffen. Wenn er seinen Speer zur Zeite hebt läufst du am besten in seine Hitbox hinein."
+
+[boss."-17188".mechanic."Stun"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von Guldhems AoE gestunnt, gewöhn dir an, ihn zu dodgen."
+
+[boss."-17188".mechanic."Shck.Wv Ctr"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von seinen Speeren getroffen, als Samarog die Schockwelle machen wollte. Pass auf, dass du etwas weiter hinten tankst."
+
+[boss."-17188".mechanic."Slam"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von seiner Fliegenklatsche getroffen. Dieser Angriff taucht nur ein bis zweimal pro Kampf nach der Zwischenphase auf. Achte darauf ihn dann auch zu dodgen."
+
+[boss."-17188".mechanic."S.Rit"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von den Speeren getroffen, die Samarog zurückruft. Pass auf, dass du dich richtig positionierst."
+
+[boss."-17188".mechanic."S.Spwn"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von einem herabfallenden Speer getroffen. Achte auf die AoEs."
+
+[boss."-17188".mechanic."Trpl"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von Smarog überfahren, achte darauf, beim Phase (66%, 33%) nicht in seinem Weg zu stehen."
+
+
+# Samarog
+
+[boss."17188".mechanic."Schk.Wv"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von einer Schockwelle getroffen. Gewöhn dir an, darüber zu springen, vetrau nicht auf Stabbilität."
+
+[boss."17188".mechanic."Swp"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von Samarogs Swipe getroffen. Wenn er seinen Speer zur Zeite hebt läufst du am besten in seine Hitbox hinein."
+
+[boss."17188".mechanic."Stun"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von Guldhems AoE gestunnt, gewöhn dir an, ihn zu dodgen."
+
+[boss."17188".mechanic."Shck.Wv Ctr"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von seinen Speeren getroffen, als Samarog die Schockwelle machen wollte. Pass auf, dass du etwas weiter hinten tankst."
+
+[boss."17188".mechanic."Slam"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von seiner Fliegenklatsche getroffen. Dieser Angriff taucht nur ein bis zweimal pro Kampf nach der Zwischenphase auf. Achte darauf ihn dann auch zu dodgen."
+
+[boss."17188".mechanic."S.Rit"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von den Speeren getroffen, die Samarog zurückruft. Pass auf, dass du dich richtig positionierst."
+
+[boss."17188".mechanic."S.Spwn"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von einem herabfallenden Speer getroffen. Achte auf die AoEs."
+
+[boss."17188".mechanic."Trpl"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von Smarog überfahren, achte darauf, beim Phase (66%, 33%) nicht in seinem Weg zu stehen."
+
+
+# Deimos
+
+[boss."17154".mechanic."Tear-Collection"]
+of = "Tear"            # Zähler: die Treffer des Spielers
+compare = "ratio"
+critical_below = 10 #%
+not_roles = ["HK", "Tank"]
+text_if_listed_critical = "Du hast weniger als 10% der Tears gesammelt. Achte darauf sie schnell einzusammeln, damit dein Hand Kite weniger unter Druck steht."
+
+[boss."17154".mechanic."Pizza"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von der Pizza getroffen. Das kann schnell in einem Tod resultieren, dodge den Angriff, verlass dich nicht auf Aegis."
+
+[boss."17154".mechanic."10% Smash"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von mindestens einem 10% Smash getroffen. Versuche den Angriff zu dodgen, wenn du nicht sicher bist, dass du Stabbi hast, sonst stirbst du schnell daran oder verlierst unnötig Schaden."
+
+[boss."17154".mechanic."Oil T."]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du hast ein Black ausgelöst. Achte darauf immer weit genug entfernt zu stehen!"
+
+[boss."17154".mechanic."Oil T."]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du hast ein Black ausgelöst. Achte darauf immer weit genug entfernt zu stehen!"
+
+[boss."17154".mechanic."Mind Crush"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest ohne Schutz von einem Mind Crush getroffen. Achte darauf, dass du immer in den Schutzzauber gehst oder bei deinen Heilern Aegis abholst, wenn Deimos seine Streitkolben schwingt."
+
+
+# Deimos CM
+
+[boss."-17154".mechanic."Tear-Collection"]
+of = "Tear"            # Zähler: die Treffer des Spielers
+compare = "ratio"
+critical_below = 10 #%
+not_roles = ["HK", "Tank"]
+text_if_listed_critical = "Du hast weniger als 10% der Tears gesammelt. Achte darauf sie schnell einzusammeln, damit dein Hand Kite weniger unter Druck steht."
+
+[boss."-17154".mechanic."Pizza"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von der Pizza getroffen. Das kann schnell in einem Tod resultieren, dodge den Angriff, verlass dich nicht auf Aegis."
+
+[boss."-17154".mechanic."10% Smash"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von mindestens einem 10% Smash getroffen. Versuche den Angriff zu dodgen, wenn du nicht sicher bist, dass du Stabbi hast, sonst stirbst du schnell daran oder verlierst unnötig Schaden."
+
+[boss."-17154".mechanic."Oil T."]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du hast ein Black ausgelöst. Achte darauf immer weit genug entfernt zu stehen!"
+
+[boss."-17154".mechanic."Oil T."]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du hast ein Black ausgelöst. Achte darauf immer weit genug entfernt zu stehen!"
+
+[boss."-17154".mechanic."Mind Crush"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest ohne Schutz von einem Mind Crush getroffen. Achte darauf, dass du immer bei deinen Heilern Aegis abholst, wenn Deimos seine Streitkolben schwingt."
+
+
+
+# SH CM
+
+[boss."-19767".mechanics."Immob.Golem"]
+not_roles = "Push"
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du hast einen Golem immobilisiert. Achte darauf, dass dies nicht passiert (wenn per Epi, dann gehe sicher, dass der Golem schon weit genug draußen ist)"
+
+[boss."-19767".role."Tank"]
+description = "Du hast SH getankt."
+criteria = [
+  { source = "mechanic", name = "Fixate", min_total = 1 },
+]
+
+[boss."-19767".mechanics."4Slice"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von der kleinen Windmühle (4 Cones) getroffen. Versuch sie zu side-steppen"
+
+[boss."-19767".mechanics."Scythe"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Achte darauf, dass du nicht in den Sensen stehst!"
+
+[boss."-19767".mechanics."Golem.SH"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Pass auf, dass du aus den Golem Aoes herausdodged. Regulär wird dies gecallt"
+
+
+# SH
+
+[boss."19767".mechanics."Immob.Golem"]
+not_roles = "Push"
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du hast einen Golem immobilisiert. Achte darauf, dass dies nicht passiert (wenn per Epi, dann gehe sicher, dass der Golem schon weit genug draußen ist)"
+
+[boss."19767".role."Tank"]
+description = "Du hast SH getankt."
+criteria = [
+  { source = "mechanic", name = "Fixate", min_total = 1 },
+]
+
+[boss."19767".mechanics."4Slice"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von der kleinen Windmühle (4 Cones) getroffen. Versuch sie zu side-steppen"
+
+[boss."19767".mechanics."Scythe"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Achte darauf, dass du nicht in den Sensen stehst!"
+
+[boss."19767".mechanics."Golem.SH"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Pass auf, dass du aus den Golem Aoes herausdodged. Regulär wird dies gecallt"
+
+
+# Dhuum CM
+
+[boss."-19450".mechanic."Echo PU"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest vom Echo gefangen!"
+
+[boss."-19450".role."Kite"]
+description = "Da hast die Boten Dhuums gekitet."
+criteria = [
+  { source = "mechanic", name = "Mess Fix", min_total = 1, top = 1 },
+]
+
+[boss."-19450".mechanic."Mark"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Achte darauf nicht in den Zeichen von Dhuums sichel zu setehen, am besten du stehst hinter ihm. Im Zweifelsfall kannst du sie auch dodgen."
+
+[boss."-19450".mechanic."Crack"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Achte darauf nicht über die Risse im Boden zu laufen, sie können dich in Lesser Deathmarks hinein-fearen."
+
+[boss."-19450".mechanic."Suck dmg"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest bei der Greater Deathmark in die Mitte gezogen."
+
+[boss."-19450".mechanic."Dip"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von der lesser Deathmark getroffen. Der Weg durch Dhuum ist meist der kürzeste!"
+
+[boss."-19450".role."Green Springer"]
+description = "Du hast Greens gespielt"
+criteria = [
+  { source = "mechanic", name = "Orb CD", min_total = 2, top = 3 },
+]
+
+[boss."-19450".role."Green Springer BU"]
+description = "Du hast Greens  als Back Up gespielt"
+criteria = [
+  { source = "mechanic", name = "Orb CD", min_total = 1, not_roles = "Green Springer" },
+]
+
+
+# Dhuum
+
+[boss."19450".role."Kite"]
+description = "Da hast die Boten Dhuums gekitet."
+criteria = [
+  { source = "mechanic", name = "Mess Fix", min_total = 1, top = 1 },
+]
+
+[boss."19450".mechanic."Mark"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Achte darauf nicht in den Zeichen von Dhuums sichel zu setehen, am besten du stehst hinter ihm. Im Zweifelsfall kannst du sie auch dodgen."
+
+[boss."19450".mechanic."Crack"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Achte darauf nicht über die Risse im Boden zu laufen, sie können dich in Lesser Deathmarks hinein-fearen."
+
+[boss."19450".mechanic."Suck dmg"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest bei der Greater Deathmark in die Mitte gezogen."
+
+[boss."19450".mechanic."Dip"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von der lesser Deathmark getroffen. Der Weg durch Dhuum ist meist der kürzeste!"
+
+[boss."19450".role."Green Springer"]
+description = "Du hast Greens gespielt"
+criteria = [
+  { source = "mechanic", name = "Orb CD", min_total = 2, top = 3 },
+]
+
+[boss."19450".role."Green Springer BU"]
+description = "Du hast Greens  als Back Up gespielt"
+criteria = [
+  { source = "mechanic", name = "Orb CD", min_total = 1, not_roles = "Green Springer" },
+]
+
+
+
+# Twin Largos CM
+
+[boss."-21105".mechanic."Float"]
+of = ["Flt", "Float"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest gebubbelt. Wenn unter allen Spielern kleine AoEs spawnen, musst du dodgen."
+
+[boss."-21105".mechanic."Tornado"]
+critical = 8
+list_if_not_critical = false
+text_if_listed_critical = "Da hast viel in den Tornados gestanden. Versuche sie zu Side-Steppen."
+
+[boss."-21105".mechanic."Charge"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest vom Charge getroffen. Dodge sie das nächste Mal."
+
+[boss."-21105".mechanic."Wave"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von der Schockwelle getroffen. Achte auf den Puls und sie dann zu springen."
+
+[boss."-21105".mechanic."Steal"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Deine Segen wurden gestolen. Achte darauf, dass du nicht in dem Rechteckigen Angriff stehst."
+
+
+# Twin Largos
+
+[boss."21105".mechanic."Float"]
+of = ["Flt", "Float"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest gebubbelt. Wenn unter allen Spielern kleine AoEs spawnen, musst du dodgen."
+
+[boss."21105".mechanic."Tornado"]
+critical = 8
+list_if_not_critical = false
+text_if_listed_critical = "Da hast viel in den Tornados gestanden. Versuche sie zu Side-Steppen."
+
+[boss."21105".mechanic."Charge"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest vom Charge getroffen. Dodge sie das nächste Mal."
+
+[boss."21105".mechanic."Wave"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von der Schockwelle getroffen. Achte auf den Puls und sie dann zu springen."
+
+[boss."21105".mechanic."Steal"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Deine Segen wurden gestolen. Achte darauf, dass du nicht in dem Rechteckigen Angriff stehst."
+
+
+# Qadim CM
+
+[boss."-20934".mechanic."F.Dance"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Achte darauf, dass du nicht auf den Goldenen Linien stehst!"
+
+[boss."-20934".mechanic."Q.Hitbox"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Achte darauf, dass du nicht in Qadims Hitbox stehst."
+
+[boss."-20934".mechanic."Inf."]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Achte darauf, dass du nicht auf halben weg zu den Spitzen der Plattformen von den Infernos getroffen wirst."
+
+[boss."-20934".mechanic."Q.Wave"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von der Schockwelle getroffen."
+
+[boss."-20934".role."Lamp"]
+description = "Du hast die Lampe gespielt."
+criteria = [
+  { source = "mechanic", name = "Lamp", top = 1 },
+]
+
+[boss."-20934".mechanic."Port"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von den Adds teleportiert. Achte auf den Leuchtenden Bildschirmrand. Du kannst den Teleport dodgen."
+
+
+# Qadim
+
+[boss."20934".mechanic."F.Dance"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Achte darauf, dass du nicht auf den Goldenen Linien stehst!"
+
+[boss."20934".mechanic."Q.Hitbox"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Achte darauf, dass du nicht in Qadims Hitbox stehst."
+
+[boss."20934".mechanic."Inf."]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Achte darauf, dass du nicht auf halben weg zu den Spitzen der Plattformen von den Infernos getroffen wirst."
+
+[boss."20934".mechanic."Q.Wave"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von der Schockwelle getroffen."
+
+[boss."20934".role."Lamp"]
+description = "Du hast die Lampe gespielt."
+criteria = [
+  { source = "mechanic", name = "Lamp", top = 1 },
+]
+
+[boss."20934".mechanic."Port"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von den Adds teleportiert. Achte auf den Leuchtenden Bildschirmrand. Du kannst den Teleport dodgen."
+
+
+
+# Sabir CM
+
+[boss."-21964".mechanics."Rot.KB"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von den Beams während der Breakbar getroffen."
+
+[boss."-21964".mechanics."Shockwave"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von der Schockwelle getroffen. Beobachte das nächste mal die Laufbewegungen der Tornados"
+
+[boss."-21964".mechanics."B.Tornado"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest vom großen Tornado gefressen."
+
+[boss."-21964".mechanics."Arena AoE"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest vom Arena AoE getroffen, gehe das nächste Mal in eine der Ecken mit einer Kuppel."
+
+
+# Sabir
+
+[boss."21964".mechanics."Rot.KB"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von den Beams während der Breakbar getroffen."
+
+[boss."21964".mechanics."Shockwave"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von der Schockwelle getroffen. Beobachte das nächste mal die Laufbewegungen der Tornados"
+
+[boss."21964".mechanics."B.Tornado"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest vom großen Tornado gefressen."
+
+[boss."21964".mechanics."Arena AoE"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest vom Arena AoE getroffen, gehe das nächste Mal in eine der Ecken mit einer Kuppel."
+
+
+# Qadim the Peerless CM
+
+[boss."-22000".mechanic."S.Light.H"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical =

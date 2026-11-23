@@ -11,6 +11,7 @@ Regelarten (jeweils unter [kind."Name"], boss-spezifisch unter [boss."<Boss-ID, 
 Schluessel einer Regel:
   critical = X                    auffaellig, wenn Wert >= X   (mechanic: Default 1)
   critical_below = X              auffaellig, wenn Wert <  X
+  critical_above = X              auffaellig, wenn Wert >  X   (streng groesser, "uebersteigt")
   list_if_not_critical = true     auch unauffaellige Werte auflisten (Mechaniken nur bei Anzahl > 0)
   text_if_listed_critical         Text, wenn auffaellig
   text_if_listed_not_critical     Text, wenn nur informativ gelistet
@@ -23,11 +24,22 @@ Schluessel einer Regel:
   min_total = N                   bei share: Regel nur anwenden, wenn die Gruppensumme >= N ist
   of = "Name"                     Quelle, falls der Regelname abweicht - erlaubt mehrere Regeln fuer dieselbe Mechanik,
                                   z. B. [mechanic."Dead (Gruppe)"] mit of = "Dead", compare = "total"
+  compare = "ratio" (nur mechanic)  Wert = Treffer des Spielers (of) / Anzahl Ereignisse der Mechanik(en) in per
+      per = "Apply"  (oder Liste)   Nenner; per_scope = "total" (Default: ALLE Ereignisse der Mechanik im Log, auch mit
+                                    NPC als Akteur) oder "player" (nur die des Spielers); min_per = N (Default 1):
+                                    ist der Nenner kleiner/0, wird die Regel uebersprungen (keine Division durch 0)
+                                    Platzhalter: {value}/{ratio} (2 Nachkommastellen), {count} (Zaehler), {per} (Nenner)
+  of = ["A", "B"]                 nur bei mechanic: die Werte mehrerer Mechaniken werden ADDIERT und als Summe bewertet
+                                  (player, total und share; {rank}/{rank_bottom} und {players} gibt es dann nicht;
+                                  Rollen-Kriterien koennen nur einzelne Mechaniken vergleichen)
   roles = ["Tank"]                Regel nur fuer Spieler mit (mindestens) einer dieser Rollen
   not_roles = ["Tank"]            Regel NICHT fuer Spieler mit einer dieser Rollen
 Platzhalter in Texten: {value} {count} {threshold} {rule} {player} {account} {character} {time} {times} {roles}
   zusaetzlich bei total/share: {total} (Gruppensumme) {players} (betroffene Spieler) {player_count} {share}
-  Rang-Platzhalter (wenn Gruppenwerte vorhanden): {rank} (Platz von oben, 1 = meiste) {rank_bottom} (von unten) {share} {total}
+  Mechanik-Summen beliebiger Mechaniken im Text: {gruppe[Mechanikname]} = Summe ueber ALLE Spieler im Log,
+  {eigene[Mechanikname]} = Wert des Spielers (Name wie in analysis_filter.toml; 0 = erfasst aber nicht aufgetreten,
+  ? = nicht erfasst bzw. keine Gruppenwerte). Der Name darf kein ] oder } enthalten.
+Rang-Platzhalter (wenn Gruppenwerte vorhanden): {rank} (Platz von oben, 1 = meiste) {rank_bottom} (von unten) {share} {total}
 
 Rollen ([role."Name"], boss-spezifisch [boss."<ID>".role."Name"]) - aus dem Vergleich mit ALLEN Spielern im Log:
   match = "any"|"all"             Rolle, wenn mindestens ein / alle Kriterien zutreffen (Default any)
@@ -37,7 +49,11 @@ Rollen ([role."Name"], boss-spezifisch [boss."<ID>".role."Name"]) - aus dem Verg
     top = 3          Platz <= 3 von oben (Wert > 0)       bottom = 3     Platz <= 3 von unten (Nullen zaehlen mit)
     share_min = 30   Anteil an der Gruppensumme >= 30 %    share_max = 5  Anteil <= 5 %
     min_total = 4    Gruppensumme muss >= 4 sein (Default 1)
+  value_min = 30 / value_max = 5   absoluter Wert (Anzahl bzw. bei generation: Ø Uptime/Stacks fuer die Gruppe)
   Metriken fuer Rollen: dps, breakbar_damage, resurrects
+  source = "generation", name = "Quickness": wie viel Uptime (bzw. Stacks) der Spieler im Schnitt ALLEN Spielern im Log
+  gibt (Summe seiner 'generated'-Anteile / Spielerzahl, Phase 0). Erfasst: Alacrity, Quickness, Might, Fury, Protection,
+  Stability, Aegis, Resistance, Resolution, Regeneration, Swiftness, Vigor (GENERATION_BUFFS in extract_log.py).
 Boss-spezifische Regeln ersetzen globale mit gleichem Namen; globale Mechanik-Regeln greifen nur, wenn die
 Mechanik im Log vorkommt.
 """
@@ -46,9 +62,10 @@ import tomllib
 
 KINDS = ("mechanic", "buff", "metric", "consumables")
 RULE_KEYS = {"critical", "critical_below", "list_if_not_critical", "text_if_listed_critical",
-             "text_if_listed_not_critical", "link", "professions", "compare", "min_total", "of", "roles", "not_roles"}
-COMPARE = ("player", "total", "share")
-ROLE_CRIT_KEYS = {"source", "name", "top", "bottom", "share_min", "share_max", "min_total"}
+             "text_if_listed_not_critical", "link", "professions", "compare", "min_total", "of", "roles", "not_roles",
+             "critical_above", "per", "per_scope", "min_per"}
+COMPARE = ("player", "total", "share", "ratio")
+ROLE_CRIT_KEYS = {"source", "name", "top", "bottom", "share_min", "share_max", "min_total", "value_min", "value_max"}
 ADDITIVE_METRICS = ("dps", "breakbar_damage", "resurrects")      # nur diese gibt es als Gruppensumme
 
 
@@ -102,14 +119,14 @@ def _clean_roles(block, where, problems):
             bad = sorted(set(c) - ROLE_CRIT_KEYS)
             if bad:
                 problems.append(f"{cw}: unbekannte Schluessel {bad}")
-            if c.get("source") not in ("mechanic", "metric") or not c.get("name"):
-                problems.append(f"{cw}: source (mechanic|metric) und name noetig")
+            if c.get("source") not in ("mechanic", "metric", "generation") or not c.get("name"):
+                problems.append(f"{cw}: source (mechanic|metric|generation) und name noetig")
                 continue
             if c["source"] == "metric" and c["name"] not in ADDITIVE_METRICS:
                 problems.append(f"{cw}: Metrik fuer Rollen nur {', '.join(ADDITIVE_METRICS)}")
                 continue
-            if not any(k in c for k in ("top", "bottom", "share_min", "share_max")):
-                problems.append(f"{cw}: mindestens eine Bedingung (top, bottom, share_min, share_max) noetig")
+            if not any(k in c for k in ("top", "bottom", "share_min", "share_max", "value_min", "value_max")):
+                problems.append(f"{cw}: mindestens eine Bedingung (top, bottom, share_min, share_max, value_min, value_max) noetig")
                 continue
             ok.append(c)
         if ok:
@@ -137,10 +154,28 @@ def _clean_rules(block, where, problems):
             if bad:
                 problems.append(f"{where}.{kind}.{name}: unbekannte Schluessel {bad}")
             src = rule.get("of", name)
+            if kind == "mechanic" and isinstance(src, list):
+                if not src or not all(isinstance(x, str) for x in src):
+                    problems.append(f"{where}.mechanic.{name}: 'of' muss eine nicht leere Liste von Namen sein")
+                    continue
+            elif not isinstance(src, str):
+                problems.append(f"{where}.{kind}.{name}: 'of' muss ein Name sein (Liste nur bei mechanic)")
+                continue
             if kind == "metric" and src not in METRICS:
                 problems.append(f"{where}.metric.{name}: unbekannte Metrik (erlaubt: {', '.join(METRICS)})")
                 continue
             cmp_ = rule.get("compare", "player")
+            if cmp_ == "ratio":
+                per = rule.get("per")
+                if kind != "mechanic":
+                    problems.append(f"{where}.{kind}.{name}: compare = ratio gibt es nur bei mechanic")
+                    continue
+                if not (isinstance(per, str) or (isinstance(per, list) and per and all(isinstance(x, str) for x in per))):
+                    problems.append(f"{where}.mechanic.{name}: compare = ratio braucht 'per' (Name oder Liste von Namen)")
+                    continue
+                if rule.get("per_scope", "total") not in ("total", "player"):
+                    problems.append(f"{where}.mechanic.{name}: per_scope muss total oder player sein")
+                    continue
             if cmp_ not in COMPARE:
                 problems.append(f"{where}.{kind}.{name}: compare muss {' | '.join(COMPARE)} sein")
                 continue
@@ -175,6 +210,16 @@ class _SafeDict(dict):
         return "{" + key + "}"
 
 
+class _Counts(dict):
+    """Fuer {gruppe[Name]} / {eigene[Name]}. tracked: True = alle Mechaniken erfasst, Menge = nur diese, False = unbekannt."""
+    def __init__(self, data, tracked):
+        super().__init__(data or {})
+        self._tracked = tracked
+
+    def __missing__(self, key):
+        return 0 if (self._tracked is True or (isinstance(self._tracked, (set, frozenset)) and key in self._tracked)) else "?"
+
+
 def _num(v):
     if isinstance(v, float) and v != int(v):
         return f"{v:.1f}"
@@ -193,9 +238,11 @@ def mech_label(m):
 
 
 def _flag(rule, value, default_crit=None):
-    c = rule.get("critical", default_crit if "critical_below" not in rule else None)
-    cb = rule.get("critical_below")
-    return (c is not None and value >= c) or (cb is not None and value < cb)
+    explicit = any(k in rule for k in ("critical_below", "critical_above"))
+    c = rule.get("critical", default_crit if not explicit else None)
+    cb, ca = rule.get("critical_below"), rule.get("critical_above")
+    return ((c is not None and value >= c) or (cb is not None and value < cb)
+            or (ca is not None and value > ca))
 
 
 def _text(rule, critical, label, value, pl, extra=None):
@@ -205,6 +252,9 @@ def _text(rule, critical, label, value, pl, extra=None):
                     rule=label, player=pl.get("account", ""), account=pl.get("account", ""),
                     character=pl.get("name", ""), time="", times="", roles=pl.get("_roles", ""))
     ctx.update(extra or {})
+    tr = pl.get("_tracked", False)
+    ctx["gruppe"] = _Counts(pl.get("_group"), tr if pl.get("_group") is not None else False)
+    ctx["eigene"] = _Counts(pl.get("_own"), tr)
     if not tmpl:
         return f"{label}: {_num(value)}"
     try:
@@ -243,21 +293,26 @@ def _rank_extra(st):
             "share": _num(st["share"]) if st["share"] is not None else "", "player_count": _num(st["n"])}
 
 
-def _criterion(c, mstats, xstats):
+def _criterion(c, mstats, xstats, gstats):
     """Liefert einen Beleg-Text, wenn das Kriterium zutrifft, sonst None."""
-    st = (mstats if c["source"] == "mechanic" else xstats).get(c["name"])
+    st = {"mechanic": mstats, "metric": xstats, "generation": gstats}[c["source"]].get(c["name"])
     if not st or st["total"] < c.get("min_total", 1):
         return None
     if "top" in c and not (st["count"] > 0 and st["rank"] <= c["top"]):
         return None
     if "bottom" in c and not st["rank_bottom"] <= c["bottom"]:
         return None
+    if "value_min" in c and not st["count"] >= c["value_min"]:
+        return None
+    if "value_max" in c and not st["count"] <= c["value_max"]:
+        return None
     sh = st["share"]
     if "share_min" in c and (sh is None or sh < c["share_min"]):
         return None
     if "share_max" in c and (sh is None or sh > c["share_max"]):
         return None
-    label = c["name"] if c["source"] == "mechanic" else METRIC_LABEL.get(c["name"], c["name"])
+    label = {"mechanic": c["name"], "generation": f"{c['name']} an die Gruppe"}.get(
+        c["source"], METRIC_LABEL.get(c["name"], c["name"]))
     parts = [_num(st["count"])]
     if sh is not None:
         parts.append(f"{_num(sh)} %")
@@ -291,6 +346,10 @@ def evaluate(slim, boss_key, rules):
         g.update(b)
         return g, scoped
 
+    tracked = False                                  # welche Mechaniken die Gruppenwerte abdecken
+    if "tracked" in grp:
+        tracked = True if grp["tracked"] is None else frozenset(grp["tracked"])
+
     out = []
     for pl in slim.get("players") or []:
         acc = pl["account"]
@@ -308,14 +367,22 @@ def evaluate(slim, boss_key, rules):
             if vals and own is not None:
                 xstats[name] = _rank_stats(vals, own)
 
+        gstats = {}                                  # Boon-Erzeugung: Ø Uptime/Stacks, die der Spieler der Gruppe gibt
+        for name, vals in (grp.get("generation") or {}).items():
+            own = (pl.get("generates") or {}).get(name)
+            if vals and own is not None:
+                gstats[name] = _rank_stats(vals, own)
+
         # Rollen
         roles = []
         for rname, r in merged("role")[0].items():
-            hits = [_criterion(c, mstats, xstats) for c in r["criteria"]]
+            hits = [_criterion(c, mstats, xstats, gstats) for c in r["criteria"]]
             if (all(hits) if r.get("match") == "all" else any(hits)):
                 roles.append({"name": rname, "why": [h for h in hits if h], "description": r.get("description", "")})
         role_names = [r["name"] for r in roles]
-        plx = {**pl, "_roles": ", ".join(role_names)}
+        plx = {**pl, "_roles": ", ".join(role_names), "_tracked": tracked,
+               "_group": {n: g["count"] for n, g in (grp.get("mechanics") or {}).items()} if grp else None,
+               "_own": {n: len(t) for (a, n), t in events.items() if a == acc}}
 
         def add(kind, name, rule, value, critical, label, extra=None):
             findings.append({"kind": kind, "name": name, "value": value, "critical": critical,
@@ -326,21 +393,44 @@ def evaluate(slim, boss_key, rules):
         for name, rule in rs.items():
             cmp_ = rule.get("compare", "player")
             src = rule.get("of", name)
-            if cmp_ == "total" or (src not in present and name not in scoped) or not _applies(rule, pl, role_names):
+            srcs = [src] if isinstance(src, str) else list(src)
+            if cmp_ == "total" or (not any(x in present for x in srcs) and name not in scoped) \
+                    or not _applies(rule, pl, role_names):
                 continue
-            times = sorted(t for t in events.get((acc, src), []) if t is not None)
+            times = sorted(t for x in srcs for t in events.get((acc, x), []) if t is not None)
             count = len(times)
             extra = {"time": fmt_ms(times[0]) if times else "",
                      "times": ", ".join(fmt_ms(t) for t in times[:5]) + (" …" if len(times) > 5 else "")}
-            extra.update(_rank_extra(mstats.get(src)))
+            gs = [(grp.get("mechanics") or {}).get(x) for x in srcs]
+            gtotal = sum(g["count"] for g in gs if g)
+            if len(srcs) == 1:
+                extra.update(_rank_extra(mstats.get(srcs[0])))
+            else:                                   # Summe mehrerer Mechaniken: kein Rang, aber Gesamtsumme/Anteil
+                extra.update(rank="", rank_bottom="", players="",
+                             total=_num(gtotal) if gtotal else "",
+                             share=_num(round(100.0 * count / gtotal, 1)) if gtotal > 0 else "")
             value = count
+            if cmp_ == "ratio":
+                pers = [rule["per"]] if isinstance(rule["per"], str) else list(rule["per"])
+                if rule.get("per_scope", "total") == "player":
+                    denom = sum(len(events.get((acc, x), [])) for x in pers)
+                else:
+                    denom = 0
+                    for x in pers:
+                        g = (grp.get("mechanics") or {}).get(x) or {}
+                        denom += g.get("events", g.get("count", 0))
+                if denom <= 0 or denom < rule.get("min_per", 1):
+                    continue                          # kein Nenner (z. B. 0 Applies) -> Regel entfaellt
+                value = count / denom
+                extra.update(value=f"{value:.2f}", ratio=f"{value:.2f}", count=_num(count), per=_num(denom))
             if cmp_ == "share":
-                g = (grp.get("mechanics") or {}).get(src)
-                if not g or g["count"] <= 0 or g["count"] < rule.get("min_total", 1):
+                if gtotal <= 0 or gtotal < rule.get("min_total", 1):
                     continue
-                value = round(100.0 * count / g["count"], 1)
-                extra.update(total=_num(g["count"]), players=_num(g["players"]), share=_num(value),
-                             count=_num(count), player_count=_num(grp.get("player_count", 0)))
+                value = round(100.0 * count / gtotal, 1)
+                extra.update(total=_num(gtotal), share=_num(value), count=_num(count),
+                             player_count=_num(grp.get("player_count", 0)))
+                if len(srcs) == 1:
+                    extra["players"] = _num(gs[0]["players"])
             crit = _flag(rule, value, default_crit=1 if cmp_ == "player" else None)
             if crit or (rule.get("list_if_not_critical") and count > 0):
                 add("mechanic", name, rule, value, crit, name, extra)
@@ -396,6 +486,8 @@ def evaluate(slim, boss_key, rules):
                 "metrics": {k: v for k, v in metrics.items() if v is not None},
                 "consumables": cons,
                 "mechanic_stats": {n: st for n, st in mstats.items() if st and st["count"] > 0},
+                "generation": {n: st["count"] for n, st in gstats.items() if st["count"] > 0},
+                "generation_stats": {n: st for n, st in gstats.items() if st["count"] > 0},
                 "metric_stats": xstats}})
     return out
 
@@ -419,11 +511,12 @@ def evaluate_group(slim, boss_key, rules):
                 continue
             src = rule.get("of", name)
             if kind == "mechanic":
-                info = values["mechanics"].get(src)
-                if info is None and name not in scoped:
+                srcs = [src] if isinstance(src, str) else list(src)
+                infos = [values["mechanics"].get(x) for x in srcs]
+                if not any(infos) and name not in scoped:
                     continue                     # globale Regel: nur wenn die Mechanik im Log vorkam
-                v = (info or {}).get("count", 0)
-                extra = {"players": _num((info or {}).get("players", 0))}
+                v = sum(i["count"] for i in infos if i)
+                extra = {"players": _num(infos[0]["players"] if infos[0] else 0) if len(srcs) == 1 else ""}
                 label, dflt = name, 1
             else:
                 v = values["metrics"].get(src)
@@ -433,8 +526,11 @@ def evaluate_group(slim, boss_key, rules):
             extra.update(total=_num(v), player_count=_num(values["player_count"]))
             crit = _flag(rule, v, default_crit=dflt)
             if crit or (rule.get("list_if_not_critical") and v):
+                gx = {"_group": {n: i["count"] for n, i in values["mechanics"].items()},
+                      "_tracked": (True if grp.get("tracked") is None else frozenset(grp["tracked"]))
+                      if "tracked" in grp else False}
                 findings.append({"kind": kind, "name": name, "value": v, "critical": crit, "link": rule.get("link"),
-                                 "text": _text(rule, crit, label, v, {}, extra)})
+                                 "text": _text(rule, crit, label, v, gx, extra)})
     findings.sort(key=lambda f: (not f["critical"], f["kind"], f["name"]))
     return {"findings": findings, "values": values}
 

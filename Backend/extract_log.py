@@ -45,6 +45,8 @@ STATS_FIELDS = ("flankingRate", "connectedDirectDamageCount", "killed", "downed"
 SUPPORT_FIELDS = ("resurrects", "resurrectTime")
 DROP_VOLUME_KEYS = {"incomingBy", "incomingByExtensionBy"}   # "wer hat es erzeugt" -> nicht exportieren
 BUFF_INFO_DROP = {"icon", "descriptions"}      # aus buffMap-Eintraegen entfernt (URLs / lange Texte)
+GENERATION_BUFFS = ("Alacrity", "Quickness", "Might", "Fury", "Protection", "Stability", "Aegis",
+                    "Resistance", "Resolution", "Regeneration", "Swiftness", "Vigor")   # fuer Rollen "wer gibt was"
 TOTAL_PRIORITIES = {"MAIN"}                    # welche Ziele in "dps_targets_total" einfliessen
 
 
@@ -205,18 +207,19 @@ def extract(root, graph="full", keep_zero=False, source_name=None, whitelist=Non
     real = [pl for pl in raw_players if not pl.get("friendlyNPC")]
     owner = {pl["name"]: i for i, pl in enumerate(real) if pl.get("name")}
     mech_wl_g = flt.get("mechanics")
-    owners_by_mech = {}
+    owners_by_mech, events_by_mech = {}, {}
     for m in root.get("mechanics") or []:
         label = mech_label(m)
         if mech_wl_g and label not in mech_wl_g and m.get("fullName") not in mech_wl_g:
             continue
         owners_by_mech.setdefault(label, []).extend(
             owner[e.get("actor")] for e in (m.get("mechanicsData") or []) if e.get("actor") in owner)
+        events_by_mech[label] = events_by_mech.get(label, 0) + len(m.get("mechanicsData") or [])
     g_mech = {}
     for n, o in owners_by_mech.items():
-        if o:                                   # counts: Wert JEDES Spielers (inkl. 0), absteigend, ohne Namen -> Rang/Anteil
-            c = collections.Counter(o)
-            g_mech[n] = {"count": len(o), "players": len(c),
+        if o or events_by_mech.get(n):          # counts: Wert JEDES Spielers (inkl. 0), absteigend, ohne Namen -> Rang/Anteil
+            c = collections.Counter(o)          # events: ALLE Ereignisse der Mechanik, auch mit NPC als Akteur
+            g_mech[n] = {"count": len(o), "players": len(c), "events": events_by_mech.get(n, 0),
                          "counts": sorted((c.get(i, 0) for i in range(len(real))), reverse=True)}
     metric_values = {"dps": [], "breakbar_damage": [], "resurrects": []}
     for pl in real:
@@ -227,7 +230,32 @@ def extract(root, graph="full", keep_zero=False, source_name=None, whitelist=Non
         metric_values["breakbar_damage"].append(tot.get("breakbarDamage", 0))
         metric_values["resurrects"].append(((pl.get("support") or [{}])[0] or {}).get("resurrects", 0) or 0)
     g_metrics = {k: sum(v) for k, v in metric_values.items()}
-    group = {"player_count": len(real), "mechanics": g_mech, "metrics": g_metrics,
+    # ---- Boon-Erzeugung: wie viel Uptime (bzw. Stacks) erzeugt ein Spieler im Schnitt fuer ALLE Spieler im Log.
+    # Summe der 'generated'-Anteile jedes Spielers ueber alle Empfaenger (Phase 0), geteilt durch die Spielerzahl.
+    gen_ids = {}
+    for key, val in (root.get("buffMap") or {}).items():
+        bid = key[1:] if key[:1] == "b" and key[1:].lstrip("-").isdigit() else key
+        if val.get("name") in GENERATION_BUFFS:
+            gen_ids[bid] = val["name"]
+    gen_sum = {}
+    if gen_ids and real:
+        for rcp in real:
+            for b in rcp.get("buffUptimes") or []:
+                nm, bd = gen_ids.get(str(b.get("id"))), (b.get("buffData") or [None])[0]
+                if nm and bd:
+                    for src, pct in (bd.get("generated") or {}).items():
+                        if src in owner and pct:
+                            d = gen_sum.setdefault(nm, {})
+                            d[owner[src]] = d.get(owner[src], 0.0) + pct
+    gen_val, gen_lists = {}, {}
+    for nm, d in gen_sum.items():
+        vals = [round(d.get(i, 0.0) / len(real), 1) for i in range(len(real))]
+        gen_lists[nm] = sorted(vals, reverse=True)
+        for i, v in enumerate(vals):
+            gen_val.setdefault(i, {})[nm] = v
+    real_idx = {id(pl): i for i, pl in enumerate(real)}
+    group = {"player_count": len(real), "mechanics": g_mech, "metrics": g_metrics, "generation": gen_lists,
+             "tracked": sorted(mech_wl_g) if mech_wl_g else None,     # None = alle Mechaniken erfasst
              "metric_values": {k: sorted(v, reverse=True) for k, v in metric_values.items()}}
     for pl in raw_players:
         if wl is not None and (pl.get("account") or "").casefold() not in wl:
@@ -236,6 +264,7 @@ def extract(root, graph="full", keep_zero=False, source_name=None, whitelist=Non
         if pl.get("name") and pl.get("account"):
             characters[pl["name"]] = pl["account"]
 
+        out["generates"] = gen_val.get(real_idx.get(id(pl)), {})      # Ø Uptime/Stacks, die der Spieler der Gruppe gibt
         out["dps_all"] = [e.get("dps") for e in (pl.get("dpsAll") or [])]
 
         dps_t = pl.get("dpsTargets") or []

@@ -2,7 +2,7 @@
 LEGACY/
 extracted/
 json_dump/
-config.toml
+**/config.toml
 json_slim/
 
 

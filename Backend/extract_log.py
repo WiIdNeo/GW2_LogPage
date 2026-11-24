@@ -15,6 +15,9 @@ Konventionen im Ausgabeformat:
   * Buffs/Zustaende/Consumables sind ueber ihren KLARNAMEN adressiert (aus der buffMap der JSON); IDs und
     weitere Attribute stehen in "buffs_info". Bei gleichem Namen mit verschiedenen IDs: "Name (ID)".
   * Wer einen Buff erzeugt hat ("generated", "incomingBy") wird bewusst NICHT exportiert - dafuer ins Log schauen.
+  * "incoming_damage" je Spieler (Phase 0): die Top-N Schadensquellen, die dem Spieler Schaden gemacht haben
+    (Skill-/Zustandsname, Schaden, Treffer), plus Gesamtschaden. Default N = 10; je Boss in der Filterdatei
+    ueber  incoming_damage = 5  (Anzahl) bzw.  incoming_damage = false  (aus) aenderbar.
   * Mit Whitelist (Accounts) bleiben nur diese Spieler uebrig; Mechanik-Ereignisse anderer Spieler entfallen.
   * Pro Boss kann eine Filterdatei (TOML) Ziele (NPC-ID) und Mechaniken (Name) auf eine Whitelist begrenzen.
     Schluessel: Boss-ID, bei Challenge Mode negativ (wie in bosses.toml), z. B. [boss."-17194"].
@@ -35,7 +38,7 @@ import tomllib
 from pathlib import Path
 
 # ----------------------------------------------------------------------------- Konfiguration
-SCHEMA_VERSION = 4
+SCHEMA_VERSION = 5                             # 5: + players[].incoming_damage
 META_FIELDS = ("eliteInsightsVersion", "gW2Build", "triggerID", "isCM", "success",
                "durationMS", "duration", "timeStartStd", "timeEndStd")
 PLAYER_FIELDS = ("account", "name", "group", "profession", "hasCommanderTag", "friendlyNPC", "notInSquad")
@@ -47,6 +50,7 @@ DROP_VOLUME_KEYS = {"incomingBy", "incomingByExtensionBy"}   # "wer hat es erzeu
 BUFF_INFO_DROP = {"icon", "descriptions"}      # aus buffMap-Eintraegen entfernt (URLs / lange Texte)
 GENERATION_BUFFS = ("Alacrity", "Quickness", "Might", "Fury", "Protection", "Stability", "Aegis",
                     "Resistance", "Resolution", "Regeneration", "Swiftness", "Vigor")   # fuer Rollen "wer gibt was"
+INCOMING_TOP = 10                              # Default: so viele Incoming-Damage-Quellen je Spieler
 TOTAL_PRIORITIES = {"MAIN"}                    # welche Ziele in "dps_targets_total" einfliessen
 
 
@@ -119,14 +123,52 @@ def mech_label(m):
     return m.get("name") or m.get("fullName") or m.get("description") or "?"
 
 
+def incoming_damage_of(pl, skill_map, buff_map, top):
+    """Schadensquellen, die DIESEM Spieler in Phase 0 Schaden gemacht haben (EI: totalDamageTaken).
+    Eintraege mit gleichem Namen (z. B. mehrere Skill-IDs) werden addiert. Rueckgabe:
+    {"total": Gesamtschaden aller Quellen, "sources": [{name, damage, hits, id, indirect}, ...]} - die Top-N nach Schaden."""
+    phases = pl.get("totalDamageTaken") or []
+    entries = (phases[0] if phases else None) or []
+    agg = {}
+    for e in entries:
+        dmg = e.get("totalDamage") or 0
+        if dmg <= 0 or "id" not in e:
+            continue
+        sid, indirect = e["id"], bool(e.get("indirectDamage"))
+        first, second = ((buff_map, skill_map) if indirect else (skill_map, buff_map))
+        info = first.get(sid) or first.get(str(sid)) or second.get(sid) or second.get(str(sid)) or {}
+        name = info.get("name") or f"unbekannt_{sid}"
+        a = agg.setdefault(name, {"name": name, "damage": 0, "hits": 0, "id": sid, "indirect": indirect, "_max": 0})
+        a["damage"] += dmg
+        a["hits"] += e.get("hits") or 0
+        if dmg > a["_max"]:                         # ID/Art des groessten Beitrags behalten
+            a["_max"], a["id"], a["indirect"] = dmg, sid, indirect
+    rows = sorted(agg.values(), key=lambda r: (-r["damage"], r["name"]))
+    return {"total": sum(r["damage"] for r in rows),
+            "sources": [{k: v for k, v in r.items() if k != "_max"} for r in rows[:top]]}
+
+
+def id_name_map(raw_map, prefix):
+    """EI-skillMap/buffMap ({"s123": {...}} bzw. {"b123": {...}}) -> {123: {...}}."""
+    out = {}
+    for key, val in (raw_map or {}).items():
+        k = key[1:] if key[:1] == prefix and key[1:].lstrip("-").isdigit() else key
+        if k.lstrip("-").isdigit():
+            out[int(k)] = val
+    return out
+
+
 # ----------------------------------------------------------------------------- Filterdatei
 def load_filters(path):
-    """analysis_filter.toml -> {boss_key: {"targets": set[int]|None, "mechanics": set[str]|None}}"""
+    """analysis_filter.toml -> {boss_key: {"targets": set[int]|None, "mechanics": set[str]|None, ["incoming_damage": int]}}"""
     data = tomllib.loads(Path(path).read_text(encoding="utf-8")).get("boss", {})
     out = {}
     for key, v in data.items():
         out[str(key)] = {"targets": set(v["targets"]) if "targets" in v else None,
                          "mechanics": set(v["mechanics"]) if "mechanics" in v else None}
+        if "incoming_damage" in v:                  # Zahl = Top-N, true = Default, false/0 = nicht exportieren
+            n = v["incoming_damage"]
+            out[str(key)]["incoming_damage"] = INCOMING_TOP if n is True else (0 if n is False else max(0, int(n)))
     return out
 
 
@@ -155,6 +197,9 @@ def extract(root, graph="full", keep_zero=False, source_name=None, whitelist=Non
     keys = [k for k in (*filter_keys, ei_key) if k]
     flt = pick_filter(filters, keys)
     boss_key = keys[0] if keys else None
+    inc_top = flt.get("incoming_damage", INCOMING_TOP)               # Top-N Incoming-Damage-Quellen (0 = aus)
+    skill_names = id_name_map(root.get("skillMap"), "s") if inc_top else {}
+    buff_names = id_name_map(root.get("buffMap"), "b") if inc_top else {}
 
     # ---- relevante Ziele (+ optional Whitelist nach NPC-ID)
     rel = relevant_targets(phases, n_t)
@@ -288,6 +333,9 @@ def extract(root, graph="full", keep_zero=False, source_name=None, whitelist=Non
             for p in range(n_ph)]
 
         out["support"] = [pick(e, SUPPORT_FIELDS) for e in (pl.get("support") or [])]
+
+        if inc_top:                                  # Incoming Damage: wer/was hat DIESEM Spieler wie viel Schaden gemacht
+            out["incoming_damage"] = incoming_damage_of(pl, skill_names, buff_names, inc_top)
 
         uptimes = {}
         for b in pl.get("buffUptimes") or []:

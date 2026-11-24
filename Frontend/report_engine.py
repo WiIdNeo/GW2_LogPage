@@ -32,8 +32,8 @@ Schluessel einer Regel:
   of = ["A", "B"]                 nur bei mechanic: die Werte mehrerer Mechaniken werden ADDIERT und als Summe bewertet
                                   (player, total und share; {rank}/{rank_bottom} und {players} gibt es dann nicht;
                                   Rollen-Kriterien koennen nur einzelne Mechaniken vergleichen)
-  roles = ["Tank"]                Regel nur fuer Spieler mit (mindestens) einer dieser Rollen
-  not_roles = ["Tank"]            Regel NICHT fuer Spieler mit einer dieser Rollen
+  roles = ["Tank", "Heal"]        Regel nur fuer Spieler, die ALLE diese Rollen haben (UND-verknuepft)
+  not_roles = ["Tank", "Heal"]    Regel NICHT fuer Spieler, die auch nur EINE dieser Rollen haben (ODER-verknuepft, "weder noch")
 Platzhalter in Texten: {value} {count} {threshold} {rule} {player} {account} {character} {time} {times} {roles}
   zusaetzlich bei total/share: {total} (Gruppensumme) {players} (betroffene Spieler) {player_count} {share}
   Mechanik-Summen beliebiger Mechaniken im Text: {gruppe[Mechanikname]} = Summe ueber ALLE Spieler im Log,
@@ -60,6 +60,9 @@ Rollen ([role."Name"], boss-spezifisch [boss."<ID>".role."Name"]) - aus dem Verg
   description = "..."             optional, nur zur Erinnerung
   not_roles = ["Cannon"]          Rolle entfaellt, wenn der Spieler eine dieser Rollen hat (diese muss WEITER OBEN in der Datei stehen)
   criteria = [ { source = "mechanic"|"metric", name = "...", <Bedingung(en)> }, ... ]
+             zusaetzlich in einem Kriterium: roles = [..] (hat mindestens eine dieser Rollen) / not_roles = [..] (hat keine davon);
+             ohne source/name ist es ein reines Rollen-Kriterium, z. B. { not_roles = ["BoonDPS", "Heal"] }.
+             Es zaehlen nur Rollen, die WEITER OBEN definiert sind (globale Rollen stehen vor den Boss-Rollen).
   Bedingungen eines Kriteriums (alle angegebenen muessen zutreffen):
     top = 3          Platz <= 3 von oben (Wert > 0)       bottom = 3     Platz <= 3 von unten (Nullen zaehlen mit)
     share_min = 30   Anteil an der Gruppensumme >= 30 %    share_max = 5  Anteil <= 5 %
@@ -85,7 +88,8 @@ RULE_KEYS = {"critical", "critical_below", "list_if_not_critical", "text_if_list
              "text_if_listed_not_critical", "link", "professions", "compare", "min_total", "of", "roles", "not_roles",
              "critical_above", "per", "per_scope", "min_per"}
 COMPARE = ("player", "total", "share", "ratio")
-ROLE_CRIT_KEYS = {"source", "name", "top", "bottom", "share_min", "share_max", "min_total", "value_min", "value_max"}
+ROLE_CRIT_KEYS = {"source", "name", "top", "bottom", "share_min", "share_max", "min_total", "value_min", "value_max",
+                  "roles", "not_roles"}
 ADDITIVE_METRICS = ("dps", "breakbar_damage", "resurrects")      # nur diese gibt es als Gruppensumme
 
 
@@ -292,6 +296,19 @@ def _clean_roles(block, where, problems):
             bad = sorted(set(c) - ROLE_CRIT_KEYS)
             if bad:
                 problems.append(f"{cw}: unbekannte Schluessel {bad}")
+            c = dict(c)
+            for k in ("roles", "not_roles"):
+                if isinstance(c.get(k), str):
+                    c[k] = [c[k]]
+            if any(k in c and not (isinstance(c[k], list) and all(isinstance(x, str) for x in c[k])) for k in ("roles", "not_roles")):
+                problems.append(f"{cw}: roles/not_roles muessen eine Liste von Rollennamen sein")
+                continue
+            if "source" not in c and "name" not in c:       # reines Rollen-Kriterium: nur roles / not_roles
+                if c.get("roles") or c.get("not_roles"):
+                    ok.append(c)
+                else:
+                    problems.append(f"{cw}: source + name (mit Bedingung) oder roles/not_roles noetig")
+                continue
             if c.get("source") not in ("mechanic", "metric", "generation") or not c.get("name"):
                 problems.append(f"{cw}: source (mechanic|metric|generation) und name noetig")
                 continue
@@ -464,9 +481,9 @@ def _applies(rule, pl, role_names=()):
     if profs and pl.get("profession") not in profs:
         return False
     need, deny = rule.get("roles"), rule.get("not_roles")
-    if need and not set(need) & set(role_names):
+    if need and not set(need) <= set(role_names):           # roles: UND - der Spieler braucht ALLE genannten Rollen
         return False
-    if deny and set(deny) & set(role_names):
+    if deny and set(deny) & set(role_names):                # not_roles: ODER (weder noch) - keine einzige darf zutreffen
         return False
     return True
 
@@ -489,8 +506,19 @@ def _rank_extra(st):
             "share": _num(st["share"]) if st["share"] is not None else "", "player_count": _num(st["n"])}
 
 
-def _criterion(c, mstats, xstats, gstats):
-    """Liefert einen Beleg-Text, wenn das Kriterium zutrifft, sonst None."""
+def _criterion(c, mstats, xstats, gstats, found=frozenset()):
+    """Liefert einen Beleg-Text, wenn das Kriterium zutrifft, sonst None. found = bereits vergebene Rollen des Spielers."""
+    if c.get("roles") and not set(c["roles"]) & found:
+        return None
+    if c.get("not_roles") and set(c["not_roles"]) & found:
+        return None
+    if "source" not in c:                                   # reines Rollen-Kriterium
+        parts = []
+        if c.get("roles"):
+            parts.append("hat " + ", ".join(sorted(set(c["roles"]) & found)))
+        if c.get("not_roles"):
+            parts.append("hat keine der Rollen " + ", ".join(c["not_roles"]))
+        return "; ".join(parts)
     st = {"mechanic": mstats, "metric": xstats, "generation": gstats}[c["source"]].get(c["name"])
     if not st or st["total"] < c.get("min_total", 1):
         return None
@@ -574,7 +602,7 @@ def evaluate(slim, boss_key, rules):
         for rname, r in merged("role")[0].items():
             if set(r.get("not_roles") or []) & {x["name"] for x in roles}:
                 continue                              # Rolle entfaellt, wenn der Spieler eine der not_roles (weiter oben definiert) hat
-            hits = [_criterion(c, mstats, xstats, gstats) for c in r["criteria"]]
+            hits = [_criterion(c, mstats, xstats, gstats, {x["name"] for x in roles}) for c in r["criteria"]]
             if (all(hits) if r.get("match") == "all" else any(hits)):
                 roles.append({"name": rname, "why": [h for h in hits if h], "description": r.get("description", "")})
         role_names = [r["name"] for r in roles]

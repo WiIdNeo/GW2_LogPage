@@ -1434,7 +1434,7 @@ targets = [
 mechanics = [
   # --- neu am 2026-11-22 ---
   "Trapped",  # max 118 Ereignisse | Trapped
-  "#Miss.Qck",  # max 48 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Qck",  # max 48 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   #"Miss.Alac",  # max 34 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   "Lnch",  # max 13 Ereignisse | Launched
   "Dead",  # max 10 Ereignisse | Dead

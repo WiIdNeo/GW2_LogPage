@@ -144,10 +144,10 @@
         criteria = [ { source = "generation", name = "Quickness", value_min = 30, top = 2 } ]
 
         [role."BoonDPS"]
-        criteria = [{source = "metric", name = "DPS", value_min = "5000", roles = ["Alac-Support","Quick-Support"]}]
+        criteria = [{source = "metric", name = "dps", value_min = 5000, roles = ["Alac-Support","Quick-Support"]}]
 
         [role."Heal"]
-        criteria = [role = ["Alac-Support", "Quick-Support"], not_roles = ["BoonDPS"]]
+        criteria = [{ roles = ["Alac-Support", "Quick-Support"], not_roles = ["BoonDPS"] }]
 
 
 # Vale Guardian
@@ -176,31 +176,35 @@
 
     # Roles
         [boss."15438".role."Condi-DPS"]
-        criteria = [{source = "metric", name = "CondiDPS", value_min = "5000"}]
+        criteria = [{source = "metric", name = "CondiDPS", value_min = 5000}]
 
         [boss."15438".role."Power-DPS"]
         criteria = [{not_roles = ["Condi-DPS", "BoonDPS", "Heal"]}]
 
     # DPS
         # will be DPS as 100%, bDPS = 80%
-        [boss."15438".metric.dps]
+        [boss."15438".metric."dps Power-DPS"]
+        of = "dps"
         roles = "Power-DPS"
         critical_below = 22000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."15438".metric.dps]
+        [boss."15438".metric."dps Condi-DPS ohne BoonDPS"]
+        of = "dps"
         roles = "Condi-DPS"
         not_roles = "BoonDPS"
         critical_below = 16500
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."15438".metric.dps]
+        [boss."15438".metric."dps BoonDPS ohne Condi-DPS"]
+        of = "dps"
         roles = "BoonDPS"
         not_roles = "Condi-DPS"
         critical_below = 17600
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."15438".metric.dps]
+        [boss."15438".metric."dps Condi-DPS + BoonDPS"]
+        of = "dps"
         roles = ["Condi-DPS", "BoonDPS"]
         critical_below = 13200
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
@@ -235,12 +239,14 @@
         criteria = [{not_roles = ["BoonDPS", "Heal"]}]
 
     # DPS
-        [boss."15429".metric.dps]
+        [boss."15429".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 22000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."15429".metric.dps]
+        [boss."15429".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
         critical_below = 17600
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
@@ -306,24 +312,28 @@
         criteria = [{not_roles = ["BoonDPS", "Heal", "Cannon"]}]
 
     # DPS
-        [boss."15375".metric.dps]
+        [boss."15375".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
-        critical_below = "28000 - 28000 * 0.1 * {boss."15375".mechanic."Launched"}"
+        critical_below = "28000 - 28000 * 0.1 * {Launched}"
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."15375".metric.dps]
+        [boss."15375".metric."dps BoonDPS ohne Cannon"]
+        of = "dps"
         roles = "BoonDPS"
         not_roles = "Cannon"
-        critical_below = "22400 - 22400 * 0.1 * {boss."15375".mechanic."Launched"}"
+        critical_below = "22400 - 22400 * 0.1 * {Launched}"
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."15375".metric.dps]
+        [boss."15375".metric."dps Cannon ohne BoonDPS"]
+        of = "dps"
         roles = "Cannon"
         not_roles = "BoonDPS"
         critical_below = 22400
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."15375".metric.dps]
+        [boss."15375".metric."dps BoonDPS + Cannon"]
+        of = "dps"
         roles = ["BoonDPS", "Cannon"]
         critical_below = 17920
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
@@ -367,24 +377,28 @@
         criteria = [{not_roles = ["BoonDPS", "Heal", "Slubling"]}]
 
     # DPS
-        [boss."16123".metric.dps]
+        [boss."16123".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 14000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."16123".metric.dps]
+        [boss."16123".metric."dps BoonDPS ohne Slubling"]
+        of = "dps"
         roles = "BoonDPS"
         not_roles = "Slubling"
         critical_below = 11200
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."16123".metric.dps]
+        [boss."16123".metric."dps Slubling ohne BoonDPS"]
+        of = "dps"
         roles = "Slubling"
         not_roles = "BoonDPS"
         critical_below = 10500
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."16123".metric.dps]
+        [boss."16123".metric."dps Slubling + BoonDPS"]
+        of = "dps"
         roles = ["Slubling", "BoonDPS"]
         critical_below = 8400
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
@@ -440,12 +454,14 @@
         criteria = [{not_roles = ["BoonDPS", "Heal"]}]
 
     # DPS
-        [boss."16115".metric.dps]
+        [boss."16115".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 17000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."16115".metric.dps]
+        [boss."16115".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
         critical_below = 13600
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
@@ -486,12 +502,14 @@
         criteria = [{not_roles = ["BoonDPS", "Heal"]}]
 
     # DPS
-        [boss."-16235".metric.dps]
+        [boss."-16235".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 25000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."-16235".metric.dps]
+        [boss."-16235".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
         critical_below = 20000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
@@ -532,12 +550,14 @@
         criteria = [{not_roles = ["BoonDPS", "Heal"]}]
 
     # DPS
-        [boss."16235".metric.dps]
+        [boss."16235".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 25000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."16235".metric.dps]
+        [boss."16235".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
         critical_below = 20000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
@@ -560,14 +580,16 @@
         criteria = [{not_roles = ["BoonDPS", "Heal"]}]
 
     # DPS
-        [boss."16246".metric.dps]
+        [boss."16246".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
-        critical_below = "12000 - 12000 * 0.1 * {boss."16246".mechanic."TP Out"}"
+        critical_below = "12000 - 12000 * 0.1 * {TP Out}"
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold} bei deiner Anzahl Ports)."
 
-        [boss."16246".metric.dps]
+        [boss."16246".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
-        critical_below = "9600 - 9600 * 0.1 * {boss."16246".mechanic."TP Out"}"
+        critical_below = "9600 - 9600 * 0.1 * {TP Out}"
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold} - bei deiner ANzahl Ports)."
 
 
@@ -608,15 +630,17 @@
         criteria = [{not_roles = ["BoonDPS", "Heal"]}]
 
     # DPS
-        [boss."-17194".metric.dps]
+        [boss."-17194".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 29000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."-17194".metric.dps]
+        [boss."-17194".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
         critical_below = 23200
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # Cairn
@@ -656,15 +680,17 @@
         criteria = [{not_roles = ["BoonDPS", "Heal"]}]
 
     # DPS
-        [boss."17194".metric.dps]
+        [boss."17194".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 31000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."17194".metric.dps]
+        [boss."17194".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
         critical_below = 24800
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # MO CM
@@ -697,27 +723,31 @@
         criteria = [{not_roles = ["BoonDPS", "Heal", "Took Dispel"]}]
 
     # DPS
-        [boss."-17172".metric.dps]
+        [boss."-17172".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 34000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."-17172".metric.dps]
+        [boss."-17172".metric."dps BoonDPS ohne Took Dispel"]
+        of = "dps"
         roles = "BoonDPS"
         not_roles = ["Took Dispel"]
         critical_below = 27200
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."-17172".metric.dps]
+        [boss."-17172".metric."dps Took Dispel ohne BoonDPS"]
+        of = "dps"
         roles = "Took Dispel"
         not_roles = ["BoonDPS"]
         critical_below = 33000
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."-17172".metric.dps]
+        [boss."-17172".metric."dps BoonDPS + Took Dispel"]
+        of = "dps"
         roles = ["BoonDPS", "Took Dispel"]
         critical_below = 26200
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # MO
@@ -750,27 +780,31 @@
         criteria = [{not_roles = ["BoonDPS", "Heal", "Took Dispel"]}]
 
     # DPS
-        [boss."17172".metric.dps]
+        [boss."17172".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 34000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."17172".metric.dps]
+        [boss."17172".metric."dps BoonDPS ohne Took Dispel"]
+        of = "dps"
         roles = "BoonDPS"
         not_roles = ["Took Dispel"]
         critical_below = 27200
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."17172".metric.dps]
+        [boss."17172".metric."dps Took Dispel ohne BoonDPS"]
+        of = "dps"
         roles = "Took Dispel"
         not_roles = ["BoonDPS"]
         critical_below = 33000
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."17172".metric.dps]
+        [boss."17172".metric."dps BoonDPS + Took Dispel"]
+        of = "dps"
         roles = ["BoonDPS", "Took Dispel"]
         critical_below = 26200
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # Samarog CM
@@ -825,20 +859,22 @@
         criteria = [{not_roles = ["BoonDPS", "Heal"]}]
 
     # DPS
-        [boss."-17188".metric.dps]
+        [boss."-17188".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 20000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."-17188".metric.dps]
+        [boss."-17188".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
         critical_below = 16000
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
     # CC
         [boss."-17188".metric.breakbar_damage]
         compare = "share"
-        critical_below = "11.11 - (1.235 * {boss."-17188".mechanic."Brtlzd"})"
+        critical_below = "11.11 - (1.235 * {Brtlzd})"
         text_if_listed_critical = "Dein DPS war mit {value} niedriger als erwartet bei deiner Menge CC-Phasen (Erwartungswert: {threshold})."
 
 
@@ -889,20 +925,22 @@
         criteria = [{not_roles = ["BoonDPS", "Heal"]}]
 
     # DPS
-        [boss."17188".metric.dps]
+        [boss."17188".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 20000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."17188".metric.dps]
+        [boss."17188".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
         critical_below = 16000
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
     # CC
         [boss."17188".metric.breakbar_damage]
         compare = "share"
-        critical_below = "11.11 - (1.235 * {boss."17188".mechanic."Brtlzd"})"
+        critical_below = "11.11 - (1.235 * {Brtlzd})"
         text_if_listed_critical = "Dein DPS war mit {value} niedriger als erwartet bei deiner Menge CC-Phasen (Erwartungswert: {threshold})."
 
 
@@ -939,21 +977,23 @@
         # Genutzt, aber nicht definiert: Tank
 
         [boss."17154".role."HK"]
-        criteria = [{ mechanic = "Weak Mind", top = 1}]
+        criteria = [{ source = "mechanic", name = "Weak Mind", top = 1 }]
 
         [boss."17154".role."DPS"]
         criteria = [{not_roles = ["BoonDPS", "Heal", "HK"]}]
 
     # DPS
-        [boss."17154".metric.dps]
+        [boss."17154".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 20000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."17154".metric.dps]
+        [boss."17154".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
         critical_below = 16000
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # Deimos CM
@@ -992,15 +1032,17 @@
         criteria = [{not_roles = ["BoonDPS", "Heal", "HK"]}]
 
     # DPS
-        [boss."-17154".metric.dps]
+        [boss."-17154".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 20000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."-17154".metric.dps]
+        [boss."-17154".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
         critical_below = 16000
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # SH CM
@@ -1039,15 +1081,17 @@
         criteria = [{not_roles = ["BoonDPS", "Heal", "Push"]}]
 
     # DPS
-        [boss."-19767".metric.dps]
+        [boss."-19767".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 30000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."-19767".metric.dps]
+        [boss."-19767".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
         critical_below = 24000
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # SH
@@ -1086,15 +1130,17 @@
         criteria = [{not_roles = ["BoonDPS", "Heal", "Push"]}]
 
     # DPS
-        [boss."19767".metric.dps]
+        [boss."19767".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 30000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."19767".metric.dps]
+        [boss."19767".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
         critical_below = 24000
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # Dhuum CM
@@ -1153,15 +1199,17 @@
         criteria = [{not_roles = ["BoonDPS", "Heal", "Kite"]}]
 
     # DPS
-        [boss."-19450".metric.dps]
+        [boss."-19450".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
-        critical_below = "10000 - 10000 * 0.05 * {boss."-19450".role."Orb CD"} "
+        critical_below = "10000 - 10000 * 0.05 * {Orb CD}"
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold} bei deiner Anzahl Greens)."
 
-        [boss."-19450".metric.dps]
+        [boss."-19450".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
-        critical_below = "8000 - 8000 * 0.05 * {boss."-19450".role."Orb CD"}"
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold} bei deiner Anzahl Greens).
+        critical_below = "8000 - 8000 * 0.05 * {Orb CD}"
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold} bei deiner Anzahl Greens)."
 
 
 # Dhuum
@@ -1215,15 +1263,17 @@
         criteria = [{not_roles = ["BoonDPS", "Heal", "Kite"]}]
 
     # DPS
-        [boss."19450".metric.dps]
+        [boss."19450".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
-        critical_below = "10000 - 10000 * 0.05 * {boss."19450".role."Orb CD"} "
+        critical_below = "10000 - 10000 * 0.05 * {Orb CD}"
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold} bei deiner Anzahl Greens)."
 
-        [boss."19450".metric.dps]
+        [boss."19450".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
-        critical_below = "8000 - 8000 * 0.05 * {boss."19450".role."Orb CD"}"
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold} bei deiner Anzahl Greens).
+        critical_below = "8000 - 8000 * 0.05 * {Orb CD}"
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold} bei deiner Anzahl Greens)."
 
 
 # Conjured Amalgamit CM
@@ -1255,29 +1305,33 @@
         criteria = [{not_roles = ["BoonDPS", "Heal"]}]
 
     # DPS
-        [boss."-43974".metric.dps]
+        [boss."-43974".metric."dps DPS ohne Collector (Shield), Collector (Sword)"]
+        of = "dps"
         roles = "DPS"
         not_roles = ["Collector (Shield)", "Collector (Sword)"]
         critical_below = 37000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."-43974".metric.dps]
+        [boss."-43974".metric."dps BoonDPS ohne Collector (Shield), Collector (Sword)"]
+        of = "dps"
         roles = "BoonDPS"
         not_roles = ["Collector (Shield)", "Collector (Sword)"]
         critical_below = 29600
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."-43974".metric.dps]
+        [boss."-43974".metric."dps Collector (Shield) + Collector (Sword) ohne DPS"]
+        of = "dps"
         not_roles = "DPS"
         roles = ["Collector (Shield)", "Collector (Sword)"]
         critical_below = 29600
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."-43974".metric.dps]
+        [boss."-43974".metric."dps Collector (Shield) + Collector (Sword) ohne BoonDPS"]
+        of = "dps"
         not_roles = "BoonDPS"
         roles = ["Collector (Shield)", "Collector (Sword)"]
         critical_below = 23680
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # Conjured Amalgamit
@@ -1309,29 +1363,33 @@
         criteria = [{not_roles = ["BoonDPS", "Heal"]}]
 
     # DPS
-        [boss."43974".metric.dps]
+        [boss."43974".metric."dps DPS ohne Collector (Shield), Collector (Sword)"]
+        of = "dps"
         roles = "DPS"
         not_roles = ["Collector (Shield)", "Collector (Sword)"]
         critical_below = 37000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."43974".metric.dps]
+        [boss."43974".metric."dps BoonDPS ohne Collector (Shield), Collector (Sword)"]
+        of = "dps"
         roles = "BoonDPS"
         not_roles = ["Collector (Shield)", "Collector (Sword)"]
         critical_below = 29600
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."43974".metric.dps]
+        [boss."43974".metric."dps Collector (Shield) + Collector (Sword) ohne DPS"]
+        of = "dps"
         not_roles = "DPS"
         roles = ["Collector (Shield)", "Collector (Sword)"]
         critical_below = 29600
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."43974".metric.dps]
+        [boss."43974".metric."dps Collector (Shield) + Collector (Sword) ohne BoonDPS"]
+        of = "dps"
         not_roles = "BoonDPS"
         roles = ["Collector (Shield)", "Collector (Sword)"]
         critical_below = 23680
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # Twin Largos CM
@@ -1367,15 +1425,17 @@
         criteria = [{not_roles = ["BoonDPS", "Heal"]}]
 
     # DPS
-        [boss."-21105".metric.dps]
+        [boss."-21105".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 20000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."-21105".metric.dps]
+        [boss."-21105".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
         critical_below = 16000
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # Twin Largos
@@ -1411,15 +1471,17 @@
         criteria = [{not_roles = ["BoonDPS", "Heal"]}]
 
     # DPS
-        [boss."21105".metric.dps]
+        [boss."21105".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 20000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."21105".metric.dps]
+        [boss."21105".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
         critical_below = 16000
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # Qadim CM
@@ -1467,20 +1529,23 @@
         criteria = [{not_roles = ["BoonDPS", "Heal", "Lamp", "Kite"]}]
 
     # DPS
-        [boss."-20934".metric.dps]
+        [boss."-20934".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 12000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."-20934".metric.dps]
+        [boss."-20934".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
         critical_below = 9600
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."-20934".metric.dps]
+        [boss."-20934".metric."dps Lamp + Kite"]
+        of = "dps"
         roles = ["Lamp", "Kite"]
         critical_below = 6500
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # Qadim
@@ -1528,20 +1593,23 @@
         criteria = [{not_roles = ["BoonDPS", "Heal", "Lamp", "Kite"]}]
 
     # DPS
-        [boss."20934".metric.dps]
+        [boss."20934".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 12000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."20934".metric.dps]
+        [boss."20934".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
         critical_below = 9600
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."20934".metric.dps]
+        [boss."20934".metric."dps Lamp + Kite"]
+        of = "dps"
         roles = ["Lamp", "Kite"]
         critical_below = 6500
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # Adina CM
@@ -1566,15 +1634,17 @@
         criteria = [{not_roles = ["BoonDPS", "Heal"]}]
 
     # DPS
-        [boss."-22006".metric.dps]
+        [boss."-22006".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 15000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."-22006".metric.dps]
+        [boss."-22006".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
         critical_below = 12000
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # Adina
@@ -1599,15 +1669,17 @@
         criteria = [{not_roles = ["BoonDPS", "Heal"]}]
 
     # DPS
-        [boss."22006".metric.dps]
+        [boss."22006".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 15000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."22006".metric.dps]
+        [boss."22006".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
         critical_below = 12000
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # Sabir CM
@@ -1637,15 +1709,17 @@
         criteria = [{not_roles = ["BoonDPS", "Heal"]}]
 
     # DPS
-        [boss."-21964".metric.dps]
+        [boss."-21964".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 19000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."-21964".metric.dps]
+        [boss."-21964".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
         critical_below = 15200
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # Sabir
@@ -1675,15 +1749,17 @@
         criteria = [{not_roles = ["BoonDPS", "Heal"]}]
 
     # DPS
-        [boss."21964".metric.dps]
+        [boss."21964".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 22000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."21964".metric.dps]
+        [boss."21964".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
         critical_below = 17600
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # Qadim the Peerless CM
@@ -1754,27 +1830,31 @@
         ]
 
     # DPS
-        [boss."-22000".metric.dps]
+        [boss."-22000".metric."dps DPS ohne Pylon"]
+        of = "dps"
         roles = "DPS"
         not_roles = "Pylon"
         critical_below = 19000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."-22000".metric.dps]
+        [boss."-22000".metric."dps BoonDPS ohne Pylon"]
+        of = "dps"
         roles = "BoonDPS"
         not_roles = "Pylon"
         critical_below = 15200
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."-22000".metric.dps]
+        [boss."-22000".metric."dps Pylon + DPS"]
+        of = "dps"
         roles = ["Pylon", "DPS"]
         critical_below = 17000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."-22000".metric.dps]
+        [boss."-22000".metric."dps Pylon + BoonDPS"]
+        of = "dps"
         roles = ["Pylon", "BoonDPS"]
         critical_below = 13800
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # Qadim the Peerless
@@ -1845,27 +1925,31 @@
         ]
 
     # DPS
-        [boss."22000".metric.dps]
+        [boss."22000".metric."dps DPS ohne Pylon"]
+        of = "dps"
         roles = "DPS"
         not_roles = "Pylon"
         critical_below = 21000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."22000".metric.dps]
+        [boss."22000".metric."dps BoonDPS ohne Pylon"]
+        of = "dps"
         roles = "BoonDPS"
         not_roles = "Pylon"
         critical_below = 16800
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."22000".metric.dps]
+        [boss."22000".metric."dps Pylon + DPS"]
+        of = "dps"
         roles = ["Pylon", "DPS"]
         critical_below = 18900
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."22000".metric.dps]
+        [boss."22000".metric."dps Pylon + BoonDPS"]
+        of = "dps"
         roles = ["Pylon", "BoonDPS"]
         critical_below = 15000
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # Greer
@@ -1900,15 +1984,17 @@
         criteria = [{not_roles = ["BoonDPS", "Heal"]}]
 
     # DPS
-        [boss."26725".metric.dps]
+        [boss."26725".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 26000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."26725".metric.dps]
+        [boss."26725".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
         critical_below = 20800
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # Decima
@@ -1954,25 +2040,29 @@
         criteria = [{not_roles = ["BoonDPS", "Heal"]}]
 
     # DPS
-        [boss."26774".metric.dps]
+        [boss."26774".metric."dps DPS + Range Group"]
+        of = "dps"
         roles = ["DPS", "Range Group"]
         critical_below = 24000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."26774".metric.dps]
+        [boss."26774".metric."dps BoonDPS + Range Group"]
+        of = "dps"
         roles =  ["BoonDPS", "Range Group"]
         critical_below = 19200
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."26774".metric.dps]
+        [boss."26774".metric."dps DPS + Melee Group"]
+        of = "dps"
         roles =  ["DPS", "Melee Group"]
         critical_below = 27000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."26774".metric.dps]
+        [boss."26774".metric."dps BoonDPS + Melee Group"]
+        of = "dps"
         roles = ["BoonDPS", "Melee Group"]
         critical_below = 21600
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # Ura
@@ -2010,15 +2100,17 @@
         criteria = [{not_roles = ["BoonDPS", "Heal"]}]
 
     # DPS
-        [boss."26712".metric.dps]
+        [boss."26712".metric."dps DPS"]
+        of = "dps"
         roles = "DPS"
         critical_below = 28000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-        [boss."26712".metric.dps]
+        [boss."26712".metric."dps BoonDPS"]
+        of = "dps"
         roles = "BoonDPS"
         critical_below = 22400
-        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold}).
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # Ice Broot Construct

@@ -1318,20 +1318,20 @@ mechanics = [
 targets = [
   # --- neu am 2026-11-22 ---
   26712,  # Ura, the Steamshrieker
-  26744,  # Champion Fumaroller  [in keiner Phase]
-  26797,  # Elite Fumaroller 1  [in keiner Phase]
+  #26744,  # Champion Fumaroller  [in keiner Phase]
+  #26797,  # Elite Fumaroller 1  [in keiner Phase]
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
   "ScalAura.H",  # max 496 Ereignisse | Hit by Scalding Aura (Ura's Hitbox)
-  "Miss.Alac",  # max 425 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Alac",  # max 425 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   "SulfAcid.A",  # max 163 Ereignisse | Received Sulfuric Acid
-  "Miss.Qck",  # max 131 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Qck",  # max 131 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "ToxGeyser.H",  # max 104 Ereignisse | Hit by Toxic Geyser
   #"SulfFroth.H",  # max 80 Ereignisse | Hit by Sulfuric Froth (Acid Projectile from Ura)
   #"Exposed",  # max 59 Ereignisse | Exposed Applied (Increased incoming damage)
   #"FullSteam.H",  # max 59 Ereignisse | Hit by Full Steam (Fumaroller Dash)
-  "Ste.Prison.H",  # max 51 Ereignisse | Hit by Steam Prison
+  #"Ste.Prison.H",  # max 51 Ereignisse | Hit by Steam Prison
   "Rising Pressure",  # max 47 Ereignisse | Applied Rising Pressure
   #"MantGrind.H",  # max 43 Ereignisse | Hit by Mantle Grinder (Fumaroller Roll)
   "ErupVent.H",  # max 40 Ereignisse | Hit by Eruption Vent (Geyser Shockwave)
@@ -1354,7 +1354,7 @@ mechanics = [
   "Dead",  # max 10 Ereignisse | Dead
   "Knck.Dwn",  # max 7 Ereignisse | Knocked Down
   "Flt",  # max 6 Ereignisse | Float
-  "Got up",  # max 6 Ereignisse | Got up
+  #"Got up",  # max 6 Ereignisse | Got up
   "Ste.Prison.T",  # max 5 Ereignisse | Targeted by Steam Prison (Ring)
   #"SulfGey.T",  # max 5 Ereignisse | Targeted by Sulfuric Geyser (Spawn)
   "BreGround.H",  # max 2 Ereignisse | Hit by Breaking Ground (Fumaroller 8 pointed star)
@@ -1366,35 +1366,6 @@ mechanics = [
   "DC",  # max 1 Ereignisse | DC
 ]
 
-# Fraenir of Jormag  (1 Log(s))
-[boss."22492"]
-targets = [
-  # --- neu am 2026-11-22 ---
-  22436,  # Icebrood Construct
-  22492,  # Fraenir of Jormag
-]
-mechanics = [
-  # --- neu am 2026-11-22 ---
-  "FrigidFusillade.H",  # max 36 Ereignisse | Hit by Frigid Fusillade (Fraenir Arrows)
-  "Frozen",  # max 15 Ereignisse | Frozen
-  "Miss.Qck",  # max 13 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
-  "Snowblind",  # max 10 Ereignisse | Snowblind
-  "Miss.Alac",  # max 9 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
-  "Unfrozen",  # max 9 Ereignisse | Unfrozen
-  "Knck.Dwn",  # max 6 Ereignisse | Knocked Down
-  "Icequake",  # max 5 Ereignisse | Knocked by Icequake
-  "Frigid Fusillade",  # max 2 Ereignisse | Cast Frigid Fusillade
-  "Frozen Missile",  # max 2 Ereignisse | Cast Frozen Missile
-  "Ice Shock Wave",  # max 1 Ereignisse | Knocked by Ice Shock Wave
-  "Lckt",  # max 1 Ereignisse | Lockout
-  "Seismic Crush (Breakbar)",  # max 1 Ereignisse | Cast Seismic Crush & Breakbar
-  "SeismicCrush.CC",  # max 1 Ereignisse | Knocked by Seismic Crush
-  # --- aus Skeleton uebernommen ---
-  "Knck.Pll",  # max 9 Ereignisse | Knocked Back or Pulled
-  "IceArmSwing.CC",  # max 4 Ereignisse | Knocked by Ice Arm Swing
-  "Lnch",  # max 1 Ereignisse | Launched
-  "FrozenMissile.CC",  # max 1 Ereignisse | Launched by Frozen Missile
-]
 
 # Icebrood Construct  (2 Log(s))
 [boss."22154"]
@@ -1405,9 +1376,9 @@ targets = [
 mechanics = [
   # --- neu am 2026-11-22 ---
   "I.Crystal",  # max 49 Ereignisse | Hit by Ice Crystal (Chill AoE)
-  "Miss.Qck",  # max 33 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Qck",  # max 33 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "ShockWave.H",  # max 15 Ereignisse | Hit by Ice Shock Wave
-  "Miss.Alac",  # max 13 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Alac",  # max 13 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   "SpinIce.H",  # max 10 Ereignisse | Hit by Spinning Ice
   #"Ice Orbs",  # max 7 Ereignisse | Hit by Rotating Ice Shatter (Orbs)
   "A.Swing",  # max 6 Ereignisse | Hit by Ice Arm Swing (Spin)
@@ -1417,9 +1388,41 @@ mechanics = [
   "Ice Arm Swing",  # max 1 Ereignisse | Cast Ice Arm Swing (Spin)
   "Lckt",  # max 1 Ereignisse | Lockout
   # --- aus Skeleton uebernommen ---
-  "IceFlail.CC",  # max 1 Ereignisse | Knocked by Ice Flail (Arm Swipe)
-  "Deadly Ice Shock Wave",  # max 1 Ereignisse | Cast Deadly Ice Shock Wave
+  #"IceFlail.CC",  # max 1 Ereignisse | Knocked by Ice Flail (Arm Swipe)
+  #"Deadly Ice Shock Wave",  # max 1 Ereignisse | Cast Deadly Ice Shock Wave
 ]
+
+
+# Fraenir of Jormag  (1 Log(s))
+[boss."22492"]
+targets = [
+  # --- neu am 2026-11-22 ---
+  22436,  # Icebrood Construct
+  22492,  # Fraenir of Jormag
+]
+mechanics = [
+  # --- neu am 2026-11-22 ---
+  #"FrigidFusillade.H",  # max 36 Ereignisse | Hit by Frigid Fusillade (Fraenir Arrows)
+  "Frozen",  # max 15 Ereignisse | Frozen
+  #"Miss.Qck",  # max 13 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  "Snowblind",  # max 10 Ereignisse | Snowblind
+  #"Miss.Alac",  # max 9 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Unfrozen",  # max 9 Ereignisse | Unfrozen
+  "Knck.Dwn",  # max 6 Ereignisse | Knocked Down
+  "Icequake",  # max 5 Ereignisse | Knocked by Icequake
+  #"Frigid Fusillade",  # max 2 Ereignisse | Cast Frigid Fusillade
+  #"Frozen Missile",  # max 2 Ereignisse | Cast Frozen Missile
+  "Ice Shock Wave",  # max 1 Ereignisse | Knocked by Ice Shock Wave
+  "Lckt",  # max 1 Ereignisse | Lockout
+  #"Seismic Crush (Breakbar)",  # max 1 Ereignisse | Cast Seismic Crush & Breakbar
+  #"SeismicCrush.CC",  # max 1 Ereignisse | Knocked by Seismic Crush
+  # --- aus Skeleton uebernommen ---
+  "Knck.Pll",  # max 9 Ereignisse | Knocked Back or Pulled
+  "IceArmSwing.CC",  # max 4 Ereignisse | Knocked by Ice Arm Swing
+  "Lnch",  # max 1 Ereignisse | Launched
+  "FrozenMissile.CC",  # max 1 Ereignisse | Launched by Frozen Missile
+]
+
 
 # Super Kodan Brothers  (5 Log(s))
 [boss."22343"]
@@ -1431,8 +1434,8 @@ targets = [
 mechanics = [
   # --- neu am 2026-11-22 ---
   "Trapped",  # max 118 Ereignisse | Trapped
-  "Miss.Qck",  # max 48 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
-  "Miss.Alac",  # max 34 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  "#Miss.Qck",  # max 48 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Alac",  # max 34 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   "Lnch",  # max 13 Ereignisse | Launched
   "Dead",  # max 10 Ereignisse | Dead
   "Knck.Dwn",  # max 6 Ereignisse | Knocked Down

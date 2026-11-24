@@ -63,22 +63,22 @@ boss = [
   { id = 22154, short = "ice", name = "Icebrood Construct", type = "strike", cm = false, enabled = true },
   { id = 22343, short = "kodas", name = "The Voice and The Claw", type = "strike", cm = false, enabled = true },
   { id = 22492, short = "frae", name = "Fraenir of Jormag", type = "strike", cm = false, enabled = true },
-  { id = 22521, short = "bone", name = "Boneskinner", type = "strike", cm = false, enabled = false },
-  { id = 22711, short = "woj", name = "Whisper of Jormag", type = "strike", cm = false, enabled = false },
-  { id = 21333, short = "freezie", name = "Freezie", type = "strike", cm = false, enabled = false },
+  { id = 22521, short = "bone", name = "Boneskinner", type = "strike", cm = false, enabled = true },
+  { id = 22711, short = "woj", name = "Whisper of Jormag", type = "strike", cm = false, enabled = true },
+  { id = 21333, short = "freezie", name = "Freezie", type = "strike", cm = false, enabled = true },
 
   # --- Strikes: End of Dragons ---
-  { id = 24033, short = "mai", name = "Captain Mai Trin", type = "strike", cm = true, enabled = false },
-  { id = 23957, short = "ankka", name = "Ankka", type = "strike", cm = true, enabled = false },
-  { id = 24485, short = "li", name = "Minister Li", type = "strike", cm = true, enabled = false },
-  { id = 24375, short = "va", name = "Void Amalgamate (Harvest Temple)", type = "strike", aliases = [43488], cm = true, enabled = false },
+  { id = 24033, short = "mai", name = "Captain Mai Trin", type = "strike", cm = true, enabled = true },
+  { id = 23957, short = "ankka", name = "Ankka", type = "strike", cm = true, enabled = true },
+  { id = 24485, short = "li", name = "Minister Li", type = "strike", cm = true, enabled = true },
+  { id = 24375, short = "va", name = "Void Amalgamate (Harvest Temple)", type = "strike", aliases = [43488], cm = true, enabled = true },
 
   # --- Strikes: Old Lion's Court / Secrets of the Obscure / Janthir Wilds / Visions of Eternity ---
-  { id = 25413, short = "olc", name = "Old Lion's Court", type = "strike", cm = true, enabled = false },
-  { id = 25705, short = "dagda", name = "Dagda", type = "strike", cm = true, enabled = false },
-  { id = 25989, short = "cerus", name = "Cerus", type = "strike", cm = true, lcm = true, enabled = false },
-  { id = 27124, short = "kela", name = "Kela", type = "strike", cm = true, enabled = false },
-  { id = 28106, short = "vloxx", name = "Vloxx", type = "strike", cm = true, lcm = true, enabled = false },
+  { id = 25413, short = "olc", name = "Old Lion's Court", type = "strike", cm = true, enabled = true },
+  { id = 25705, short = "dagda", name = "Dagda", type = "strike", cm = true, enabled = true },
+  { id = 25989, short = "cerus", name = "Cerus", type = "strike", cm = true, lcm = true, enabled = true },
+  { id = 27124, short = "kela", name = "Kela", type = "strike", cm = true, enabled = true },
+  { id = 28106, short = "vloxx", name = "Vloxx", type = "strike", cm = true, lcm = true, enabled = true },
 
   # --- Fraktale (nur CM) ---
   { id = 17021, short = "mama", name = "MAMA", type = "fractal", only_cm = true, enabled = false },

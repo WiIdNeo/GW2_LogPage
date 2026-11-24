@@ -1067,7 +1067,7 @@ text_if_listed_critical = "Du wurdest von dem Leuchten von Adinas Aufstieg geble
 [boss."22006".mechanic."Mines"]
 critical = 1
 list_if_not_critical = false
-text_if_listed_critical = "Du bist durch eine Mine gelaufen."
+text_if_listed_critical = "Du bist über eine Mine gelaufen."
 
 [boss."22006".mechanic."S.Thrower"]
 critical = 1
@@ -1311,4 +1311,75 @@ text_if_listed_critical = "Du wurdest in der Hitbox gedownt. Gewöhne dir für a
 
 # Ura
 
+[boss."26712".mechanic."ScalAura.H"]
+critical = 10
+list_if_not_critical = false
+text_if_listed_critical = "Du hast mehr als 10 Ticks in der Hinbox von Ura verbracht. Versuche das zu minimieren, um deine Heiler zu entlasten."
+
+[boss."26712".mechanic."ToxGeyser.H"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du hast in einem Toxischen Geysir gestanden."
+
+[boss."26712".mechanic."Bubbles"]
+of = "Pres.Blast.Up"            # Zähler: die Treffer des Spielers
+compare = "ratio"
+per = "Pres.Blast.T"           # Nenner: Anzahl der Applies
+critical_above = 1         # kritisch, wenn die Quote größer als 1 ist
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest öfter gebubbelt als notwendig. Achte darauf, dass du nicht in den Bubble-Aoes von andern Spielern stehst."
+
+[boss."26712".mechanic."ErupVent.H"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest von der Schockwelle eines Geysirs getroffen."
+
+[boss."26712".mechanic."Pick-up Shard"]
+critical_below = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du hast nicht eine Scherbe aufgenommen. Achte das nächste Mal darauf!"
+
+
+# Ice Broot Construct
+
+[boss."22154".mechanics."I.Crystal"]
+critical = 2
+list_if_not_critical = false
+text_if_listed_critical = "Du hast in den Kühlescherben getroffen. Auch wenn das die normale Strat in Pugs ist, solltest du diese AoEs zumindest versuchen zu vermeiden."
+
+
+# Freanir of Jormag
+
+[boss."22492".mechanic."Frozen"]
+critical = 1
+list_if_not_critical = false
+text_if_listed_critical = "Du wurdest eingefroren. Geh das nächste Mal möglichst schnell in die Mitte (in beiden Freanir-Phasen)"
+
+
+# Kodan Twins
+
+# ---------nothing----------
+
+
+# Boneskinner
+
+# Wisper of Jormag
+
+# Aetherblade Hideout
+
+# Xulai Junk Jard
+
+# Kainieng Overlook
+
+# Harvest Tempel
+
+# Old Lions Court
+
+# Cosmic Observatory
+
+# Temple of Febe
+
+# Kela
+
+# Vloxx
 

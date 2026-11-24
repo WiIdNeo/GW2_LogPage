@@ -668,6 +668,8 @@ mechanics = [
   "Cone",  # max 1 Ereignisse | Boon ripping Cone Attack  [aus Normalmodus]
   #"Eth.Seal.F",  # max 3 Ereignisse | Failed to interact with an Ethereal Seal  [aus Normalmodus]
   "Resp",  # max 1 Ereignisse | Resp  [aus Normalmodus]
+  # --- neu am 2026-11-24 ---
+  "F Echo",  # max 4 Ereignisse | Freed from Ender's Echo
 ]
 
 # Dhuum  (7 Log(s))
@@ -746,6 +748,8 @@ mechanics = [
   "Lckt",  # max 3 Ereignisse | Lockout
   # --- aus Skeleton uebernommen ---
   "DC",  # max 1 Ereignisse | DC
+  # --- neu am 2026-11-24 ---
+  "Resp",  # max 2 Ereignisse | Resp
 ]
 
 # Conjured Amalgamate  (11 Log(s))
@@ -1444,4 +1448,622 @@ mechanics = [
   "UnrelPain.A",  # max 1 Ereignisse | Unreleting Pain Applied
   # --- aus Skeleton uebernommen ---
   "Lckt",  # max 2 Ereignisse | Lockout
+]
+
+# Boneskinner  (1 Log(s))
+[boss."22521"]
+targets = [
+  # --- neu am 2026-11-24 ---
+  22521,  # Boneskinner
+]
+mechanics = [
+  # --- neu am 2026-11-24 ---
+  "Grasp.H",  # max 183 Ereignisse | Grasp (Claw AoE)
+  "Barrage.H",  # max 117 Ereignisse | Hit by Barrage (Wisp AoE)
+  "Launched",  # max 7 Ereignisse | Hit by Death Wind
+  "Miss.Qck",  # max 6 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  "Crush.Cru.H",  # max 5 Ereignisse | Hit by Crushing Cruelty (Jump middle after Charge)
+  "D.Wind",  # max 5 Ereignisse | Cast Death Wind (extinguished one torch)
+  "Downed",  # max 3 Ereignisse | Downed
+  "Breakbar",  # max 2 Ereignisse | Casting a Breakbar
+  "D.Darkness",  # max 2 Ereignisse | Cast Douse in Darkness (extinguished all torches)
+  "D.Torch",  # max 2 Ereignisse | Charged a torch
+  "Dead",  # max 2 Ereignisse | Dead
+  "Res",  # max 2 Ereignisse | Res
+  "DouseDarkness.H",  # max 1 Ereignisse | Hit by Douse in Darkness
+  "Exposed.E",  # max 1 Ereignisse | Gained Exposed (Breakbar broken)
+  "Got up",  # max 1 Ereignisse | Got up
+  "Knck.Dwn",  # max 1 Ereignisse | Knocked Down
+  "Knck.Pll",  # max 1 Ereignisse | Knocked Back or Pulled
+]
+
+# Xunlai Jade Junkyard CM  (7 Log(s))
+[boss."-23957"]
+targets = [
+  # --- neu am 2026-11-24 ---
+  23957,  # Ankka
+  24348,  # Reanimated Spite 1
+  24827,  # Reanimated Antipathy 1
+]
+mechanics = [
+  # --- neu am 2026-11-24 ---
+  "Miss.Alac",  # max 418 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity 
+  "Hands.H",  # max 340 Ereignisse | Hit by Hands AoE
+  "Miss.Qck",  # max 277 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  "DevVoid.B",  # max 213 Ereignisse | Received Devouring Void
+  "Hallu",  # max 80 Ereignisse | Received Hallucinations Debuff
+  "Res",  # max 38 Ereignisse | Res
+  "AnkkaPull.H",  # max 28 Ereignisse | Hit by Death's Embrace (Ankka's Pull)
+  "Sctn.AoE.H",  # max 22 Ereignisse | Hit by in-between sections AoE
+  "Krait.H",  # max 20 Ereignisse | Hit by Krait AoE
+  "Downed",  # max 18 Ereignisse | Downed
+  "ZhtRch.Pull",  # max 18 Ereignisse | Pulled by Zhaitan's Reach
+  "Lich.H",  # max 17 Ereignisse | Hit by Lich AoE
+  "ZhtRch.Knck",  # max 17 Ereignisse | Knocked by Zhaitan's Reach
+  "Got up",  # max 13 Ereignisse | Got up
+  "Clarity.Achiv.L",  # max 10 Ereignisse | Achievement Eligibility: Clarity Lost
+  "Dead",  # max 10 Ereignisse | Dead
+  "Undev.Achiv.L",  # max 10 Ereignisse | Achievement Eligibility: Undevoured Lost
+  "Clarity.Achiv.K",  # max 9 Ereignisse | Achievement Eligibility: Clarity Kept
+  "Imm.Death.B",  # max 9 Ereignisse | Placed Death's Hand AoE and gained Imminent Death Buff
+  "Imm.Death.H",  # max 9 Ereignisse | Hit by Imminent Death
+  "Knck.Pll",  # max 9 Ereignisse | Knocked Back or Pulled
+  "Sprd.AoE.B",  # max 9 Ereignisse | Received Death's Hand Spread
+  "Lnch",  # max 7 Ereignisse | Launched
+  "Quaggan.H",  # max 7 Ereignisse | Hit by Quaggan Explosion
+  "Lich.H.F",  # max 5 Ereignisse | Fixated by Lich Hallucination
+  "AnkkaPull.C",  # max 4 Ereignisse | Casted Death's Embrace
+  "Fxt.Hatred",  # max 4 Ereignisse | Fixated by Reanimated Hatred
+  "Sprd.AoE.H",  # max 4 Ereignisse | Hit by placeable Death's Hand AoE
+  "Pwrd.Up",  # max 3 Ereignisse | Ankka has powered up
+  "Undev.Achiv.K",  # max 2 Ereignisse | Achievement Eligibility: Undevoured Kept
+]
+
+# Xunlai Jade Junkyard  (2 Log(s))
+[boss."23957"]
+targets = [
+  # --- neu am 2026-11-24 ---
+  23957,  # Ankka
+  24348,  # Reanimated Spite 1
+]
+mechanics = [
+  # --- neu am 2026-11-24 ---
+  "Miss.Qck",  # max 117 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  "Miss.Alac",  # max 94 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity 
+  "Hands.H",  # max 55 Ereignisse | Hit by Hands AoE
+  "Hallu",  # max 40 Ereignisse | Received Hallucinations Debuff
+  "Quaggan.H",  # max 12 Ereignisse | Hit by Quaggan Explosion
+  "Sctn.AoE.H",  # max 12 Ereignisse | Hit by in-between sections AoE
+  "Krait.H",  # max 7 Ereignisse | Hit by Krait AoE
+  "Clarity.Achiv.L",  # max 6 Ereignisse | Achievement Eligibility: Clarity Lost
+  "ZhtRch.Pull",  # max 6 Ereignisse | Pulled by Zhaitan's Reach
+  "Clarity.Achiv.K",  # max 5 Ereignisse | Achievement Eligibility: Clarity Kept
+  "Res",  # max 5 Ereignisse | Res
+  "ZhtRch.Knck",  # max 4 Ereignisse | Knocked by Zhaitan's Reach
+  "Sprd.AoE.B",  # max 3 Ereignisse | Received Death's Hand Spread
+  "Downed",  # max 2 Ereignisse | Downed
+  "Got up",  # max 2 Ereignisse | Got up
+  "Lckt",  # max 2 Ereignisse | Lockout
+  "Lich.H.F",  # max 2 Ereignisse | Fixated by Lich Hallucination
+  "Lnch",  # max 2 Ereignisse | Launched
+  "Fxt.Hatred",  # max 1 Ereignisse | Fixated by Reanimated Hatred
+  "Knck.Pll",  # max 1 Ereignisse | Knocked Back or Pulled
+]
+
+# Aetherblade Hideout CM  (7 Log(s))
+[boss."-24033"]
+targets = [
+  # --- neu am 2026-11-24 ---
+  -37,  # Ferrous Bomb 1
+  23656,  # Elite CC Scarlet Phantom 1
+  24033,  # Captain Mai Trin
+  25247,  # Echo of Scarlet Briar
+  25262,  # Elite HP Scarlet Phantom 1
+  # --- neu am 2026-11-24 ---
+  24768,  # Echo of Scarlet Briar  [in keiner Phase]
+]
+mechanics = [
+  # --- neu am 2026-11-24 ---
+  "Miss.Alac",  # max 365 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity 
+  "ElecBlast.H",  # max 317 Ereignisse | Hit by Electric Blast (Echo AoEs)
+  "ToxBull.H",  # max 177 Ereignisse | Hit by Toxic Bullet
+  "Miss.Qck",  # max 125 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  "Exposed",  # max 69 Ereignisse | Exposed Applied (Increased incoming damage)
+  "Shck.Wv",  # max 56 Ereignisse | Hit by Shockwave attack
+  "Res",  # max 43 Ereignisse | Res
+  "FissTorm.H",  # max 38 Ereignisse | Hit by Fissure of Torment
+  "Downed",  # max 24 Ereignisse | Downed
+  "ToxOrb.H",  # max 19 Ereignisse | Hit by Toxic Orb
+  "Got up",  # max 14 Ereignisse | Got up
+  "HrtPier.H",  # max 14 Ereignisse | Hit by Heartpiercer
+  "Puddle",  # max 13 Ereignisse | Hit by Ley Breach (Red Puddle)
+  "Dead",  # max 10 Ereignisse | Dead
+  "Green.D",  # max 10 Ereignisse | Received Photon Saturation (Green Debuff)
+  "LeyBreach.T",  # max 8 Ereignisse | Targeted by Ley Breach (Red Puddle)
+  "Cone",  # max 7 Ereignisse | Hit by Cone attack
+  "HrtPier.CC",  # max 7 Ereignisse | Knocked Down by Heartpiercer
+  "Knck.Dwn",  # max 7 Ereignisse | Knocked Down
+  "Green.Dth",  # max 6 Ereignisse | Died to Focused Destruction (Green)
+  "Cone.S",  # max 5 Ereignisse | Hit by Side Cone attack
+  "Bomb",  # max 4 Ereignisse | Selected for Bomb
+  "Green",  # max 3 Ereignisse | Selected for Green
+  "BombBlue.A",  # max 2 Ereignisse | Received Blue Bomb Target
+  "BombGreen.A",  # max 2 Ereignisse | Received Green Bomb Target
+  "BombRed.A",  # max 2 Ereignisse | Received Red Bomb Target
+  "Spread.Dwn",  # max 2 Ereignisse | Downed by Kaleidoscopic Chaos (Spread)
+  "DC",  # max 1 Ereignisse | DC
+  "PuzzleCM.Dth",  # max 1 Ereignisse | Died to Mag Beam (Puzzle)
+  "Resp",  # max 1 Ereignisse | Resp
+  "Smash",  # max 1 Ereignisse | Died to Echo's Smash
+]
+
+# Aetherblade Hideout  (3 Log(s))
+[boss."24033"]
+targets = [
+  # --- neu am 2026-11-24 ---
+  23656,  # Elite CC Scarlet Phantom 1
+  24033,  # Captain Mai Trin
+  24396,  # Scarlet Phantom 1  [in keiner Phase]
+  24431,  # Elite HP Scarlet Phantom 1
+  24768,  # Echo of Scarlet Briar
+]
+mechanics = [
+  # --- neu am 2026-11-24 ---
+  "Miss.Alac",  # max 196 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity 
+  "ToxBull.H",  # max 168 Ereignisse | Hit by Toxic Bullet
+  "ElecBlast.H",  # max 123 Ereignisse | Hit by Electric Blast (Echo AoEs)
+  "Miss.Qck",  # max 96 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  "FissTorm.H",  # max 48 Ereignisse | Hit by Fissure of Torment
+  "Shck.Wv",  # max 45 Ereignisse | Hit by Shockwave attack
+  "Res",  # max 26 Ereignisse | Res
+  "HrtPier.H",  # max 19 Ereignisse | Hit by Heartpiercer
+  "ToxOrb.H",  # max 17 Ereignisse | Hit by Toxic Orb
+  "Downed",  # max 10 Ereignisse | Downed
+  "Got up",  # max 10 Ereignisse | Got up
+  "Puddle",  # max 9 Ereignisse | Hit by Ley Breach (Red Puddle)
+  "Cone",  # max 8 Ereignisse | Hit by Cone attack
+  "Cone.S",  # max 6 Ereignisse | Hit by Side Cone attack
+  "Lckt",  # max 6 Ereignisse | Lockout
+  "HrtPier.CC",  # max 5 Ereignisse | Knocked Down by Heartpiercer
+  "Knck.Dwn",  # max 5 Ereignisse | Knocked Down
+  "LeyBreach.T",  # max 4 Ereignisse | Targeted by Ley Breach (Red Puddle)
+  "DC",  # max 2 Ereignisse | DC
+  "Dead",  # max 2 Ereignisse | Dead
+  "Spread.Dwn",  # max 2 Ereignisse | Downed by Kaleidoscopic Chaos (Spread)
+  "Green",  # max 1 Ereignisse | Selected for Green
+  "Resp",  # max 1 Ereignisse | Resp
+]
+
+# Cosmic Observatory CM  (4 Log(s))
+[boss."-25705"]
+targets = [
+  # --- neu am 2026-11-24 ---
+  25623,  # Champion The Tormented 1
+  25705,  # Dagda
+  26000,  # Elite The Tormented 1
+]
+mechanics = [
+  # --- neu am 2026-11-24 ---
+  "Miss.Alac",  # max 686 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity 
+  "Miss.Qck",  # max 293 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  "DemAur.L",  # max 160 Ereignisse | Lost stacks of Demonic Aura
+  "DemAur.R",  # max 160 Ereignisse | Removed Stacks of Demonic Aura
+  "Spin.Neb.H",  # max 151 Ereignisse | Spining Nebula Hit (Spin Projectiles)
+  "Debilitated",  # max 122 Ereignisse | Debilitated Applied (Reduced outgoing damage)
+  "PlnCrhProj.H",  # max 113 Ereignisse | Planet Crash (Projectiles Hits)
+  "Rsdl.Anxty",  # max 83 Ereignisse | Residual Anxiety
+  "Infirmity",  # max 80 Ereignisse | Infirmity Applied (Reduced incoming healing)
+  "PurLight.C",  # max 72 Ereignisse | Casted Purifying Light
+  "Sl.Fst.H",  # max 70 Ereignisse | Soul Feat (Pulsing Orb AoEs)
+  "PurLight.Dagda.C",  # max 69 Ereignisse | Casted Purifying Light (Hit Dagda)
+  "DemFev.T",  # max 49 Ereignisse | Targeted by Demonic Fever (Orange Spread AoEs)
+  "Res",  # max 31 Ereignisse | Res
+  "ChargCons.H",  # max 29 Ereignisse | Charging Constellation Hit
+  "Targ.Ord.A",  # max 25 Ereignisse | Received Target Order
+  "ExtVuln.A",  # max 24 Ereignisse | Applied Extreme Vulnerability
+  "Lckt",  # max 17 Ereignisse | Lockout
+  "Downed",  # max 14 Ereignisse | Downed
+  "Got up",  # max 13 Ereignisse | Got up
+  "Shooting Stars",  # max 11 Ereignisse | Shooting Stars Cast
+  "DancStars.Achiv.L",  # max 10 Ereignisse | Achievement Eligibility: Danced with the Stars Lost
+  "Shar.Des.T",  # max 10 Ereignisse | Targeted by Shared Destruction (Greens - Meteor Crash)
+  "StarsTarg.A",  # max 10 Ereignisse | Shooting Stars Target (Green Arrow)
+  "Dead",  # max 9 Ereignisse | Dead
+  "Sl.Fst.T",  # max 7 Ereignisse | Soul Feast Target
+  "Spinning Nebula",  # max 7 Ereignisse | Spinning Nebula Cast
+  "Lnch",  # max 6 Ereignisse | Launched
+  "Dmn.Blst.H",  # max 5 Ereignisse | Demonic Blast Hit (Cones AoEs)
+  "Lst.Ctrl",  # max 5 Ereignisse | Lost Control (10 stacks of Residual Anxiety)
+  "Knck.Pll",  # max 4 Ereignisse | Knocked Back or Pulled
+  "Planet Crash",  # max 3 Ereignisse | Planet Crash Cast
+  "Planet Crash (Int)",  # max 3 Ereignisse | Interrupted Planet Crash
+  "DancStars.Achiv.K",  # max 2 Ereignisse | Achievement Eligibility: Danced with the Stars Kept
+]
+
+# Cosmic Observatory  (3 Log(s))
+[boss."25705"]
+targets = [
+  # --- neu am 2026-11-24 ---
+  25705,  # Dagda
+  25829,  # Veteran The Tormented 1
+  26000,  # Elite The Tormented 1
+]
+mechanics = [
+  # --- neu am 2026-11-24 ---
+  "Miss.Qck",  # max 235 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  "Spin.Neb.H",  # max 106 Ereignisse | Spining Nebula Hit (Spin Projectiles)
+  "Miss.Alac",  # max 76 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity 
+  "Rsdl.Anxty",  # max 60 Ereignisse | Residual Anxiety
+  "Infirmity",  # max 54 Ereignisse | Infirmity Applied (Reduced incoming healing)
+  "Sl.Fst.H",  # max 54 Ereignisse | Soul Feat (Pulsing Orb AoEs)
+  "PlnCrhProj.H",  # max 28 Ereignisse | Planet Crash (Projectiles Hits)
+  "DemFev.T",  # max 21 Ereignisse | Targeted by Demonic Fever (Orange Spread AoEs)
+  "Res",  # max 10 Ereignisse | Res
+  "Shooting Stars",  # max 8 Ereignisse | Shooting Stars Cast
+  "StarsTarg.A",  # max 8 Ereignisse | Shooting Stars Target (Green Arrow)
+  "PurLight.C",  # max 6 Ereignisse | Casted Purifying Light
+  "Debilitated",  # max 5 Ereignisse | Debilitated Applied (Reduced outgoing damage)
+  "Dmn.Blst.H",  # max 5 Ereignisse | Demonic Blast Hit (Cones AoEs)
+  "Downed",  # max 5 Ereignisse | Downed
+  "Got up",  # max 5 Ereignisse | Got up
+  "Spinning Nebula",  # max 5 Ereignisse | Spinning Nebula Cast
+  "Lckt",  # max 3 Ereignisse | Lockout
+  "PurLight.Dagda.C",  # max 3 Ereignisse | Casted Purifying Light (Hit Dagda)
+  "PurLight.Soul.C",  # max 3 Ereignisse | Casted Purifying Light (Hit Soul Feast)
+  "Sl.Fst.T",  # max 3 Ereignisse | Soul Feast Target
+  "Planet Crash",  # max 2 Ereignisse | Planet Crash Cast
+  "Planet Crash (Int)",  # max 2 Ereignisse | Interrupted Planet Crash
+  "Lnch",  # max 1 Ereignisse | Launched
+  "Lst.Ctrl",  # max 1 Ereignisse | Lost Control (10 stacks of Residual Anxiety)
+]
+
+# Temple of Febe  (4 Log(s))
+[boss."25989"]
+targets = [
+  # --- neu am 2026-11-24 ---
+  25677,  # Embodiment of Gluttony 1
+  25686,  # Empowered Embodiment of Rage 1
+  25700,  # Embodiment of Malice 1
+  25747,  # Malicious Shadow 1  [in keiner Phase]
+  25967,  # Empowered Embodiment of Envy 1
+  25989,  # Cerus
+  26034,  # Embodiment of Despair 1
+  26049,  # Empowered Embodiment of Regret 1
+]
+mechanics = [
+  # --- neu am 2026-11-24 ---
+  "Miss.Qck",  # max 208 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  "Miss.Alac",  # max 186 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity 
+  "PoolDesp.H",  # max 113 Ereignisse | Hit by Pool of Despair (Spread Ground AoE)
+  "Emp.CrushReg.H",  # max 108 Ereignisse | Hit by Empowered Crushing Regret (Green)
+  "EnvGaze.Strip",  # max 88 Ereignisse | Boons removed by Envious Gaze (Any)
+  "Res",  # max 63 Ereignisse | Res
+  "EnrSmash.H",  # max 51 Ereignisse | Hit by Enraged Smash
+  "EnvGaz.H",  # max 48 Ereignisse | Hit by Envious Gaze (Wall/Beam)
+  "WailDesp.H",  # max 42 Ereignisse | Hit by Wail of Despair (Spread Player AoE)
+  "Emp.A",  # max 35 Ereignisse | Gained Empowered
+  "Downed",  # max 24 Ereignisse | Downed
+  "Exposed",  # max 22 Ereignisse | Exposed Applied (Increased incoming damage)
+  "Got up",  # max 21 Ereignisse | Got up
+  "Ins.A",  # max 21 Ereignisse | Insatiable Applied (Absorbed Gluttony Orb)
+  "CrushReg.H",  # max 20 Ereignisse | Hit by Crushing Regret (Green)
+  "Green.A",  # max 18 Ereignisse | Crushing Regret Applied (Green)
+  "CrushReg.C.S",  # max 17 Ereignisse | Crushing Regret Successful
+  "Pet.F",  # max 13 Ereignisse | Petrify hit players and healed Cerus
+  "CryRage.H",  # max 12 Ereignisse | Hit by Cry of Rage
+  "EnrSmash.C",  # max 12 Ereignisse | Casted Enraged Smash
+  "Lckt",  # max 12 Ereignisse | Lockout
+  "Emp.CryRage.H",  # max 9 Ereignisse | Hit by Empowered Cry of Rage
+  "CrushReg.C",  # max 8 Ereignisse | Casted Crushing Regret
+  "InsHun.C",  # max 8 Ereignisse | Casted Insatiable Hunger
+  "Pet.H",  # max 7 Ereignisse | Hit by Petrify
+  "EnvGaz.C",  # max 6 Ereignisse | Casted Envious Gaze
+  "MalInt.A",  # max 6 Ereignisse | Malicious Intent Target
+  "MalInt.C",  # max 5 Ereignisse | Casted Malicious Intent
+  "CryRage.C",  # max 4 Ereignisse | Casted Cry of Rage
+  "MalInt.H",  # max 4 Ereignisse | Hit by Malicious Intent (Malicious Shadow Spawn)
+  "Pet.C",  # max 4 Ereignisse | Casted Petrify
+  "WailDesp.C",  # max 4 Ereignisse | Casted Wail of Despair
+  "Dead",  # max 3 Ereignisse | Dead
+  "EmpGlu.A",  # max 2 Ereignisse | Gained Empowered Gluttony
+  "EmpReg.A",  # max 2 Ereignisse | Gained Empowered Regret
+  "CrushReg.C.F",  # max 1 Ereignisse | Crushing Regret Failed
+  "Emp.Despair.K",  # max 1 Ereignisse | Empowered Embodiment of Despair Killed
+  "Emp.Envy.K",  # max 1 Ereignisse | Empowered Embodiment of Envy Killed
+  "Emp.Malice.K",  # max 1 Ereignisse | Empowered Embodiment of Malice Killed
+  "Emp.Rage.K",  # max 1 Ereignisse | Empowered Embodiment of Rage Killed
+]
+
+# Kaineng Overlook  (3 Log(s))
+[boss."24485"]
+targets = [
+  # --- neu am 2026-11-24 ---
+  23612,  # The Sniper
+  23618,  # The Ritualist
+  24254,  # The Mindblade
+  24261,  # The Enforcer
+  24485,  # Minister Li
+  24660,  # The Mech Rider
+]
+mechanics = [
+  # --- neu am 2026-11-24 ---
+  "Miss.Alac",  # max 440 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity 
+  "Miss.Qck",  # max 245 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  "Flames.S",  # max 235 Ereignisse | Stood in Flames
+  "Pwrd.Up1",  # max 160 Ereignisse | Powered Up (Split 1)
+  "Res",  # max 32 Ereignisse | Res
+  "Storm.H",  # max 20 Ereignisse | Hit by bladestorm
+  "ElecRain.H",  # max 18 Ereignisse | Hit by Electric Rain (Set of 5 AoEs by Mech Rider)
+  "Wave.H",  # max 18 Ereignisse | Hit by Wave
+  "Rush.H",  # max 16 Ereignisse | Hit by Rush
+  "Targ.Ord.A",  # max 14 Ereignisse | Received Target Order
+  "Downed",  # max 12 Ereignisse | Downed
+  "Got up",  # max 12 Ereignisse | Got up
+  "FallAxe.B.H",  # max 8 Ereignisse | Hit by Mech Rider Big Cone
+  "Pwrd.Up2",  # max 8 Ereignisse | Powered Up (Split 2)
+  "Burst.H",  # max 7 Ereignisse | Hit by Burst
+  "ExpUpper.H",  # max 6 Ereignisse | Hit by Explosive Uppercut
+  "FallAxe.S.H",  # max 6 Ereignisse | Hit by Mech Rider Small Cone
+  "Laser.H",  # max 6 Ereignisse | Hit by Big Laser
+  "Lnch",  # max 6 Ereignisse | Launched
+  "Fixated.M",  # max 5 Ereignisse | Fixated by The Mindblade
+  "Fixated.E",  # max 4 Ereignisse | Fixated by The Enforcer
+  "Bomb.D",  # max 2 Ereignisse | Downed by Bomb
+  "Flt",  # max 2 Ereignisse | Float
+  "Green",  # max 2 Ereignisse | Selected for Green
+]
+
+# Old Lion's Court  (1 Log(s))
+[boss."25413"]
+targets = [
+  # --- neu am 2026-11-24 ---
+  25413,  # Prototype Vermilion
+  25415,  # Prototype Arsenite
+  25419,  # Prototype Indigo
+]
+mechanics = [
+  # --- neu am 2026-11-24 ---
+  "PernVort.H",  # max 320 Ereignisse | Hit by Pernicious Vortex (Pull)
+  "CrackWind.H",  # max 235 Ereignisse | Hit by Crackling Wind (Push)
+  "Miss.Qck",  # max 208 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  "Red.VermIndi.H",  # max 117 Ereignisse | Hit by Boiling Aether (Vermilion & Indigo)
+  "Miss.Alac",  # max 48 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity 
+  "TriBolt.H",  # max 36 Ereignisse | Hit by Tri Bolt (Spread AoEs)
+  "TidTorm.A",  # max 27 Ereignisse | Tidal Torment Applied
+  "Red.Arse.H",  # max 26 Ereignisse | Hit by Boiling Aether (Arsenite)
+  "ErgShr.A",  # max 20 Ereignisse | Ergo Shear Applied
+  "Exposed",  # max 15 Ereignisse | Exposed Applied (Increased incoming damage)
+  "BladeOut.H",  # max 13 Ereignisse | Hit by Noxious Vapor Blade (to player)
+  "AethAver.Achiv.L",  # max 10 Ereignisse | Achievement Eligibility: Aether Aversion Lost
+  "PwrTrns.A",  # max 10 Ereignisse | Knight gained Power Transfer
+  "WovShld.A",  # max 9 Ereignisse | Knight gained Ley-Woven Shielding
+  "BladeBack.H",  # max 8 Ereignisse | Hit by Noxious Return (to Arsenite)
+  "Lckt",  # max 7 Ereignisse | Lockout
+  "CrckWind.C",  # max 6 Ereignisse | Casted Crackling Wind
+  "DualHrz.C",  # max 5 Ereignisse | Casted Dual Horizon
+  "Fix.Verm.A",  # max 5 Ereignisse | Fixated Applied Vermilion
+  "PrnVrx.C",  # max 5 Ereignisse | Casted Pernicious Vortex
+  "Fix.Arse.A",  # max 4 Ereignisse | Fixated Applied Arsenite
+  "Fix.Indi.A",  # max 4 Ereignisse | Fixated Applied Indigo
+  "GravWave.C",  # max 4 Ereignisse | Casted Gravitational Wave
+  "Expo.A",  # max 3 Ereignisse | Exposed Applied to Knight
+  "MalfWovShld.A",  # max 3 Ereignisse | Knight gained Malfunctioning Ley-Woven Shielding
+  "TriChg.H",  # max 3 Ereignisse | Hit by Tribocharge
+  "Downed",  # max 1 Ereignisse | Downed
+  "Got up",  # max 1 Ereignisse | Got up
+]
+
+# Guardian's Glade  (3 Log(s))
+[boss."27124"]
+targets = [
+  # --- neu am 2026-11-24 ---
+  27124,  # Kela, Seneschal of Waves
+  27651,  # Executor of Waves 1
+  27655,  # Elite Crocodilian Razortooth 1
+]
+mechanics = [
+  # --- neu am 2026-11-24 ---
+  "Miss.Qck",  # max 206 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  "Miss.Alac",  # max 127 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity 
+  "Tantrum.H",  # max 107 Ereignisse | Hit by Tantrum
+  "Tornado.H",  # max 63 Ereignisse | Hit by Tornado
+  "CrocTackle.H",  # max 58 Ereignisse | Hit by Crocodilian Razortooth Tackle
+  "Speed",  # max 54 Ereignisse | Gained Relentless Speed
+  "Res",  # max 51 Ereignisse | Res
+  "Lnch",  # max 48 Ereignisse | Launched
+  "Tornado.CC",  # max 43 Ereignisse | CC by Tornado
+  "LooSand.A",  # max 39 Ereignisse | Applied Loose Sand
+  "Croc.Fix",  # max 38 Ereignisse | Fixated by Crocodilian Razortooth
+  "Knck.Dwn",  # max 32 Ereignisse | Knocked Down
+  "CrocTackle.CC",  # max 31 Ereignisse | CC by Crocodilian Razortooth Tackle
+  "Bee.Cntmntd",  # max 21 Ereignisse | Contaminated by Bitting Swarm
+  "ShredArmor.A",  # max 20 Ereignisse | Applied Shredded Armor
+  "Downed",  # max 18 Ereignisse | Downed
+  "Got up",  # max 17 Ereignisse | Got up
+  "Stomp.H",  # max 13 Ereignisse | Hit by Stomp
+  "LightStk.H",  # max 12 Ereignisse | Hit by Lightning Strike
+  "Ate Croc",  # max 10 Ereignisse | Ate a Crocodilian Razortooth
+  "Dead",  # max 10 Ereignisse | Dead
+  "Fixated",  # max 10 Ereignisse | Fixated by Kela
+  "Lckt",  # max 10 Ereignisse | Lockout
+  "Stomp.CC",  # max 9 Ereignisse | CC by Stomp
+  "ClawSlam.H",  # max 6 Ereignisse | Hit by ClawSlam
+  "LightStk.CC",  # max 6 Ereignisse | CC by Lightning Strike
+  "Bee.First",  # max 5 Ereignisse | Biting Swarm First Application
+  "ScalWave.H",  # max 5 Ereignisse | Hit by Scalding Wave
+  "Ate Player",  # max 1 Ereignisse | Ate a Player
+  "ClawSlam.CC",  # max 1 Ereignisse | CC by ClawSlam
+  "Player Eaten",  # max 1 Ereignisse | Player Eaten
+  "Tank Eaten",  # max 1 Ereignisse | Tank Eaten
+]
+
+# Harvest Temple  (2 Log(s))
+[boss."43488"]
+targets = [
+  # --- neu am 2026-11-24 ---
+  -23,  # Heart 1
+  -22,  # The PrimordusVoid
+  -21,  # The JormagVoid
+  -20,  # The MordremothVoid
+  -19,  # The KralkatorrikVoid
+  -18,  # The SooWonVoid
+  -17,  # The ZhaitanVoid
+  23846,  # Void Saltspray Dragon
+  23956,  # Heart 4
+  23995,  # Void Obliterator
+  24450,  # Void Giant 1
+  25025,  # Void Time Caster
+]
+mechanics = [
+  # --- neu am 2026-11-24 ---
+  "Orb Push",  # max 1133 Ereignisse | Orb was pushed by player
+  "Miss.Qck",  # max 255 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  "Miss.Alac",  # max 252 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity 
+  "J.Grasp.H",  # max 69 Ereignisse | Hit by Grasp of Jormag
+  "Spread.B",  # max 67 Ereignisse | Baited spread mechanic
+  "GraspVoid.H",  # max 62 Ereignisse | Hit by Grasp of the Void (Final Orb Projectile)
+  "Z.Poison.H",  # max 53 Ereignisse | Hit by Zhaitan Poison
+  "NigEpoch.H",  # max 46 Ereignisse | Hit by Nightmare Epoch
+  "WyvBreath.H",  # max 42 Ereignisse | Hit by Wyvern Breath
+  "Knck.Pll",  # max 39 Ereignisse | Knocked Back or Pulled
+  "Artillery.H",  # max 38 Ereignisse | Hit by Brandbomber Artillery
+  "RotBile.H",  # max 36 Ereignisse | Hit by Giant's Rotting Bile
+  "J.Breath.H",  # max 32 Ereignisse | Hit by Jormag Breath
+  "Res",  # max 30 Ereignisse | Res
+  "Downed",  # max 27 Ereignisse | Downed
+  "Void.D",  # max 27 Ereignisse | Received Void debuff
+  "Got up",  # max 23 Ereignisse | Got up
+  "Goop.H",  # max 20 Ereignisse | Hit by goop left by heart
+  "Exposed",  # max 18 Ereignisse | Exposed Applied (Increased incoming damage)
+  "MagicDisc.H",  # max 18 Ereignisse | Hit by Magic Discharge (Orb Explosion Wave)
+  "VoidExp.H",  # max 16 Ereignisse | Hit by Void Explosion (Last Laugh)
+  "Whrlpl.H",  # max 15 Ereignisse | Hit by Hydro Burst (Whirlpool)
+  "Charge.H",  # max 14 Ereignisse | Hit by Obliterator's Charge
+  "MagHail.H",  # max 14 Ereignisse | Hit by Magic Hail
+  "ChrgShot.H",  # max 13 Ereignisse | Hit by Void Skullpiercer's Charged Shot
+  "Lnch",  # max 13 Ereignisse | Launched
+  "Tsunami.H",  # max 13 Ereignisse | Hit by Soo-Won Tsunami
+  "Red.B",  # max 10 Ereignisse | Baited red puddle mechanic
+  "CallLigh.H",  # max 9 Ereignisse | Hit by Call Lightning
+  "NopeRopes.Achiv.L",  # max 9 Ereignisse | Achievement Eligibility: Jumping the Nope Ropes Lost
+  "ShckWv.H",  # max 9 Ereignisse | Hit by Mordremoth's Shockwave
+  "Void.H",  # max 9 Ereignisse | Hit by Void
+  "K.Pool.H",  # max 8 Ereignisse | Hit by Kralkatorrik Void Pool
+  "VoidExp.Champ.H",  # max 8 Ereignisse | Hit by Void Explosion (Last Laugh, Champion)
+  "Bees.H",  # max 7 Ereignisse | Hit by bees from heart
+  "Knck.Dwn",  # max 7 Ereignisse | Knocked Down
+  "Claw.H",  # max 6 Ereignisse | Hit by Soo-Won Claw
+  "Prjtile.H",  # max 6 Ereignisse | Hit by Corrupted Waters (Heart Projectile)
+  "Stomp.CC",  # max 6 Ereignisse | CC'd by Giant's Stomp
+  "Charge.CC",  # max 5 Ereignisse | CC'd by Obliterator's Charge
+  "Red.H",  # max 5 Ereignisse | Hit by Red Void Pool
+  "Scream.H",  # max 5 Ereignisse | Hit by Zhaitan Scream
+  "Storm.H",  # max 5 Ereignisse | Hit by Kralkatorrik's Stormfall
+  "Dead",  # max 4 Ereignisse | Dead
+  "Kick.H",  # max 4 Ereignisse | Kicked by Void Skullpiercer
+  "Flame.H",  # max 3 Ereignisse | Hit by Flames of Primordus
+  "NopeRopes.Achiv.K",  # max 3 Ereignisse | Achievement Eligibility: Jumping the Nope Ropes Kept
+  "Spread.H",  # max 3 Ereignisse | Hit by Targeted Expulsion (Spread)
+  "Barrage.H",  # max 2 Ereignisse | Hit by Crystal Barrage
+  "Beam.H",  # max 2 Ereignisse | Hit by Kralkatorrik's Branding Beam
+  "Slam.H",  # max 2 Ereignisse | Hit by Primordus Slam
+  "FrozFury.H",  # max 1 Ereignisse | Hit by Frozen Fury
+  "Jaws.H",  # max 1 Ereignisse | Hit by Primordus Jaws
+  "Lckt",  # max 1 Ereignisse | Lockout
+  "Torment.H",  # max 1 Ereignisse | Hit by Torment of the Void (Bouncing Orbs)
+]
+
+# Whisper of Jormag  (2 Log(s))
+[boss."22711"]
+targets = [
+  # --- neu am 2026-11-24 ---
+  22711,  # Whisper of Jormag
+]
+mechanics = [
+  # --- neu am 2026-11-24 ---
+  "H.Chains",  # max 163 Ereignisse | Hit by Chains of Frost
+  "I.Tornado",  # max 36 Ereignisse | Hit by Ice Tempest (Tornadoes)
+  "S.Ice.O",  # max 29 Ereignisse | Hit by other's Spreading Ice
+  "FrigVor.H",  # max 24 Ereignisse | Hit by Frigid Vortex
+  "Miss.Qck",  # max 24 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  "S.Ice",  # max 23 Ereignisse | Hit by own Spreading Ice
+  "F.Chains",  # max 15 Ereignisse | Selected for Chains of Frost
+  "Miss.Alac",  # max 12 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity 
+  "FrigVor.A",  # max 10 Ereignisse | Frigid Vortex Applied
+  "TP In",  # max 10 Ereignisse | Teleported back to the arena
+  "TP Out",  # max 10 Ereignisse | Teleported outside of the arena
+  "Lnch",  # max 9 Ereignisse | Launched
+  "S.Lethal.Coal.",  # max 9 Ereignisse | Soaked Lethal Coalescence Damage
+  "Res",  # max 8 Ereignisse | Res
+  "Downed",  # max 6 Ereignisse | Downed
+  "Knck.Pll",  # max 6 Ereignisse | Knocked Back or Pulled
+  "F.Chains.C",  # max 5 Ereignisse | Cast Chains of Frost
+  "Vicious Slam",  # max 5 Ereignisse | Cast Vicious Slam (Launch)
+  "I.Slice",  # max 4 Ereignisse | Hit by Icy Slice
+  "Dead",  # max 3 Ereignisse | Dead
+  "Got up",  # max 3 Ereignisse | Got up
+  "I.Slash",  # max 3 Ereignisse | Hit by Icy Slash
+  "IceShatt.H",  # max 3 Ereignisse | Hit by Ice Shatter (Large AoEs)
+  "Lethal Coalescence",  # max 3 Ereignisse | Cast Lethal Coalescence
+  "LethalCoa.A",  # max 3 Ereignisse | Selected for Lethal Coalescence (Green)
+  "S.Ice.C",  # max 3 Ereignisse | Cast Spreading Ice
+  "DC",  # max 1 Ereignisse | DC
+  "Frigid Vortex",  # max 1 Ereignisse | Cast Frigid Vortex
+]
+
+# Nexus of Eternity  (1 Log(s))
+[boss."28106"]
+targets = [
+  # --- neu am 2026-11-24 ---
+  27929,  # Elite Cosmic Piercer 1
+  27933,  # Champion Cosmic Sunderer
+  27934,  # Champion Cosmic Bulwark
+  27958,  # Champion Cosmic Piercer
+  28017,  # Champion Aspect of the Staff 1
+  28033,  # Champion Aspect of the Spear 1
+  28065,  # Elite Cosmic Bulwark 1
+  28106,  # Vloxx
+]
+mechanics = [
+  # --- neu am 2026-11-24 ---
+  "EterRefl.H",  # max 694 Ereignisse | Hit by Eternal Reflection (Staff Frontal)
+  "Miss.Alac",  # max 508 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity 
+  "SurrCur.H",  # max 372 Ereignisse | Hit by Surrounding Curse (Staff Projectiles)
+  "ThouStr.H",  # max 286 Ereignisse | Hit by Thousand Strikes (Spear Frontal)
+  "CosmChar.H",  # max 199 Ereignisse | Hit by Cosmic Charge (Spear Charge)
+  "Miss.Qck",  # max 194 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  "RagStor.H",  # max 137 Ereignisse | Hit by Raging Storm (Spear Projectiles)
+  "ExciExtr.H",  # max 129 Ereignisse | Hit by Excision Extremis (Random Half-Circles)
+  "DivEter.H",  # max 76 Ereignisse | Hit by Division Eternal (Sword Frontal)
+  "Knck.Pll",  # max 69 Ereignisse | Knocked Back or Pulled
+  "Emp.A",  # max 62 Ereignisse | Gained Empowered from any source
+  "Emp.Vl",  # max 62 Ereignisse | Gained Empowered from self
+  "ProbDist.H",  # max 55 Ereignisse | Hit by Probability Distribution (Pools)
+  "Lnch",  # max 50 Ereignisse | Launched
+  "EchoBlad.H",  # max 47 Ereignisse | Hit by Echoing Blade (Spin Half-Circles & Red Projectiles)
+  "Asp.OrbGen",  # max 45 Ereignisse | Orbs Generated (Breakbar Broken)
+  "Emp.L",  # max 41 Ereignisse | Lost Empowered
+  "Emp.R",  # max 41 Ereignisse | Removed Empowered from Vloxx
+  "Flt",  # max 30 Ereignisse | Float
+  "JudEter.T",  # max 26 Ereignisse | Selected for Judgment of Eternity (3-Player Greens)
+  "Worldpier.H",  # max 25 Ereignisse | Hit by Worldpiercer (Walls)
+  "VisEter.H",  # max 24 Ereignisse | Hit by Visions of Eternity (Intermission Attack)
+  "Downed",  # max 23 Ereignisse | Downed
+  "Ascen.R",  # max 22 Ereignisse | Removed Ascension
+  "Got up",  # max 22 Ereignisse | Got up
+  "JudEter.H",  # max 22 Ereignisse | Hit by Judgment of Eternity (3-Player Green failed)
+  "Res",  # max 20 Ereignisse | Res
+  "SlicReal.H",  # max 20 Ereignisse | Hit by Slice Through Reality (Sword Teleport)
+  "ProbDist.T",  # max 15 Ereignisse | Selected for Probability Distribution (Pools)
+  "Ascen.A",  # max 13 Ereignisse | Applied Ascension
+  "AnnOrb.H",  # max 10 Ereignisse | Hit by Annihilating Orb (Staff Teleport)
+  "Knck.Dwn",  # max 8 Ereignisse | Knocked Down
+  "Fixate",  # max 6 Ereignisse | Fixated by Vloxx
+  "AnnOrb.Shck.H",  # max 4 Ereignisse | Hit by Annihilating Orb Shockwave (Staff Teleport)
+  "DmgImm.A",  # max 4 Ereignisse | Applied Damage Immunity
+  "AscSac.T",  # max 3 Ereignisse | Selected for Ascension's Sacrifice (Chains & 2-Player Greens)
+  "AnnOrb.Shck.KD",  # max 2 Ereignisse | Hit by Annihilating Orb Shockwave (Staff Teleport) without stability
+  "Dead",  # max 1 Ereignisse | Dead
+  "Fixate.L",  # max 1 Ereignisse | Lost Fixation early (downed or stealthed)
+  "Lckt",  # max 1 Ereignisse | Lockout
 ]

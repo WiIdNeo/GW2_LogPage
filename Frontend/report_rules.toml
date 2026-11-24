@@ -133,6 +133,7 @@
 
         [mechanic."Res"]
         critical = 1
+        not_roles = "Heal"
         list_if_not_critical = true
         text_if_listed_critical = "Du hast {value}x wiederbelebt. Insgesamt gab es {gruppe[Downed]} Downs in der Gruppe."
 

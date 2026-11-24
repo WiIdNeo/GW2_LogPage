@@ -110,11 +110,11 @@
         list_if_not_critical = false
         text_if_listed_critical = "Du bist {value}x gedownt."
 
-        [mechanic."Launched"]
-        of = "Lnch"
-        critical = 1
-        list_if_not_critical = false
-        text_if_listed_critical = "Du wurdest geworfen."
+        #[mechanic."Launched"]
+        #of = "Lnch"
+        #critical = 1
+        #list_if_not_critical = false
+        #text_if_listed_critical = "Du wurdest geworfen."
 
         [mechanic."DC"]
         critical = 1
@@ -126,10 +126,10 @@
         list_if_not_critical = false
         text_if_listed_critical = "Du hast im Kampf umgeloggt."
 
-        [mechanic."Knck.Pll"]
-        critical = 1
-        list_if_not_critical = false
-        text_if_listed_critical = "Du wurdest geschubst oder gezogen."
+        #[mechanic."Knck.Pll"]
+        #critical = 1
+        #list_if_not_critical = false
+        #text_if_listed_critical = "Du wurdest geschubst oder gezogen."
 
         [mechanic."Res"]
         critical = 1

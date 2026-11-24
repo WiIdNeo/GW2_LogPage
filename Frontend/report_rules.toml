@@ -1826,7 +1826,7 @@
 
         [boss."-22000".role."DPS"]
         criteria = [
-          {not_roles = ["Pylon", "Tank"]},
+          {not_roles = ["Pylon", "Tank", "Heal", "BoonDPS"]},
         ]
 
     # DPS
@@ -1921,7 +1921,7 @@
 
         [boss."22000".role."DPS"]
         criteria = [
-          {not_roles = ["Pylon", "Tank"]},
+          {not_roles = ["Pylon", "Tank", "Heal", "BoonDPS"]},
         ]
 
     # DPS

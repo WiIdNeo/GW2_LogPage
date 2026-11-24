@@ -1,4 +1,0 @@
-SaveOutHTML=false
-SaveOutJSON=true
-UploadToDPSReports=true
-SaveAtOut=true

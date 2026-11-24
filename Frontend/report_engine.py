@@ -41,9 +41,24 @@ Platzhalter in Texten: {value} {count} {threshold} {rule} {player} {account} {ch
   ? = nicht erfasst bzw. keine Gruppenwerte). Der Name darf kein ] oder } enthalten.
 Rang-Platzhalter (wenn Gruppenwerte vorhanden): {rank} (Platz von oben, 1 = meiste) {rank_bottom} (von unten) {share} {total}
 
+Formeln: critical, critical_below und critical_above duerfen statt einer Zahl ein TEXT mit einer Rechnung sein, die je Spieler
+  ausgewertet wird, z. B.  critical_below = "25000 - 25000 * 0.2 * {Mechanic A}"
+  Erlaubt: + - * / // % ** ( ), Zahlen, min() max() abs() round() floor() ceil() sqrt(), Vergleiche (< <= > >= == !=),
+  and/or/not und  "A if Bedingung else B".  Werte kommen als {Platzhalter} in geschweiften Klammern (Name darf Leerzeichen enthalten):
+    {Name} oder {eigene[Name]}   Anzahl der Mechanik beim Spieler (0, wenn nicht aufgetreten)
+    {gruppe[Name]}               Summe der Mechanik ueber ALLE Spieler im Log
+    {buff[Name]}                 Uptime/Stacks des Buffs beim Spieler (Phase 0), 0 wenn nicht vorhanden
+    {metric[dps]}                dps, breakbar_damage, flanking_percent, resurrects des Spielers (fehlt der Wert: Regel entfaellt)
+    {spieler}                    Anzahl Spieler im Log
+  Bei compare = "total" (Gruppenregel) sind {Name} und {gruppe[Name]} die Gruppensumme und {metric[..]} der Gruppenwert.
+  Laesst sich eine Formel nicht berechnen (Division durch 0, fehlender Wert), entfaellt die Regel fuer diesen Spieler.
+  Den berechneten Schwellwert zeigt {threshold} im Text.
+  roles / not_roles / professions duerfen auch ein einzelner Text sein (wird zur Liste).
+
 Rollen ([role."Name"], boss-spezifisch [boss."<ID>".role."Name"]) - aus dem Vergleich mit ALLEN Spielern im Log:
   match = "any"|"all"             Rolle, wenn mindestens ein / alle Kriterien zutreffen (Default any)
   description = "..."             optional, nur zur Erinnerung
+  not_roles = ["Cannon"]          Rolle entfaellt, wenn der Spieler eine dieser Rollen hat (diese muss WEITER OBEN in der Datei stehen)
   criteria = [ { source = "mechanic"|"metric", name = "...", <Bedingung(en)> }, ... ]
   Bedingungen eines Kriteriums (alle angegebenen muessen zutreffen):
     top = 3          Platz <= 3 von oben (Wert > 0)       bottom = 3     Platz <= 3 von unten (Nullen zaehlen mit)
@@ -57,6 +72,11 @@ Rollen ([role."Name"], boss-spezifisch [boss."<ID>".role."Name"]) - aus dem Verg
 Boss-spezifische Regeln ersetzen globale mit gleichem Namen; globale Mechanik-Regeln greifen nur, wenn die
 Mechanik im Log vorkommt.
 """
+import ast
+import functools
+import math
+import operator
+import re
 import sys
 import tomllib
 
@@ -96,6 +116,152 @@ METRIC_LABEL = {"dps": "DPS (Hauptziele)", "breakbar_damage": "Breakbar-Schaden"
                 "flanking_percent": "Flankenrate %", "resurrects": "Wiederbelebungen"}
 
 
+# ----------------------------------------------------------------------------- Formeln (sicherer Ausdrucks-Auswerter)
+THRESH_KEYS = ("critical", "critical_below", "critical_above")
+_FUNCS = {"min": min, "max": max, "abs": abs, "round": round, "floor": math.floor, "ceil": math.ceil, "sqrt": math.sqrt}
+_BIN = {ast.Add: operator.add, ast.Sub: operator.sub, ast.Mult: operator.mul, ast.Div: operator.truediv,
+        ast.FloorDiv: operator.floordiv, ast.Mod: operator.mod, ast.Pow: operator.pow}
+_CMP = {ast.Lt: operator.lt, ast.LtE: operator.le, ast.Gt: operator.gt, ast.GtE: operator.ge,
+        ast.Eq: operator.eq, ast.NotEq: operator.ne}
+_TOKEN = re.compile(r"\{([^{}]+)\}")
+_TOKEN_KIND = re.compile(r"^(\w+)\[(.+)\]$")
+_TOKEN_KINDS = ("eigene", "gruppe", "buff", "metric")
+
+
+def _check_expr(node, idents):
+    t = type(node)
+    if t is ast.Constant:
+        if isinstance(node.value, bool) or not isinstance(node.value, (int, float)):
+            raise ValueError("nur Zahlen erlaubt")
+    elif t is ast.Name:
+        if node.id not in idents:
+            raise ValueError(f"'{node.id}' ist kein gueltiger Wert - Mechaniken und Werte als {{Name}} in geschweiften Klammern schreiben")
+    elif t is ast.BinOp and type(node.op) in _BIN:
+        _check_expr(node.left, idents); _check_expr(node.right, idents)
+    elif t is ast.UnaryOp and type(node.op) in (ast.USub, ast.UAdd, ast.Not):
+        _check_expr(node.operand, idents)
+    elif t is ast.IfExp:
+        for n in (node.test, node.body, node.orelse):
+            _check_expr(n, idents)
+    elif t is ast.Compare and all(type(o) in _CMP for o in node.ops):
+        for n in [node.left, *node.comparators]:
+            _check_expr(n, idents)
+    elif t is ast.BoolOp:
+        for n in node.values:
+            _check_expr(n, idents)
+    elif t is ast.Call and isinstance(node.func, ast.Name) and node.func.id in _FUNCS and not node.keywords:
+        if not node.args:
+            raise ValueError(f"{node.func.id}() braucht Argumente")
+        for n in node.args:
+            _check_expr(n, idents)
+    else:
+        raise ValueError(f"nicht erlaubtes Element ({t.__name__})")
+
+
+@functools.lru_cache(maxsize=512)
+def compile_expr(src):
+    """Text -> (AST, {Bezeichner: Platzhalter}). ValueError bei Syntaxfehlern oder unerlaubten Elementen."""
+    toks = {}
+
+    def sub(m):
+        ident = f"v{len(toks)}"
+        toks[ident] = m.group(1).strip()
+        return ident
+    for tok in _TOKEN.findall(src):
+        km = _TOKEN_KIND.match(tok.strip())
+        if km and km.group(1) not in _TOKEN_KINDS:
+            raise ValueError(f"unbekannter Platzhalter '{{{tok}}}' (erlaubt: eigene[..], gruppe[..], buff[..], metric[..])")
+        if km and km.group(1) == "metric" and km.group(2) not in METRICS:
+            raise ValueError(f"unbekannte Metrik '{km.group(2)}' (erlaubt: {', '.join(METRICS)})")
+    py = _TOKEN.sub(sub, src).strip()
+    try:
+        tree = ast.parse(py, mode="eval")
+    except SyntaxError:
+        raise ValueError(f"Syntaxfehler in '{src}' - Mechaniknamen mit Leerzeichen muessen als {{Name}} in geschweiften Klammern stehen")
+    _check_expr(tree.body, set(toks))
+    return tree.body, toks
+
+
+def _eval_node(node, vals):
+    t = type(node)
+    if t is ast.Constant:
+        return node.value
+    if t is ast.Name:
+        return vals[node.id]
+    if t is ast.BinOp:
+        l, r = _eval_node(node.left, vals), _eval_node(node.right, vals)
+        if isinstance(node.op, ast.Pow) and abs(r) > 100:
+            raise ArithmeticError("Exponent zu gross")
+        return _BIN[type(node.op)](l, r)
+    if t is ast.UnaryOp:
+        v = _eval_node(node.operand, vals)
+        return -v if isinstance(node.op, ast.USub) else (+v if isinstance(node.op, ast.UAdd) else (not v))
+    if t is ast.IfExp:
+        return _eval_node(node.body if _eval_node(node.test, vals) else node.orelse, vals)
+    if t is ast.Compare:
+        left = _eval_node(node.left, vals)
+        for op, comp in zip(node.ops, node.comparators):
+            right = _eval_node(comp, vals)
+            if not _CMP[type(op)](left, right):
+                return False
+            left = right
+        return True
+    if t is ast.BoolOp:
+        res = isinstance(node.op, ast.And)
+        for v in node.values:
+            val = _eval_node(v, vals)
+            if isinstance(node.op, ast.And) and not val:
+                return val
+            if isinstance(node.op, ast.Or) and val:
+                return val
+            res = val
+        return res
+    return _FUNCS[node.func.id](*[_eval_node(a, vals) for a in node.args])       # ast.Call
+
+
+class _Env:
+    """Werte, die in Formeln als {Platzhalter} zur Verfuegung stehen."""
+    def __init__(self, own, group, buffs, metrics, players):
+        self.own, self.group, self.buffs, self.metrics, self.players = own, group, buffs, metrics, players
+
+    def value(self, tok):
+        if tok == "spieler":
+            return self.players or 0
+        km = _TOKEN_KIND.match(tok)
+        kind, name = km.groups() if km else ("eigene", tok)
+        if kind == "metric":
+            return self.metrics.get(name)                  # None -> Regel entfaellt
+        return {"eigene": self.own, "gruppe": self.group, "buff": self.buffs}[kind].get(name, 0)
+
+
+def _eval_expr(src, env):
+    """Berechnet eine Formel; None, wenn sie sich nicht berechnen laesst (fehlender Wert, Division durch 0 ...)."""
+    body, toks = compile_expr(src)
+    vals = {ident: env.value(tok) for ident, tok in toks.items()}
+    if any(v is None for v in vals.values()):
+        return None
+    try:
+        r = _eval_node(body, vals)
+    except (ArithmeticError, ValueError, TypeError):
+        return None
+    return float(r) if isinstance(r, (int, float)) and r == r else None
+
+
+def _resolve(rule, env):
+    """Ersetzt Formeln in critical/critical_below/critical_above durch Zahlen. None = nicht berechenbar -> Regel entfaellt."""
+    out = rule
+    for k in THRESH_KEYS:
+        v = rule.get(k)
+        if isinstance(v, str):
+            r = _eval_expr(v, env)
+            if r is None:
+                return None
+            if out is rule:
+                out = dict(rule)
+            out[k] = r
+    return out
+
+
 # ----------------------------------------------------------------------------- Regeln laden
 def _clean_roles(block, where, problems):
     out = {}
@@ -104,9 +270,16 @@ def _clean_roles(block, where, problems):
         if not isinstance(r, dict) or not isinstance(r.get("criteria"), list) or not r["criteria"]:
             problems.append(f"{w}: 'criteria' (Liste) fehlt")
             continue
-        bad = sorted(set(r) - {"criteria", "match", "description"})
+        bad = sorted(set(r) - {"criteria", "match", "description", "not_roles"})
         if bad:
             problems.append(f"{w}: unbekannte Schluessel {bad}")
+        nr = r.get("not_roles", [])
+        if isinstance(nr, str):
+            r = {**r, "not_roles": [nr]}
+            nr = r["not_roles"]
+        if not (isinstance(nr, list) and all(isinstance(x, str) for x in nr)):
+            problems.append(f"{w}: not_roles muss eine Liste von Rollennamen sein")
+            continue
         if r.get("match", "any") not in ("any", "all"):
             problems.append(f"{w}: match muss any oder all sein")
             continue
@@ -153,6 +326,29 @@ def _clean_rules(block, where, problems):
             bad = sorted(set(rule) - RULE_KEYS)
             if bad:
                 problems.append(f"{where}.{kind}.{name}: unbekannte Schluessel {bad}")
+            rule = dict(rule)
+            ok = True
+            for k in ("roles", "not_roles", "professions"):
+                if isinstance(rule.get(k), str):
+                    rule[k] = [rule[k]]                     # "Tank" -> ["Tank"]
+                elif k in rule and not (isinstance(rule[k], list) and all(isinstance(x, str) for x in rule[k])):
+                    problems.append(f"{where}.{kind}.{name}: {k} muss eine Liste von Namen sein")
+                    ok = False
+            for k in THRESH_KEYS:
+                v = rule.get(k)
+                if k not in rule:
+                    continue
+                if isinstance(v, str):
+                    try:
+                        compile_expr(v)
+                    except ValueError as e:
+                        problems.append(f"{where}.{kind}.{name}.{k}: {e}")
+                        ok = False
+                elif isinstance(v, bool) or not isinstance(v, (int, float)):
+                    problems.append(f"{where}.{kind}.{name}.{k}: muss eine Zahl oder eine Formel (Text) sein")
+                    ok = False
+            if not ok:
+                continue
             src = rule.get("of", name)
             if kind == "mechanic" and isinstance(src, list):
                 if not src or not all(isinstance(x, str) for x in src):
@@ -247,7 +443,7 @@ def _flag(rule, value, default_crit=None):
 
 def _text(rule, critical, label, value, pl, extra=None):
     tmpl = rule.get("text_if_listed_critical" if critical else "text_if_listed_not_critical")
-    thr = rule.get("critical") if rule.get("critical") is not None else rule.get("critical_below")
+    thr = next((rule[k] for k in ("critical", "critical_below", "critical_above") if rule.get(k) is not None), None)
     ctx = _SafeDict(value=_num(value), count=_num(value), threshold=_num(thr) if thr is not None else "",
                     rule=label, player=pl.get("account", ""), account=pl.get("account", ""),
                     character=pl.get("name", ""), time="", times="", roles=pl.get("_roles", ""))
@@ -376,6 +572,8 @@ def evaluate(slim, boss_key, rules):
         # Rollen
         roles = []
         for rname, r in merged("role")[0].items():
+            if set(r.get("not_roles") or []) & {x["name"] for x in roles}:
+                continue                              # Rolle entfaellt, wenn der Spieler eine der not_roles (weiter oben definiert) hat
             hits = [_criterion(c, mstats, xstats, gstats) for c in r["criteria"]]
             if (all(hits) if r.get("match") == "all" else any(hits)):
                 roles.append({"name": rname, "why": [h for h in hits if h], "description": r.get("description", "")})
@@ -387,6 +585,13 @@ def evaluate(slim, boss_key, rules):
         def add(kind, name, rule, value, critical, label, extra=None):
             findings.append({"kind": kind, "name": name, "value": value, "critical": critical,
                              "text": _text(rule, critical, label, value, plx, extra), "link": rule.get("link")})
+
+        uptimes = {}                                 # Buff-Uptimes Phase 0 (auch fuer Formeln: {buff[Name]})
+        for name, per_phase in (pl.get("buffUptimes") or {}).items():
+            if per_phase:
+                uptimes[name] = per_phase[0].get("uptime", 0)
+        env = _Env(plx["_own"], plx["_group"] or {}, uptimes, {k: v for k, v in metrics.items() if v is not None},
+                   grp.get("player_count", 0))
 
         # Mechaniken
         rs, scoped = merged("mechanic")
@@ -431,19 +636,21 @@ def evaluate(slim, boss_key, rules):
                              player_count=_num(grp.get("player_count", 0)))
                 if len(srcs) == 1:
                     extra["players"] = _num(gs[0]["players"])
+            rule = _resolve(rule, env)
+            if rule is None:
+                continue
             crit = _flag(rule, value, default_crit=1 if cmp_ == "player" else None)
             if crit or (rule.get("list_if_not_critical") and count > 0):
                 add("mechanic", name, rule, value, crit, name, extra)
 
         # Buffs (Phase 0)
-        uptimes = {}
-        for name, per_phase in (pl.get("buffUptimes") or {}).items():
-            if per_phase:
-                uptimes[name] = per_phase[0].get("uptime", 0)
         for name, rule in merged("buff")[0].items():
             if not _applies(rule, pl, role_names):
                 continue
             v = uptimes.get(name, 0.0)
+            rule = _resolve(rule, env)
+            if rule is None:
+                continue
             crit = _flag(rule, v)
             if crit or rule.get("list_if_not_critical"):
                 add("buff", name, rule, v, crit, name)
@@ -463,6 +670,9 @@ def evaluate(slim, boss_key, rules):
                 extra.update(total=_num(tot), share=_num(round(100.0 * v / tot, 1)), count=_num(v),
                              player_count=_num(grp.get("player_count", 0)))
                 v = round(100.0 * v / tot, 1)
+            rule = _resolve(rule, env)
+            if rule is None:
+                continue
             crit = _flag(rule, v)
             if crit or rule.get("list_if_not_critical"):
                 add("metric", name, rule, v, crit, METRIC_LABEL.get(src, name), extra or None)
@@ -470,7 +680,8 @@ def evaluate(slim, boss_key, rules):
         # Consumables
         cons = sorted({c.get("name") for c in pl.get("consumables") or [] if c.get("name")})
         rule = merged("consumables")[0].get("")
-        if rule and _applies(rule, pl, role_names):
+        rule = _resolve(rule, env) if rule and _applies(rule, pl, role_names) else None
+        if rule:
             crit = _flag(rule, len(cons))
             if crit or rule.get("list_if_not_critical"):
                 add("consumables", "", rule, len(cons), crit, "Consumables")
@@ -501,6 +712,8 @@ def evaluate_group(slim, boss_key, rules):
     findings = []
     if not grp:
         return {"findings": findings, "values": values}
+    gcounts = {n: i["count"] for n, i in values["mechanics"].items()}
+    env = _Env(gcounts, gcounts, {}, {k: v for k, v in values["metrics"].items() if v is not None}, values["player_count"])
     for kind in ("mechanic", "metric"):
         g = dict(rules["global"].get(kind) or {})
         b = (rules["boss"].get(str(boss_key)) or {}).get(kind) or {}
@@ -524,6 +737,9 @@ def evaluate_group(slim, boss_key, rules):
                     continue
                 extra, label, dflt = {}, METRIC_LABEL.get(src, name), None
             extra.update(total=_num(v), player_count=_num(values["player_count"]))
+            rule = _resolve(rule, env)
+            if rule is None:
+                continue
             crit = _flag(rule, v, default_crit=dflt)
             if crit or (rule.get("list_if_not_critical") and v):
                 gx = {"_group": {n: i["count"] for n, i in values["mechanics"].items()},

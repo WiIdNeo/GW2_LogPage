@@ -222,6 +222,53 @@ def build_players(players):
     return page("Spieler", f'<p><a href="index.html">→ Log-Übersicht</a></p><ul>{items}</ul>')
 
 
+# ---------------------------------------------------------------- Killproofs: feste Reihenfolge fuer die Spielerseite
+# Eintrag: (Anzeigename, Boss-ID aus bosses.toml, Modi) - Modi: n = Normal, c = CM, l = LCM (Reihenfolge = Anzeige).
+# Schluessel in player_kp / boss-Tabelle: '<ID>' normal, '-<ID>' CM, '--<ID>' LCM.
+KP_LAYOUT = [
+    ("Wing 1", [("Vale Guardian", 15438, "n"), ("Spirit Woods / Spirit Run", 15415, "n"),
+                ("Gorseval", 15429, "n"), ("Sabetha", 15375, "n")]),
+    ("Wing 2", [("Slothasor", 16123, "n"), ("Bandit Trio", 16088, "n"), ("Matthias Gabrel", 16115, "n")]),
+    ("Wing 3", [("Escort / McLeod", 16253, "n"), ("Keep Construct", 16235, "nc"),
+                ("Twisted Castle", 16247, "n"), ("Xera", 16246, "n")]),
+    ("Wing 4", [("Cairn", 17194, "nc"), ("Mursaat Overseer", 17172, "nc"),
+                ("Samarog", 17188, "nc"), ("Deimos", 17154, "nc")]),
+    ("Wing 5", [("Soulless Horror", 19767, "nc"), ("River of Souls / Desmina", 19828, "n"),
+                ("Statue of Ice (Broken King)", 19691, "n"), ("Statue of Death (Eater of Souls)", 19536, "n"),
+                ("Statue of Darkness (Eyes)", 19651, "n"), ("Dhuum", 19450, "nc")]),
+    ("Wing 6", [("Conjured Amalgamate", 43974, "nc"), ("Twin Largos", 21105, "nc"), ("Qadim", 20934, "nc")]),
+    ("Wing 7", [("Cardinal Adina", 22006, "nc"), ("Cardinal Sabir", 21964, "nc"), ("Qadim the Peerless", 22000, "nc")]),
+    ("Wing 8", [("Greer", 26725, "nc"), ("Decima", 26774, "nc"), ("Ura", 26712, "ncl")]),
+    ("Icebrood Saga", [("Icebrood Construct", 22154, "n"), ("Fraenir of Jormag", 22492, "n"),
+                       ("Kodan Brothers (Voice and Claw)", 22343, "n"), ("Boneskinner", 22521, "n"),
+                       ("Whisper of Jormag", 22711, "n")]),
+    ("End of Dragons Strikes", [("Aetherblade Hideout", 24033, "nc"), ("Xunlai Jade Junkyard", 23957, "nc"),
+                                ("Kaineng Overlook", 24485, "nc"), ("Harvest Temple", 24375, "nc")]),
+    ("Core Game Strikes", [("Old Lion's Court", 25413, "nc"), ("Freezie", 21333, "n")]),
+    ("Secrets of the Obscure Strikes", [("Cosmic Observatory", 25705, "nc"), ("Temple of Febe", 25989, "ncl")]),
+    ("Visions of Eternity Strikes", [("Kela", 27124, "nc"), ("Vloxx", 28106, "ncl")]),
+]
+
+
+def kp_html(kp_rows, bosses):
+    """Killproofs in fester Reihenfolge nach Wing/Strike-Gruppe; CM (und LCM) direkt hinter der Normalversion."""
+    totals = {str(r["boss_key"]): r["total"] for r in kp_rows}
+    used, out = set(), []
+    for section, items in KP_LAYOUT:
+        rows = []
+        for label, bid, modes in items:
+            for m in modes:
+                key = {"n": str(bid), "c": str(-abs(bid)), "l": f"--{abs(bid)}"}[m]
+                used.add(key)
+                rows.append(f"<tr><td>{esc(label + {'n': '', 'c': ' CM', 'l': ' LCM'}[m])}</td><td>{totals.get(key, 0) or 0}</td></tr>")
+        out.append(f"<h3>{esc(section)}</h3><table><tr><th>Encounter</th><th>Anzahl</th></tr>{''.join(rows)}</table>")
+    rest = [(k, v) for k, v in totals.items() if k not in used and v]       # nichts verschlucken, was nicht im Layout steht
+    if rest:
+        rows = "".join(f'<tr><td>{esc(bosses[k]["name"] if k in bosses else k)}</td><td>{v}</td></tr>' for k, v in rest)
+        out.append(f"<h3>Sonstige</h3><table><tr><th>Typ</th><th>Anzahl</th></tr>{rows}</table>")
+    return "<h2>Killproofs</h2>" + "".join(out)
+
+
 def build_player(db, p, bosses, entries, reports=frozenset()):
     acc = p["account"]
     ps = player_slug(acc)
@@ -293,9 +340,7 @@ def build_player(db, p, bosses, entries, reports=frozenset()):
     # Killproofs (Schluessel-Format von Wingman roh anzeigen, falls nicht in boss-Tabelle)
     kp = db.execute("SELECT * FROM player_kp WHERE account=? ORDER BY boss_key", (acc,)).fetchall()
     if kp:
-        krows = "".join(f'<tr><td>{esc(bosses[r["boss_key"]]["name"] if r["boss_key"] in bosses else r["boss_key"])}</td>'
-                        f'<td>{r["total"]}</td></tr>' for r in kp)
-        parts.append(f"<h2>Killproofs</h2><table><tr><th>Typ</th><th>Anzahl</th></tr>{krows}</table>")
+        parts.append(kp_html(kp, bosses))
 
     # Letzte Logs dieses Spielers
     mine = [(l, b) for l, b, pl in entries if any(x["account"] == acc for x in pl)][:20]

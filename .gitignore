@@ -6,6 +6,5 @@ json_dump/
 json_slim/
 *.sqlite
 *.sqlite-shm
-*-sqlite-wal
-
-
+*.sqlite-wal
+Backend/gw2logs.sqlite

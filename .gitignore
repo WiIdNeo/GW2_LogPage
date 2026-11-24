@@ -4,5 +4,8 @@ extracted/
 json_dump/
 **/config.toml
 json_slim/
+*.sqlite
+*.sqlite-shm
+*-sqlite-wal
 
 

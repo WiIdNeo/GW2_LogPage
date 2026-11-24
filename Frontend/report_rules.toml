@@ -133,7 +133,7 @@
 
         [mechanic."Res"]
         critical = 1
-        not_roles = "Heal"
+        not_roles = ["Heal", "Flak Kite", "HK", "Pylon"]
         list_if_not_critical = true
         text_if_listed_critical = "Du hast {value}x wiederbelebt. Insgesamt gab es {gruppe[Downed]} Downs in der Gruppe."
 
@@ -345,7 +345,7 @@
         [boss."16123".mechanic."Floor"]
         list_if_not_critical = false
         critical = 10
-        text_if_listed_critical = "Du hast mehr als 10 Sekunden auf dem Gift-Boden der Arne gestanden, versuche das zu vermeiden!"
+        text_if_listed_critical = "Du hast mehr als 10 Sekunden auf dem Gift-Boden der Arena gestanden, versuche das zu vermeiden!"
 
         [boss."16123".mechanic."Tantrum"]
         list_if_not_critical = false

@@ -2151,7 +2151,7 @@
         text_if_listed_critical = "Du wurdest von der Schockwelle des Destroyers getroffen."
 
     # Roles
-        [boss."20934".role."Kite"]
+        [boss."-20934".role."Kite"]
         description = "Du hast gekitet."
         match = "all"
         criteria = [

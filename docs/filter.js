@@ -18,7 +18,7 @@
     var p = new URLSearchParams();
     selects.forEach(function (s) { if (s.value) p.set(s.id, s.value); });
     var q = p.toString();
-    history.replaceState(null, '', location.pathname + (q ? '?' + q : ''));
+    history.replaceState(null, '', location.pathname + (q ? '?' + q : '') + location.hash);   // Sprungziel behalten
   }
 
   selects.forEach(function (s) {
@@ -26,4 +26,21 @@
     s.addEventListener('change', apply);
   });
   apply();
+})();
+
+// Spielerseite: Sprunglinks oeffnen eingeklappte Abschnitte; Knoepfe "Alle auf-/zuklappen".
+(function () {
+  function openId(id) {
+    var el = id && document.getElementById(id);
+    if (el && el.tagName === 'DETAILS') el.open = true;
+  }
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (a) openId(decodeURIComponent(a.getAttribute('href').slice(1)));
+    var b = e.target.closest && e.target.closest('button[data-details]');
+    if (b) Array.prototype.forEach.call(document.querySelectorAll('details.boss-sec'), function (d) {
+      d.open = b.getAttribute('data-details') === 'open';
+    });
+  });
+  openId(decodeURIComponent(location.hash.slice(1)));
 })();

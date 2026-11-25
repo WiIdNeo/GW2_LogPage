@@ -58,7 +58,7 @@ Slubling = 0.75                             # 10500 / 14000
 # Dhuum (CM nutzt denselben Abschnitt)
 [boss."19450".dps_factor]
 "*" = "1 - 0.05 * {Orb CD}"
-# Kite = 0.5                                # noch austarieren
+"Kite" = 0.9
 
 # Conjured Amalgamate (CM nutzt denselben Abschnitt)
 [boss."43974".dps_factor]
@@ -73,7 +73,6 @@ Kite = 0.54
 # Qadim the Peerless
 [boss."22000".dps_factor]
 Pylon = 0.9                                 # 18900 / 21000
-# Tank = 0.7                                # noch austarieren
 
 [boss."-22000".dps_factor]
 Pylon = 0.89                                # 17000 / 19000

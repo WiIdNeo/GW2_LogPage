@@ -14,6 +14,12 @@ targets = [
   15433,  # Red Guardian 1
   15438,  # Vale Guardian
 ]
+damage_targets = [
+  15420,  # Green Guardian 1
+  15431,  # Blue Guardian 1
+  15433,  # Red Guardian 1
+  15438,  # Vale Guardian
+]
 mechanics = [
   # --- neu am 2026-11-22 ---
   #"Miss.Alac",  # max 437 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
@@ -48,7 +54,11 @@ mechanics = [
 targets = [
   # --- neu am 2026-11-22 ---
   15429,  # Gorseval the Multifarious
-  #15434,  # Charged Soul NW 1
+  15434,  # Charged Soul NW 1
+]
+damage_targets = [
+  15429,  # Gorseval the Multifarious
+  15434,  # Charged Soul NW 1
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
@@ -73,7 +83,12 @@ mechanics = [
 
 # Sabetha the Saboteur 1  (2 Log(s))
 [boss."15375"]
-damage_targets = [15375, 15372, 15404, 15430]   # zaehlen fuer den Target-Damage: Sabetha, Kernan, Knuckles, Karde
+damage_targets = [
+  15372,  # Kernan
+  15375,  # Sabetha the Saboteur 1
+  15404,  # "Knuckles"
+  15430,  # Karde
+]
 targets = [
   # --- neu am 2026-11-22 ---
   #-16,  # North Cannon  [in keiner Phase]
@@ -197,6 +212,12 @@ targets = [
   #16274,  # Engul the Calculating
   #16278,  # Jessica the Benevolent 1
   #16282,  # Caulle the Vociferous 1
+]
+damage_targets = [
+  15372,  # Kernan
+  15375,  # Sabetha the Saboteur 1
+  15404,  # "Knuckles"
+  15430,  # Karde
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
@@ -384,9 +405,14 @@ mechanics = [
 [boss."-17188"]
 targets = [
   # --- neu am 2026-11-22 ---
-  #17124,  # Rigom 1
+  17124,  # Rigom 1
   17188,  # Samarog
-  #17208,  # Guldhem 1
+  17208,  # Guldhem 1
+]
+damage_targets = [
+  17124,  # Rigom 1
+  17188,  # Samarog
+  17208,  # Guldhem 1
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
@@ -433,6 +459,11 @@ targets = [
   #17124,  # Rigom 1
   17188,  # Samarog
   #17208,  # Guldhem 1
+]
+damage_targets = [
+  17124,  # Rigom 1
+  17188,  # Samarog
+  17208,  # Guldhem 1
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
@@ -481,6 +512,12 @@ targets = [
   17206,  # Thief
   17335,  # Gambler
 ]
+damage_targets = [
+  17154,  # Deimos
+  17163,  # Drunkard
+  17206,  # Thief
+  17335,  # Gambler
+]
 mechanics = [
   # --- neu am 2026-11-22 ---
   #"Miss.Qck",  # max 95 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
@@ -523,6 +560,12 @@ targets = [
   17206,  # Thief
   17335,  # Gambler
 ]
+damage_targets = [
+  17154,  # Deimos
+  17163,  # Drunkard
+  17206,  # Thief
+  17335,  # Gambler
+]
 mechanics = [
   # --- neu am 2026-11-22 ---
   #"Miss.Qck",  # max 421 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
@@ -558,7 +601,7 @@ mechanics = [
 [boss."-19767"]
 targets = [
   # --- neu am 2026-11-22 ---
-  #19422,  # Tormented Dead 1
+  19422,  # Tormented Dead 1
   19767,  # Soulless Horror
 ]
 mechanics = [
@@ -594,7 +637,7 @@ mechanics = [
 [boss."19767"]
 targets = [
   # --- neu am 2026-11-22 ---
-  #19422,  # Tormented Dead 1
+  19422,  # Tormented Dead 1
   19767,  # Soulless Horror
 ]
 mechanics = [
@@ -726,6 +769,11 @@ targets = [
   37464,  # Left Arm
   43974,  # Conjured Amalgamate
 ]
+damage_targets = [
+  10142,  # Right Arm
+  37464,  # Left Arm
+  43974,  # Conjured Amalgamate
+]
 mechanics = [
   # --- neu am 2026-11-22 ---
   "Shield.C",  # max 293 Ereignisse | Collected Shield
@@ -763,6 +811,11 @@ targets = [
   37464,  # Left Arm
   43974,  # Conjured Amalgamate
 ]
+damage_targets = [
+  10142,  # Right Arm
+  37464,  # Left Arm
+  43974,  # Conjured Amalgamate
+]
 mechanics = [
   # --- neu am 2026-11-22 ---
   "Shield.C",  # max 338 Ereignisse | Collected Shield
@@ -791,6 +844,10 @@ mechanics = [
 [boss."-21105"]
 targets = [
   # --- neu am 2026-11-22 ---
+  21089,  # Kenut
+  21105,  # Nikare
+]
+damage_targets = [
   21089,  # Kenut
   21105,  # Nikare
 ]
@@ -831,6 +888,10 @@ targets = [
   21089,  # Kenut
   21105,  # Nikare
 ]
+damage_targets = [
+  21089,  # Kenut
+  21105,  # Nikare
+]
 mechanics = [
   # --- neu am 2026-11-22 ---
   #"Miss.Alac",  # max 277 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
@@ -867,6 +928,13 @@ targets = [
   #-7,  # Qadim's Lamp
   #-5,  # Stab Pyre Guardian 1
   #-4,  # Protect Pyre Guardian 1
+  20934,  # Qadim
+  20997,  # Wyvern Matriarch
+  21073,  # Apocalypse Bringer
+  21183,  # Wyvern Patriarch
+  21285,  # Ancient Invoked Hydra
+]
+damage_targets = [
   20934,  # Qadim
   20997,  # Wyvern Matriarch
   21073,  # Apocalypse Bringer
@@ -933,10 +1001,10 @@ mechanics = [
 [boss."20934"]
 targets = [
   # --- neu am 2026-11-22 ---
-  -13,  # Resolution Pyre Guardian 1
+  #-13,  # Resolution Pyre Guardian 1
   #-7,  # Qadim's Lamp 1
-  -5,  # Stab Pyre Guardian 1
-  -4,  # Protect Pyre Guardian 1
+  #-5,  # Stab Pyre Guardian 1
+  #-4,  # Protect Pyre Guardian 1
   20934,  # Qadim
   20997,  # Wyvern Matriarch
   21073,  # Apocalypse Bringer
@@ -944,6 +1012,13 @@ targets = [
   #21285,  # Ancient Invoked Hydra
   # --- neu am 2026-11-22 ---
   21050,  # Pyre Guardian 1  [in keiner Phase]
+]
+damage_targets = [
+  20934,  # Qadim
+  20997,  # Wyvern Matriarch
+  21073,  # Apocalypse Bringer
+  21183,  # Wyvern Patriarch
+  21285,  # Ancient Invoked Hydra
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
@@ -1233,8 +1308,13 @@ mechanics = [
 targets = [
   # --- neu am 2026-11-22 ---
   26725,  # Greer, the Blightbringer
-  #26742,  # Reeg, the Blighter
-  #26771,  # Gree, the Bringer
+  26742,  # Reeg, the Blighter
+  26771,  # Gree, the Bringer
+]
+damage_targets = [
+  26725,  # Greer, the Blightbringer
+  26742,  # Reeg, the Blighter
+  26771,  # Gree, the Bringer
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
@@ -1409,6 +1489,10 @@ targets = [
   22436,  # Icebrood Construct
   22492,  # Fraenir of Jormag
 ]
+damage_targets = [
+  22436,  # Icebrood Construct
+  22492,  # Fraenir of Jormag
+]
 mechanics = [
   # --- neu am 2026-11-22 ---
   #"FrigidFusillade.H",  # max 36 Ereignisse | Hit by Frigid Fusillade (Fraenir Arrows)
@@ -1438,6 +1522,10 @@ mechanics = [
 targets = [
   # --- neu am 2026-11-22 ---
   22343,  # Voice of the Fallen
+  22481,  # Claw of the Fallen
+]
+damage_targets = [
+    22343,  # Voice of the Fallen
   22481,  # Claw of the Fallen
 ]
 mechanics = [
@@ -1568,6 +1656,14 @@ targets = [
   # --- neu am 2026-11-24 ---
   24768,  # Echo of Scarlet Briar  [in keiner Phase]
 ]
+damage_targets = [
+  23656,  # Elite CC Scarlet Phantom 1
+  24033,  # Captain Mai Trin
+  25247,  # Echo of Scarlet Briar
+  25262,  # Elite HP Scarlet Phantom 1
+  # --- neu am 2026-11-24 ---
+  24768,  # Echo of Scarlet Briar  [in keiner Phase]
+]
 mechanics = [
   # --- neu am 2026-11-24 ---
   #"Miss.Alac",  # max 365 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
@@ -1607,6 +1703,13 @@ mechanics = [
 [boss."24033"]
 targets = [
   # --- neu am 2026-11-24 ---
+  23656,  # Elite CC Scarlet Phantom 1
+  24033,  # Captain Mai Trin
+  24396,  # Scarlet Phantom 1  [in keiner Phase]
+  24431,  # Elite HP Scarlet Phantom 1
+  24768,  # Echo of Scarlet Briar
+]
+damage_targets = [
   23656,  # Elite CC Scarlet Phantom 1
   24033,  # Captain Mai Trin
   24396,  # Scarlet Phantom 1  [in keiner Phase]
@@ -1730,7 +1833,17 @@ targets = [
   25677,  # Embodiment of Gluttony 1
   25686,  # Empowered Embodiment of Rage 1
   25700,  # Embodiment of Malice 1
-  25747,  # Malicious Shadow 1  [in keiner Phase]
+  #25747,  # Malicious Shadow 1  [in keiner Phase]
+  25967,  # Empowered Embodiment of Envy 1
+  25989,  # Cerus
+  26034,  # Embodiment of Despair 1
+  26049,  # Empowered Embodiment of Regret 1
+]
+damage_targets = [
+  25677,  # Embodiment of Gluttony 1
+  25686,  # Empowered Embodiment of Rage 1
+  25700,  # Embodiment of Malice 1
+  #25747,  # Malicious Shadow 1  [in keiner Phase]
   25967,  # Empowered Embodiment of Envy 1
   25989,  # Cerus
   26034,  # Embodiment of Despair 1
@@ -1791,6 +1904,14 @@ targets = [
   24485,  # Minister Li
   24660,  # The Mech Rider
 ]
+damage_targets = [
+  23612,  # The Sniper
+  23618,  # The Ritualist
+  24254,  # The Mindblade
+  24261,  # The Enforcer
+  24485,  # Minister Li
+  24660,  # The Mech Rider
+]
 mechanics = [
   # --- neu am 2026-11-24 ---
   #"Miss.Alac",  # max 440 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
@@ -1823,6 +1944,11 @@ mechanics = [
 [boss."25413"]
 targets = [
   # --- neu am 2026-11-24 ---
+  25413,  # Prototype Vermilion
+  25415,  # Prototype Arsenite
+  25419,  # Prototype Indigo
+]
+damage_targets = [
   25413,  # Prototype Vermilion
   25415,  # Prototype Arsenite
   25419,  # Prototype Indigo

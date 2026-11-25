@@ -179,23 +179,26 @@
         critical = 5
         list_if_not_critical = true
         text_if_listed_critical = "Du hast relativ lang in den Seeker-AoEs gestanden. Achte darauf, dass du nicht in Roten AoEs stehst"
+        chart = true
 
         [boss."15438".mechanic."Leuchtende Bodenplatten"]
         of = ["Floor R", "Floor B", "Floor G"]
         critical = 2
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest {value}x von leuchtenden Bodenplatten getroffen. Achte darauf dich schneller zu bewegen."
+        chart = true
 
         [boss."15438".mechanic."Orbs"]
         critical = 5
         list_if_not_critical = true
-        text_if_listed_critical = "Du hast relativ lang in den Seeker-AoEs gestanden. Achte darauf, dass du nicht in Roten AoEs stehst"
+        text_if_listed_critical = "Du hast in den Splittphasen weiße Orbs eingesammelt. Vermeide das wenn möglich, um deinen heiler zu entlasten."
 
         [boss."15438".mechanic."Blues"]
         of = ["Boss TP", "Split TP"]
         critical = 1
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest teleportiert! Achte das nächste Mal mehr auf die Blauen AoEs"
+        chart = true
 
     # Roles
         [boss."15438".role."Condi-DPS"]
@@ -268,6 +271,7 @@
         list_if_not_critical = false
         text_if_listed_critical = "Du hast in dem AoE des Blauen Orbs gestanden, sieh dir den Abschnitt zu Phase 2 nochmal genauer an."
         link = "https://snowcrows.com/guides/raids/spirit-vale/gorseval"
+        chart = true
 
         [boss."15429".mechanic."Slam"]
         critical = 1
@@ -278,6 +282,7 @@
         critical = 1
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest ge-eggt. Achte darauf rechtzeitig zu dodgen, wenn unter allen Spielern AoEs auftauchen."
+        chart = true
 
     # Roles
         [boss."15429".role."DPS"]
@@ -435,16 +440,19 @@
         list_if_not_critical = false
         critical = 1
         text_if_listed_critical = "Du wurdest vom Tantrum getroffen. Achte darauf, dass du kurz nachdem der zweite AoE unter dich gelegt wurde dodgst!"
+        chart = true
 
         [boss."16123".mechanic."Breath"]
         list_if_not_critical = false
         critical = 1
         text_if_listed_critical = "Du wurdest vom Feueratem von Slothasor getroffen. Achte darauf, dass du ihn sidestepst."
+        chart = true
 
         [boss."16123".mechanic."Shake"]
         list_if_not_critical = false
         critical = 1
         text_if_listed_critical = "Du wurdest vom Shake getroffen. Achte darauf, dass du dodgst, wenn er sich schüttelt."
+        chart = true
 
         [boss."16123".mechanic."Poison dmg"]
         list_if_not_critical = false
@@ -522,6 +530,7 @@
         critical = 1
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von {value} ticks der Feuertornados getroffen. Achte darauf, nicht im Weg von Feuertornados zu stehen!"
+        chart = true
 
         [boss."16115".mechanic."SAK-Hits"]
         of = "Well dmg"            # Zähler: die Treffer des Spielers
@@ -534,6 +543,7 @@
         critical = 1
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von {value} ticks der Stürme getroffen. Achte darauf, nicht im Weg von Stürmen zu stehen!"
+        chart = true
 
         [boss."16115".mechanic."KD"]
         critical = 10
@@ -544,11 +554,13 @@
         critical = 1
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von {value} ticks des Walkers getroffen. Achte darauf, ihm nicht im Weg zu stehen!"
+        chart = true
 
         [boss."16115".mechanic."Icy KD"]
         critical = 1
         list_if_not_critical = false
         text_if_listed_critical = "Du bist im Eis-Feld ausgerutscht. Pass auf, nicht in eines hineinzugehen!"
+        chart = true
 
     # Roles
         [boss."16115".role."Reflect"]
@@ -602,6 +614,7 @@
         list_if_not_critical = false
         critical = 1
         text_if_listed_critical = "Du wurdest {value}x von der Pizza getroffen. Achte darauf, dass du weder im AoE unter dem Boss, noch in den Cones stehst (diese Mechanik ist schwierig zu umgehen, geringe Werte können unkritisch/unvermeidbar sein)"
+        chart = true
 
         [boss."-16235".mechanic."Richtige Orbs"]
         of = ["GW.Orb", "GR.Orb"]
@@ -609,12 +622,14 @@
         list_if_not_critical = true
         text_if_listed_critical = "Du hast weniger als 5 richtige Orbs gesammelt. Sammle das nächste Mal die Orbs der Farbe über deinem Kopf."
         text_if_listed_not_critical = "Du hast {value} korrekte Orbs gesammelt"
+        chart = true
 
         [boss."-16235".mechanic."falsche Orbs"]
         of = ["BW.Orb", "BR.Orb"]
         critical = 1
         list_if_not_critical = false
         text_if_listed_critical = "Du hast Orbs der falschen Farbe eingesammelt. Achte auf die Farbe über seinem Kopf, sie kann pro Sammelphase variieren!"
+        chart = true
 
         [boss."-16235".mechanic."Jump"]
         critical = 1
@@ -672,6 +687,7 @@
         list_if_not_critical = false
         critical = 1
         text_if_listed_critical = "Du wurdest {value}x von der Pizza getroffen. Achte darauf, dass du weder im AoE unter dem Boss, noch in den Cones stehst (diese Mechanik ist schwierig zu umgehen, geringe Werte können unkritisch/unvermeidbar sein)"
+        chart = true
 
         [boss."16235".mechanic."Richtige Orbs"]
         of = ["GW.Orb", "GR.Orb"]
@@ -679,12 +695,14 @@
         list_if_not_critical = true
         text_if_listed_critical = "Du hast weniger als 5 richtige Orbs gesammelt. Sammle das nächste Mal die Orbs der Farbe über deinem Kopf."
         text_if_listed_not_critical = "Du hast {value} korrekte Orbs gesammelt"
+        chart = true
 
         [boss."16235".mechanic."falsche Orbs"]
         of = ["BW.Orb", "BR.Orb"]
         critical = 1
         list_if_not_critical = false
         text_if_listed_critical = "Du hast Orbs der falschen Farbe eingesammelt. Achte auf die Farbe über seinem Kopf, sie kann pro Sammelphase variieren!"
+        chart = true
 
         [boss."16235".mechanic."Jump"]
         critical = 1
@@ -799,6 +817,7 @@
         critical = 1
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest teleportiert. Achte auf den orangenen Bildschirmrand!"
+        chart = true
 
         [boss."-17194".mechanic."Refl.KB"]
         critical = 1
@@ -870,6 +889,7 @@
         critical = 1
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest teleportiert. Achte auf den orangenen Bildschirmrand!"
+        chart = true
 
         [boss."17194".mechanic."Refl.KB"]
         critical = 1
@@ -1015,7 +1035,7 @@
         [boss."17172".mechanic."Dispel"]
         roles = ["Took Dispel"]
         critical_below = 5
-        text_if_listed_critical = "If your group was not incredibly fast, you did not dispel enough!"
+        text_if_listed_critical = "Wenn deine Gruppe nicht sehr schnell war, hast du zu wenig dispelled! Achte darauf das auf Cooldwon zu machen, damit die Gruppe nicht irgendwann von übermäßig vielen Statuen mit Schild angegriffen wird."
 
     # Roles
         [boss."17172".role."Took Dispel"]
@@ -1100,11 +1120,13 @@
         critical = 1
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von einer Schockwelle getroffen. Gewöhn dir an, darüber zu springen, vertrau nicht auf Stabilität."
+        chart = true
 
         [boss."-17188".mechanic."Swp"]
         critical = 1
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von Samarogs Swipe getroffen. Wenn er seinen Speer zur Seite hebt läufst du am besten in seine Hitbox hinein."
+        chart = true
 
         [boss."-17188".mechanic."Stun"]
         critical = 1
@@ -1120,6 +1142,7 @@
         critical = 1
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von seiner Fliegenklatsche getroffen. Dieser Angriff taucht nur ein bis zweimal pro Kampf nach der Zwischenphase auf. Achte darauf ihn dann auch zu dodgen."
+        chart = true
 
         [boss."-17188".mechanic."S.Rt"]
         critical = 1
@@ -1156,7 +1179,7 @@
         [boss."-17188".metric.breakbar_damage]
         compare = "share"
         critical_below = "11.11 - (1.235 * {Brtlzd})"
-        text_if_listed_critical = "Dein DPS war mit {value} niedriger als erwartet bei deiner Menge CC-Phasen (Erwartungswert: {threshold})."
+        text_if_listed_critical = "Dein CC war mit {value} niedriger als erwartet bei deiner Menge CC-Phasen (Erwartungswert: {threshold})."
 
     # Boons
 
@@ -1187,11 +1210,13 @@
         critical = 1
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von einer Schockwelle getroffen. Gewöhn dir an, darüber zu springen, vertrau nicht auf Stabilität."
+        chart = true
 
         [boss."17188".mechanic."Swp"]
         critical = 1
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von Samarogs Swipe getroffen. Wenn er seinen Speer zur Seite hebt läufst du am besten in seine Hitbox hinein."
+        chart = true
 
         [boss."17188".mechanic."Stun"]
         critical = 1
@@ -1207,6 +1232,7 @@
         critical = 1
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von seiner Fliegenklatsche getroffen. Dieser Angriff taucht nur ein bis zweimal pro Kampf nach der Zwischenphase auf. Achte darauf ihn dann auch zu dodgen."
+        chart = true
 
         [boss."17188".mechanic."S.Rt"]
         critical = 1
@@ -1244,7 +1270,7 @@
         [boss."17188".metric.breakbar_damage]
         compare = "share"
         critical_below = "11.11 - (1.235 * {Brtlzd})"
-        text_if_listed_critical = "Dein DPS war mit {value} niedriger als erwartet bei deiner Menge CC-Phasen (Erwartungswert: {threshold})."
+        text_if_listed_critical = "Dein CC war mit {value} niedriger als erwartet bei deiner Menge CC-Phasen (Erwartungswert: {threshold})."
 
     # Boons
 
@@ -1273,12 +1299,14 @@
         [boss."17154".mechanic."Tear-Collection"]
         of = "Tear"            # Anteil des Spielers an allen Tears in %
         compare = "share"
+        chart = true
         critical_below = 10 #%
         not_roles = ["HK", "Tank"]
         text_if_listed_critical = "Du hast weniger als 10% der Tears gesammelt. Achte darauf sie schnell einzusammeln, damit dein Hand Kite weniger unter Druck steht."
 
         [boss."17154".mechanic."Pizza"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von der Pizza getroffen. Das kann schnell in einem Tod resultieren, dodge den Angriff, verlass dich nicht auf Aegis."
 
@@ -1289,19 +1317,22 @@
 
         [boss."17154".mechanic."Oil T."]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du hast ein Black ausgelöst. Achte darauf immer weit genug entfernt zu stehen!"
 
         [boss."17154".mechanic."Mind Crush"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest ohne Schutz von einem Mind Crush getroffen. Achte darauf, dass du immer in den Schutzzauber gehst oder bei deinen Heilern Aegis abholst, wenn Deimos seine Streitkolben schwingt."
 
     # Roles
-        # Genutzt, aber nicht definiert: Tank
-
         [boss."17154".role."HK"]
-        criteria = [{ source = "mechanic", name = "Weak Mind", top = 1 }]
+        description = "Du hast die Hände gekitet."
+        criteria = [
+          { source = "incoming", name = "Soul Feast", value_min = 50000, share_min = 25 },
+        ]
 
         [boss."17154".role."DPS"]
         criteria = [{not_roles = ["BoonDPS", "Heal", "HK"]}]
@@ -1352,12 +1383,14 @@
         [boss."-17154".mechanic."Tear-Collection"]
         of = "Tear"            # Anteil des Spielers an allen Tears in %
         compare = "share"
+        chart = true
         critical_below = 10 #%
         not_roles = ["HK", "Tank"]
         text_if_listed_critical = "Du hast weniger als 10% der Tears gesammelt. Achte darauf sie schnell einzusammeln, damit dein Hand Kite weniger unter Druck steht."
 
         [boss."-17154".mechanic."Pizza"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von der Pizza getroffen. Das kann schnell in einem Tod resultieren, dodge den Angriff, verlass dich nicht auf Aegis."
 
@@ -1368,16 +1401,22 @@
 
         [boss."-17154".mechanic."Oil T."]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du hast ein Black ausgelöst. Achte darauf immer weit genug entfernt zu stehen!"
 
         [boss."-17154".mechanic."Mind Crush"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest ohne Schutz von einem Mind Crush getroffen. Achte darauf, dass du immer bei deinen Heilern Aegis abholst, wenn Deimos seine Streitkolben schwingt."
 
     # Roles
-        # Genutzt, aber nicht definiert: HK, Tank
+        [boss."-17154".role."HK"]
+        description = "Du hast die Hand gekitet."
+        criteria = [
+          { source = "incoming", name = "Soul Feast", value_min = 50000, share_min = 25 },
+        ]
 
         [boss."-17154".role."DPS"]
         criteria = [{not_roles = ["BoonDPS", "Heal", "HK"]}]
@@ -1438,6 +1477,7 @@
 
         [boss."-19767".mechanic."Scythe"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Achte darauf, dass du nicht in den Sensen stehst!"
 
@@ -1447,7 +1487,11 @@
         text_if_listed_critical = "Pass auf, dass du aus den Golem Aoes herausdodgst. Regulär wird dies gecallt"
 
     # Roles
-        # Genutzt, aber nicht definiert: Push
+        [boss."-19767".role."Push"]
+        description = "Du hast die Golems geschubst."
+        criteria = [
+          { source = "target", name = 19422, stat = "cc", value_min = 8 },
+        ]
 
         [boss."-19767".role."Tank"]
         description = "Du hast SH getankt."
@@ -1509,6 +1553,7 @@
 
         [boss."19767".mechanic."Scythe"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Achte darauf, dass du nicht in den Sensen stehst!"
 
@@ -1518,7 +1563,11 @@
         text_if_listed_critical = "Pass auf, dass du aus den Golem Aoes herausdodgst. Regulär wird dies gecallt"
 
     # Roles
-        # Genutzt, aber nicht definiert: Push
+        [boss."19767".role."Push"]
+        description = "Du hast die Golems geschubst."
+        criteria = [
+          { source = "target", name = 19422, stat = "cc", value_min = 8 },
+        ]
 
         [boss."19767".role."Tank"]
         description = "Du hast SH getankt."
@@ -1569,6 +1618,7 @@
     # Mechanics
         [boss."-19450".mechanic."Echo PU"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest vom Echo gefangen!"
 
@@ -1929,6 +1979,7 @@
         [boss."-21105".mechanic."Float"]
         of = ["Flt", "Float"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest gebubbelt. Wenn unter allen Spielern kleine AoEs spawnen, musst du dodgen."
 
@@ -1944,11 +1995,13 @@
 
         [boss."-21105".mechanic."Wave"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von der Schockwelle getroffen. Achte auf den Puls und sie dann zu springen."
 
         [boss."-21105".mechanic."Steal"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Deine Segen wurden gestohlen. Achte darauf, dass du nicht in dem rechteckigen Angriff stehst."
 
@@ -1996,6 +2049,7 @@
     # Mechanics
         [boss."21105".mechanic."Float"]
         of = ["Flt", "Float"]
+        chart = true
         critical = 1
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest gebubbelt. Wenn unter allen Spielern kleine AoEs spawnen, musst du dodgen."
@@ -2012,11 +2066,13 @@
 
         [boss."21105".mechanic."Wave"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von der Schockwelle getroffen. Achte auf den Puls und sie dann zu springen."
 
         [boss."21105".mechanic."Steal"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Deine Segen wurden gestohlen. Achte darauf, dass du nicht in dem rechteckigen Angriff stehst."
 
@@ -2079,11 +2135,13 @@
 
         [boss."-20934".mechanic."Q.Wave"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von der Schockwelle von Qadim getroffen."
 
         [boss."-20934".mechanic."Port"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von den Adds teleportiert. Achte auf den Leuchtenden Bildschirmrand. Du kannst den Teleport dodgen."
 
@@ -2093,7 +2151,14 @@
         text_if_listed_critical = "Du wurdest von der Schockwelle des Destroyers getroffen."
 
     # Roles
-        # Genutzt, aber nicht definiert: Kite
+        [boss."20934".role."Kite"]
+        description = "Du hast gekitet."
+        match = "all"
+        criteria = [
+        { source = "target", name = 21285, value_max = 500 },     # NPC-ID des Adds, kaum Schaden darauf
+        { source = "metric", name = "dps", value_min = 3000 },    # aber im Kampf aktiv gewesen
+        { not_roles = ["Heal", "Lamp"] },
+        ]
 
         [boss."-20934".role."Lamp"]
         description = "Du hast die Lampe gespielt."
@@ -2176,11 +2241,13 @@
 
         [boss."20934".mechanic."Q.Wave"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von der Schockwelle von Qadim getroffen."
 
         [boss."20934".mechanic."Port"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von den Adds teleportiert. Achte auf den Leuchtenden Bildschirmrand. Du kannst den Teleport dodgen."
 
@@ -2190,7 +2257,14 @@
         text_if_listed_critical = "Du wurdest von der Schockwelle des Destroyers getroffen."
 
     # Roles
-        # Genutzt, aber nicht definiert: Kite
+        [boss."20934".role."Kite"]
+        description = "Du hast gekitet."
+        match = "all"
+        criteria = [
+        { source = "target", name = 21285, value_max = 500 },     # NPC-ID des Adds, kaum Schaden darauf
+        { source = "metric", name = "dps", value_min = 3000 },    # aber im Kampf aktiv gewesen
+        { not_roles = ["Heal", "Lamp"] },
+        ]
 
         [boss."20934".role."Lamp"]
         description = "Du hast die Lampe gespielt."
@@ -2258,6 +2332,7 @@
     # Mechanics
         [boss."-22006".mechanic."R.Blind"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von dem Leuchten von Adinas Aufstieg geblendet."
 
@@ -2315,6 +2390,7 @@
     # Mechanics
         [boss."22006".mechanic."R.Blind"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von dem Leuchten von Adinas Aufstieg geblendet."
 
@@ -2497,6 +2573,7 @@
         [boss."-22000".mechanic."Lightning"]
         of = ["S.Lght.H", "Lght.H" ]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von einem Blitz getroffen. Achte auf den Leuchtenden Bildschirmrand und weiche ihm aus."
 
@@ -2517,16 +2594,19 @@
 
         [boss."-22000".mechanic."Dome.KB"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von der Dome um Qadim gepusht. Dies endet schnell im Tod an den Feuerfeldern."
 
         [boss."-22000".mechanic."P.KB"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von der Pylon-Explosion gepusht. Dies endet schnell im Tod an den Feuerfeldern."
 
         [boss."-22000".mechanic."A.Prj.H"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest vom Pfeil getroffen."
 
@@ -2537,6 +2617,7 @@
 
         [boss."-22000".mechanic."Rush.H"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von Qadim überfahren."
 
@@ -2619,6 +2700,7 @@
         [boss."22000".mechanic."Lightning"]
         of = ["S.Lght.H", "Lght.H" ]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von einem Blitz getroffen. Achte auf den Leuchtenden Bildschirmrand und weiche ihm aus."
 
@@ -2639,16 +2721,19 @@
 
         [boss."22000".mechanic."Dome.KB"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von der Dome um Qadim gepusht. Dies endet schnell im Tod an den Feuerfeldern."
 
         [boss."22000".mechanic."P.KB"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von der Pylon-Explosion gepusht. Dies endet schnell im Tod an den Feuerfeldern."
 
         [boss."22000".mechanic."A.Prj.H"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest vom Pfeil getroffen."
 
@@ -2659,6 +2744,7 @@
 
         [boss."22000".mechanic."Rush.H"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von Qadim überfahren."
 
@@ -2743,7 +2829,7 @@
         text_if_listed_critical = "Du hast für {value} Sekunden in der HitBox gestanden, das ist wesentlich mehr, als notwendig."
 
         [boss."26725".mechanic."EnfMiasma.H"]
-        critical = 10
+        critical = 1
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest von der Triple Cone Attack getroffen. Achte darauf das nächste Mal schneller durch die Hitbox abzuhauen."
 
@@ -2912,6 +2998,7 @@
         [boss."26712".mechanic."Bubbles"]
         of = "Pres.Blast.Up"            # Zähler: die Treffer des Spielers
         compare = "ratio"
+        chart = true
         per = "Pres.Blast.T"           # Nenner: Anzahl der Applies
         critical_above = 1         # kritisch, wenn die Quote größer als 1 ist
         list_if_not_critical = false
@@ -2924,6 +3011,7 @@
 
         [boss."26712".mechanic."Pick-up Shard"]
         critical_below = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du hast nicht eine Scherbe aufgenommen. Achte das nächste Mal darauf!"
 
@@ -3141,6 +3229,7 @@
 
         [boss."-24033".mechanic."Exposed"]
         critical = 1
+        chart = true
         list_if_not_critical = false
         text_if_listed_critical = "Du hast {value} Stacks exposed gesammelt!"
 
@@ -3376,6 +3465,7 @@
         [boss."-25705".mechanic."Debilitated"]
         critical = 1
         list_if_not_critical = false
+        chart = true
         text_if_listed_critical = "Du hast {value} Stacks vom Damage Debuff erhalten. Achte darauf dich nicht von den Projektilen treffen zu lassen!"
 
         [boss."-25705".mechanic."Sl.Fst.H"]
@@ -3407,8 +3497,7 @@
         [boss."25989".mechanic."EnvGaz.H"]
         critical = 3
         list_if_not_critical = false
-        text_if_listed_critical = "Du wurdest {value} Ticks vom Soul Feast getroffen, achte darauf nicht in Roten AoEs zu stehen und vor allem herauszutragen, wenn du davon anvisiert wirst."
-
+        text_if_listed_critical = "Du wurdest von einer Wall überfahren. Das Corrupted deine Segen und sollte vermieden werden. Achte auf den Großen Roten Pfeil, der ihr kommen ankündigt."
     # Roles
         [boss."25989".role."DPS"]
         criteria = [{not_roles = ["BoonDPS", "Heal"]}]

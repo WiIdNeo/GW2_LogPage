@@ -75,6 +75,15 @@ Rollen ([role."Name"], boss-spezifisch [boss."<ID>".role."Name"]) - aus dem Verg
     share_min = 30   Anteil an der Gruppensumme >= 30 %    share_max = 5  Anteil <= 5 %
     min_total = 4    Gruppensumme muss >= 4 sein (Default 1)
   value_min = 30 / value_max = 5   absoluter Wert (Anzahl bzw. bei generation: Ø Uptime/Stacks fuer die Gruppe)
+  source = "target", name = "<NPC-ID>": Wert des Spielers auf dieses Ziel (Phase 0, alle Ziele mit der ID zusammen).
+  stat = "dps" (Default) | "cc" (Anzahl ausgeteilter Crowd-Control-Effekte) | "cc_duration" (CC-Dauer in Sekunden).
+  Nur value_min / value_max. Fehlt der CC-Wert in den Daten (EI-Version / Log vor Schema 7), trifft es NICHT zu. Kommt das Ziel im Log nicht vor (nicht exportiert: in analysis_filter.toml
+  unter targets oder damage_targets aufnehmen), trifft das Kriterium NICHT zu.
+  source = "incoming", name = "<Quelle>": Schaden, den der Spieler durch diese Quelle erhalten hat (Phase 0, Name wie
+  in incoming_damage, z. B. "Soul Feast"). value_min / value_max = Schaden absolut, share_min / share_max = Anteil
+  in % an ALLEM Schaden, den der Spieler erhalten hat. Nur die Top-N-Quellen je Spieler werden exportiert
+  (incoming_damage in analysis_filter.toml, Default 10); fehlt die Quelle dort, zaehlt sie als 0. Ohne
+  incoming_damage im Log (abgeschaltet / alte Logs) trifft das Kriterium NICHT zu.
   Metriken fuer Rollen: dps, condi_dps, breakbar_damage, resurrects (fehlen die Gruppenwerte - Logs vor Schema 6 -,
   funktionieren nur value_min / value_max)
   source = "generation", name = "Quickness": wie viel Uptime (bzw. Stacks) der Spieler im Schnitt ALLEN Spielern im Log
@@ -97,7 +106,8 @@ RULE_KEYS = {"critical", "critical_below", "list_if_not_critical", "text_if_list
              "critical_above", "per", "per_scope", "min_per", "chart"}
 COMPARE = ("player", "total", "share", "ratio")
 ROLE_CRIT_KEYS = {"source", "name", "top", "bottom", "share_min", "share_max", "min_total", "value_min", "value_max",
-                  "roles", "not_roles"}
+                  "roles", "not_roles", "stat"}
+TARGET_STATS = {"dps": "Schaden auf", "cc": "CC auf", "cc_duration": "CC-Dauer (s) auf"}   # stat bei source = target
 ADDITIVE_METRICS = ("dps", "condi_dps", "breakbar_damage", "resurrects")      # nur diese gibt es als Gruppensumme
 
 # Consumables, die bei [consumables] NICHT mitgezaehlt werden (Name wie in buffs_info, z. B. "Potion of Slaying ...")
@@ -335,8 +345,32 @@ def _clean_roles(block, where, problems):
                 else:
                     problems.append(f"{cw}: source + name (mit Bedingung) oder roles/not_roles noetig")
                 continue
-            if c.get("source") not in ("mechanic", "metric", "generation") or not c.get("name"):
-                problems.append(f"{cw}: source (mechanic|metric|generation) und name noetig")
+            if c.get("source") == "target":
+                tid = str(c.get("name", "")).strip()
+                if not tid.lstrip("-").isdigit():
+                    problems.append(f"{cw}: bei source = target ist name die NPC-ID des Ziels (Zahl)")
+                    continue
+                bad = [k for k in ("top", "bottom", "share_min", "share_max", "min_total") if k in c]
+                if bad:
+                    problems.append(f"{cw}: bei source = target gibt es nur value_min / value_max (nicht {bad})")
+                    continue
+                if c.get("stat", "dps") not in TARGET_STATS:
+                    problems.append(f"{cw}: stat muss {' | '.join(TARGET_STATS)} sein")
+                    continue
+                c["name"] = tid
+            elif "stat" in c:
+                problems.append(f"{cw}: stat gibt es nur bei source = target")
+                continue
+            if c.get("source") == "incoming":
+                if not isinstance(c.get("name"), str) or not c["name"].strip():
+                    problems.append(f"{cw}: bei source = incoming ist name der Name der Schadensquelle (Text)")
+                    continue
+                bad = [k for k in ("top", "bottom", "min_total") if k in c]
+                if bad:
+                    problems.append(f"{cw}: bei source = incoming gibt es nur value_min/value_max/share_min/share_max (nicht {bad})")
+                    continue
+            if c.get("source") not in ("mechanic", "metric", "generation", "target", "incoming") or not c.get("name"):
+                problems.append(f"{cw}: source (mechanic|metric|generation|target|incoming) und name noetig")
                 continue
             if c["source"] == "metric" and c["name"] not in ADDITIVE_METRICS:
                 problems.append(f"{cw}: Metrik fuer Rollen nur {', '.join(ADDITIVE_METRICS)}")
@@ -550,7 +584,32 @@ def _rank_extra(st):
             "share": _num(st["share"]) if st["share"] is not None else "", "player_count": _num(st["n"])}
 
 
-def _criterion(c, mstats, xstats, gstats, found=frozenset()):
+def _incoming_criterion(c, inc):
+    """source = incoming: erhaltener Schaden durch eine Quelle, Anteil am eigenen Gesamtschaden. None = trifft nicht zu."""
+    if not isinstance(inc, dict) or "sources" not in inc:
+        return None
+    dmg = sum(x.get("damage") or 0 for x in inc.get("sources") or [] if x.get("name") == c["name"])
+    total = inc.get("total") or 0
+    share = round(100.0 * dmg / total, 1) if total else 0.0
+    if ("value_min" in c and not dmg >= c["value_min"]) or ("value_max" in c and not dmg <= c["value_max"]) \
+            or ("share_min" in c and not share >= c["share_min"]) or ("share_max" in c and not share <= c["share_max"]):
+        return None
+    return f"Schaden durch {c['name']}: {_num(dmg)} ({_num(share)} % des erhaltenen Schadens)"
+
+
+def _target_criterion(c, tstats):
+    """source = target: eigener Wert (dps / cc / cc_duration) auf alle Ziele mit dieser NPC-ID. None = trifft nicht zu."""
+    t = (tstats or {}).get(c["name"])
+    stat = c.get("stat", "dps")
+    v = t.get(stat) if t else None
+    if v is None:                                   # Ziel nicht im Log bzw. Wert nicht erfasst
+        return None
+    if ("value_min" in c and not v >= c["value_min"]) or ("value_max" in c and not v <= c["value_max"]):
+        return None
+    return f"{TARGET_STATS[stat]} {t['label']}: {_num(v)}"
+
+
+def _criterion(c, mstats, xstats, gstats, found=frozenset(), tstats=None, incoming=None):
     """Liefert einen Beleg-Text, wenn das Kriterium zutrifft, sonst None. found = bereits vergebene Rollen des Spielers."""
     if c.get("roles") and not set(c["roles"]) & found:
         return None
@@ -563,13 +622,17 @@ def _criterion(c, mstats, xstats, gstats, found=frozenset()):
         if c.get("not_roles"):
             parts.append("hat keine der Rollen " + ", ".join(c["not_roles"]))
         return "; ".join(parts)
-    st = {"mechanic": mstats, "metric": xstats, "generation": gstats}[c["source"]].get(c["name"])
+    if c["source"] == "incoming":
+        return _incoming_criterion(c, incoming)
+    if c["source"] == "target":
+        return _target_criterion(c, tstats)
+    st = {"mechanic": mstats, "metric": xstats, "generation": gstats, "target": tstats or {}}[c["source"]].get(c["name"])
     if st and st.get("partial"):                           # nur eigener Wert bekannt (keine Gruppenwerte)
         if any(k in c for k in ("top", "bottom", "share_min", "share_max", "min_total")):
             return None
         if ("value_min" in c and not st["count"] >= c["value_min"]) or ("value_max" in c and not st["count"] <= c["value_max"]):
             return None
-        return f"{METRIC_LABEL.get(c['name'], c['name'])}: {_num(st['count'])}"
+        return f"{st.get('label') or METRIC_LABEL.get(c['name'], c['name'])}: {_num(st['count'])}"
     if not st or st["total"] < c.get("min_total", 1):
         return None
     if "top" in c and not (st["count"] > 0 and st["rank"] <= c["top"]):
@@ -654,11 +717,25 @@ def evaluate(slim, boss_key, rules):
         for name in ADDITIVE_METRICS:
             if name not in rxstats and metrics.get(name) is not None:
                 rxstats[name] = {"count": metrics[name], "partial": True}
+        tstats = {}                                  # je Ziel-NPC-ID (Phase 0, nur eigener Wert): dps, cc, cc_duration
+        for t in slim.get("targets") or []:
+            tid = str(t.get("id"))
+            e = (pl.get("targets") or {}).get(str(t.get("index"))) or {}
+            d = ((e.get("dps") or [{}])[0] or {}).get("dps") or 0
+            sx = (e.get("stats") or [{}])[0] or {}
+            st = tstats.setdefault(tid, {"dps": 0, "cc": 0, "cc_duration": 0, "label": t.get("name") or tid})
+            st["dps"] += d
+            for k, src, f in (("cc", "appliedCrowdControl", 1), ("cc_duration", "appliedCrowdControlDuration", 1000)):
+                if st[k] is not None and isinstance(sx.get(src), (int, float)):
+                    st[k] += sx[src] / f
+                else:
+                    st[k] = None                     # nicht erfasst -> Kriterium trifft nicht zu
         roles = []
         for rname, r in merged("role")[0].items():
             if set(r.get("not_roles") or []) & {x["name"] for x in roles}:
                 continue                              # Rolle entfaellt, wenn der Spieler eine der not_roles (weiter oben definiert) hat
-            hits = [_criterion(c, mstats, rxstats, gstats, {x["name"] for x in roles}) for c in r["criteria"]]
+            hits = [_criterion(c, mstats, rxstats, gstats, {x["name"] for x in roles}, tstats, pl.get("incoming_damage"))
+                    for c in r["criteria"]]
             if (all(hits) if r.get("match") == "all" else any(hits)):
                 roles.append({"name": rname, "why": [h for h in hits if h], "description": r.get("description", "")})
         role_names = [r["name"] for r in roles]

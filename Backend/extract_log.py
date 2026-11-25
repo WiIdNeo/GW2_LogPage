@@ -40,13 +40,15 @@ import tomllib
 from pathlib import Path
 
 # ----------------------------------------------------------------------------- Konfiguration
-SCHEMA_VERSION = 6                             # 5: + players[].incoming_damage  6: + stats_all, condi_dps, damage_targets
+SCHEMA_VERSION = 7                             # 5: + players[].incoming_damage  6: + stats_all, condi_dps, damage_targets
+                                               # 7: + appliedCrowdControl(Duration) je Ziel
 META_FIELDS = ("eliteInsightsVersion", "gW2Build", "triggerID", "isCM", "success",
                "durationMS", "duration", "timeStartStd", "timeEndStd")
 PLAYER_FIELDS = ("account", "name", "group", "profession", "hasCommanderTag", "friendlyNPC", "notInSquad")
 TARGET_FIELDS = ("id", "name", "finalHealth", "finalBarrier", "barrierPercent", "healthPercentBurned")
 DPS_FIELDS = ("dps", "condiDps", "powerDps", "breakbarDamage")
-STATS_FIELDS = ("flankingRate", "connectedDirectDamageCount", "killed", "downed")
+STATS_FIELDS = ("flankingRate", "connectedDirectDamageCount", "killed", "downed",
+                "appliedCrowdControl", "appliedCrowdControlDuration")         # CC je Ziel (fuer Rollen, z. B. SH-Push)
 STATS_ALL_FIELDS = ("stackDist", "distToCom", "skillCastUptime", "skillCastUptimeNoAA")   # aus statsAll (je Spieler, nicht je Ziel)
 SUPPORT_FIELDS = ("resurrects", "resurrectTime")
 DROP_VOLUME_KEYS = {"incomingBy", "incomingByExtensionBy"}   # "wer hat es erzeugt" -> nicht exportieren

@@ -3,7 +3,7 @@
 Seiten:
   index.html          Log-Uebersicht mit Filter (Spieler / Boss / Modus)
   players.html        Spielerliste
-  player-<slug>.html  eine Seite pro Whitelist-Spieler
+  player-<slug>.html  eine Seite pro Whitelist-Spieler (mit Verlaufs-Charts je Boss, siehe charts.py/charts.toml)
   report-<hash>.html  Bewertung eines Logs (alle Spieler, Auffaelligkeiten nach report_rules.toml)
   (legal.html und features.html werden NICHT erzeugt - nur verlinkt; liegen manuell im Ausgabeordner)
   style.css, filter.js
@@ -15,12 +15,15 @@ Das JS blendet Items per `hidden` aus, wenn sie die gewaehlte Klasse nicht haben
 Aufruf:  python3 build_site.py [--db gw2logs.sqlite] [--out site]
   --db   Pfad zur SQLite-DB (relativ zum Ausfuehrverzeichnis), Default: db_path aus ./config.toml, sonst gw2logs.sqlite
   --out  Ausgabeordner (relativ zum Ausfuehrverzeichnis, wird angelegt), Default: site
+  --charts Einstellungen fuer die Verlaufs-Charts (DPS-Faktoren), Default: ./charts.toml
   --rules  Regeldatei fuer die Bewertung, Default: ./report_rules.toml
+           Bei Fehlern in der Regeldatei bricht der Build ab (--ignore-rule-problems: trotzdem bauen)
 """
 import argparse, json, re, sqlite3, sys, tomllib
 from html import escape as esc
 from pathlib import Path
 
+import charts
 import report_engine
 
 CATS = ["Damage", "Mechanics", "Speed", "Support", "Teamplay"]
@@ -266,12 +269,182 @@ def kp_html(kp_rows, bosses):
     if rest:
         rows = "".join(f'<tr><td>{esc(bosses[k]["name"] if k in bosses else k)}</td><td>{v}</td></tr>' for k, v in rest)
         out.append(f"<h3>Sonstige</h3><table><tr><th>Typ</th><th>Anzahl</th></tr>{rows}</table>")
-    return "<h2>Killproofs</h2>" + "".join(out)
+    return '<h2 id="kp">Killproofs</h2>' + "".join(out)
 
 
-def build_player(db, p, bosses, entries, reports=frozenset()):
+# ---------------------------------------------------------------- Spielerseite: Feedback, Rollen/Klassen, Verlauf je Boss
+def _day(t):
+    """'2026-11-20T19:02:..' -> '20.11.'"""
+    return f"{t[8:10]}.{t[5:7]}." if t and len(t) >= 10 else "?"
+
+
+def _pct(n, total):
+    return f"{round(100 * n / total)} %" if total else "–"
+
+
+def _combo(roles, only=None):
+    """Rollenkombination als Text (Reihenfolge wie in report_rules.toml). only: nur diese Rollen beruecksichtigen."""
+    names = [r for r in roles if only is None or r in only]
+    return " + ".join(names) or ("Sonstige" if only is not None else "ohne Rolle")
+
+
+def roles_classes_html(items, last_n=10):
+    """items: [(Rollenkombination, Klasse)] alt -> neu. Je Kombination: Anteil an allen / den letzten N Logs,
+    darunter die Klassen mit ihrem Anteil innerhalb dieser Kombination (gesamt und in den letzten N Logs)."""
+    from collections import Counter
+    if not items:
+        return ""
+    last = items[-last_n:]
+    tot, tot_l = Counter(c for c, _ in items), Counter(c for c, _ in last)
+    out = []
+    for combo, n in tot.most_common():
+        cls, cls_l = Counter(k for c, k in items if c == combo), Counter(k for c, k in last if c == combo)
+        rows = "".join(f'<tr><td>{esc(k)}</td><td class="num">{_pct(m, n)}</td>'
+                       f'<td class="num">{_pct(cls_l[k], tot_l[combo]) if tot_l[combo] else "–"}</td></tr>'
+                       for k, m in cls.most_common())
+        out.append(f'<div class="rc"><h4>{esc(combo)} <small>({_pct(n, len(items))} aller Logs, '
+                   f'{_pct(tot_l[combo], len(last))} in den letzten {len(last)})</small></h4>'
+                   f'<table><thead><tr><th>Klasse</th><th>gesamt</th><th>letzte {len(last)}</th></tr></thead>'
+                   f'<tbody>{rows}</tbody></table></div>')
+    return f'<div class="rcgrid">{"".join(out)}</div>'
+
+
+def feedback_html(logs, min_pct, last_n=10):
+    """Was war wie oft kritisch? logs: [(log, eval)] alt -> neu. Nur Punkte, deren Quote UEBER min_pct liegt."""
+    from collections import Counter
+    n, last = len(logs), {l["file_hash"] for l, _ in logs[-last_n:]}
+    hits, hits_l = Counter(), Counter()
+    for l, ev in logs:
+        for key in {f.get("label") or f["name"] or "Consumables" for f in ev.get("findings") or [] if f["critical"]}:
+            hits[key] += 1
+            if l["file_hash"] in last:
+                hits_l[key] += 1
+    items = [(k, c) for k, c in hits.most_common() if n and 100 * c / n > min_pct]
+    if not items:
+        return f'<p class="muted">Nichts, was in mehr als {fmt_pct(min_pct)} der Logs kritisch war.</p>'
+    nl = min(n, last_n)
+    li = "".join(f'<li><b>{esc(k)}</b>: in {c} von {n} Log{"s" if n != 1 else ""} kritisch ({_pct(c, n)})'
+                 + (f', in den letzten {nl}: {hits_l[k]}×' if n > last_n else "") + "</li>" for k, c in items)
+    return f'<ul class="fb">{li}</ul>'
+
+
+def fmt_pct(v):
+    return f"{charts.fmt_num(v)} %"
+
+
+def rating_table(avg, best):
+    """Wingman-Bewertung eines Bosses: Durchschnitt (nur erfolgreiche Logs) und Bestwert je Kategorie."""
+    head = "".join(f"<th>{CAT_SHORT[c]}</th>" for c in CATS)
+    a = "".join(f'<td>{grade(avg[c]["avg_grade"]) if c in avg else "–"}'
+                + (f' <small class="muted">({avg[c]["logs"]})</small>' if c in avg else "") + "</td>" for c in CATS)
+    b = "".join(f"<td>{grade(best.get(c))}</td>" for c in CATS)
+    return f'<table class="rt"><tr><th></th>{head}</tr><tr><th>Ø</th>{a}</tr><tr><th>Best</th>{b}</tr></table>'
+
+
+def boss_sections(acc, entries, bosses, evals, ccfg, reports, avgb, best):
+    """Je Boss ein einklappbarer Abschnitt: Wingman-Bewertung, Feedback, Rollen/Klassen, DPS-Chart + Tabelle,
+    Tode/Downs und Mechanik-Charts. Rueckgabe: ([(boss, anchor, html)], [(Rollenkombination, Klasse)] aller Logs)."""
+    from collections import Counter
+    cf, ps = acc.casefold(), player_slug(acc)
+    per_boss, overview = {}, []
+    for l, b, plist in sorted(entries, key=lambda e: e[0]["encounter_time"] or ""):       # alt -> neu
+        ev = (evals.get(l["file_hash"]) or {}).get(cf)
+        if not ev or (ccfg["only_success"] and l["success"] != 1):
+            continue
+        per_boss.setdefault(l["boss_key"], []).append((l, ev))
+        roles = [r["name"] for r in ev.get("roles") or []]
+        overview.append((_combo(roles, ccfg["overview_roles"]), ev.get("profession") or "?"))
+    keys = [k for k in set(per_boss) | set(avgb) | set(best) if k in bosses and bosses[k]["enabled"]]
+    out = []
+    for key in sorted(keys, key=lambda k: bosses[k]["sort"]):
+        b, logs = bosses[key], per_boss.get(key, [])
+        anchor = f"v-{boss_slug(b)}-{boss_mode(b)}"
+        parts = []
+        if key in avgb or key in best:
+            parts.append("<h3>Bewertung <small>(Wingman, Ø nur erfolgreiche Logs)</small></h3>"
+                         + rating_table(avgb.get(key, {}), best.get(key, {})))
+        if not logs:
+            parts.append('<p class="muted">Keine ausgewerteten Logs.</p>')
+            out.append((b, anchor, f'<details class="boss-sec" id="{anchor}"><summary><b>{esc(b["name"])}</b> '
+                                   f'<small>keine ausgewerteten Logs</small></summary>{"".join(parts)}</details>'))
+            continue
+        combos, rc = Counter(), []
+        for l, ev in logs:                                                 # Rollen/Klassen + Feedback: ALLE Logs
+            roles = [r["name"] for r in ev.get("roles") or []]
+            combos[_combo(roles)] += 1
+            rc.append((_combo(roles), ev.get("profession") or "?"))
+        win = logs[-ccfg["chart_max_logs"]:]                               # Charts + Tabelle: nur die letzten N
+        older = len(logs) - len(win)
+        dps_lab, dps_abs, dps_norm, t_abs, t_norm, rows = [], [], [], [], [], []
+        mech = {"Tode": {}, "Downs": {}}                                   # Name -> {x-Index: Punkt}
+        for i, (l, ev) in enumerate(win):
+            roles = [r["name"] for r in ev.get("roles") or []]
+            v = ev["values"]
+            dps = (v.get("metrics") or {}).get("dps")
+            excl = charts.is_excluded(ccfg, roles)
+            f = None if excl or dps is None else charts.dps_factor(ccfg, key, roles, v)
+            norm = dps / f if f else None
+            when = fmt_time(l["encounter_time"])
+            if not excl and dps is not None:
+                dps_lab.append(_day(l["encounter_time"]))
+                dps_abs.append(dps)
+                dps_norm.append(norm)
+                t_abs.append(f"{when}: {charts.fmt_num(dps)} DPS")
+                t_norm.append(f"{when}: {charts.fmt_num(norm)} normalisiert" if norm else None)
+            ms = v.get("mechanics") or {}
+            mech["Tode"][i] = {"value": ms.get("Dead", 0), "threshold": None}
+            mech["Downs"][i] = {"value": ms.get("Downed", 0), "threshold": None}
+            for name, pt in (v.get("charts") or {}).items():
+                mech.setdefault(name, {})[i] = pt
+            links = links_html(link(l["dps_url"], "dps.report"), link(l["wm_url"], "Wingman"),
+                               ilink(f"{report_name(l)}#p-{ps}", "Bewertung") if l["file_hash"] in reports else "")
+            rows.append(f'<tr><td>{when}</td><td>{esc(", ".join(roles) or "–")}</td>'
+                        f'<td>{esc(ev.get("profession") or "?")}</td><td class="num">{charts.fmt_num(dps)}</td>'
+                        f'<td class="num">{"nicht im Chart" if excl else charts.fmt_num(f)}</td>'
+                        f'<td class="num">{charts.fmt_num(norm) if norm else "–"}</td><td>{links}</td></tr>')
+
+        parts.append("<h3>Feedback</h3>" + feedback_html(logs, ccfg["feedback_min_percent"]))
+        parts.append("<h3>Rollen und Klassen</h3>" + roles_classes_html(rc))
+        svg = charts.line_chart(dps_lab, [{"cls": "l1", "values": dps_abs, "titles": t_abs},
+                                          {"cls": "l2", "values": dps_norm, "titles": t_norm}],
+                                height=200, label=f"DPS-Verlauf {b['name']}")
+        parts.append("<h3>Schaden</h3>" + (charts.legend([("l1", "absolut"), ("l2", "normalisiert (auf DPS-Rolle)")])
+                                         + svg if svg else '<p class="muted">Keine DPS-Logs (nur Heal o. Ä.).</p>'))
+        parts.append('<div class="scroll"><table><thead><tr><th>Zeit (UTC)</th><th>Rollen</th><th>Klasse</th>'
+                     '<th>DPS</th><th>Faktor</th><th>normalisiert</th><th>Links</th></tr></thead><tbody>'
+                     + "".join(reversed(rows)) + "</tbody></table></div>")
+        flt = f"index.html?player=player-{ps}&amp;boss=boss-{boss_slug(b)}&amp;mode=mode-{boss_mode(b)}" \
+              + ("&amp;result=result-ok" if ccfg["only_success"] else "")
+        parts.append(f'<p class="muted">Charts und Tabelle: '
+                     + (f'die letzten {len(win)} Logs' if len(win) > 1 else "1 Log")
+                     + (f', {older} ältere' if older else "")
+                     + f' – <a href="{flt}">alle Logs dieses Bosses in der Log-Übersicht</a></p>')
+        labels = [_day(l["encounter_time"]) for l, _ in win]
+        boxes = []
+        for name, pts in mech.items():
+            vals = [pts[i]["value"] if i in pts else None for i in range(len(win))]
+            thr = [pts[i]["threshold"] if i in pts else None for i in range(len(win))]
+            tt = [f"{fmt_time(win[i][0]['encounter_time'])}: {charts.fmt_num(vals[i])}" if i in pts else None
+                  for i in range(len(win))]
+            series = [{"cls": "l1", "values": vals, "titles": tt}]
+            if any(t is not None for t in thr):
+                series.append({"cls": "thr", "values": thr, "dots": False})
+            svg = charts.line_chart(labels, series, height=160, label=f"{name} {b['name']}", width=420)
+            if svg:
+                boxes.append(f'<div class="chbox"><h4>{esc(name)}</h4>{svg}</div>')
+        if boxes:
+            parts.append("<h3>Tode, Downs und Mechaniken <small>(gestrichelt: Schwellwert)</small></h3>"
+                         f'<div class="chgrid">{"".join(boxes)}</div>')
+        out.append((b, anchor, f'<details class="boss-sec" id="{anchor}"><summary><b>{esc(b["name"])}</b> '
+                               f'<small>{len(logs)} Log(s) · meist {esc(combos.most_common(1)[0][0])}</small></summary>'
+                               + "".join(parts) + "</details>"))
+    return out, overview
+
+
+def build_player(db, p, bosses, entries, reports=frozenset(), evals=None, ccfg=None):
     acc = p["account"]
     ps = player_slug(acc)
+    ccfg = ccfg or charts.load_config("")[0]
     parts = ['<p><a href="players.html">← Spielerübersicht</a> | <a href="index.html">→ Log-Übersicht</a> | '
              f'<a href="index.html?player=player-{ps}">→ Logs von {esc(acc)}</a></p>']
 
@@ -279,7 +452,7 @@ def build_player(db, p, bosses, entries, reports=frozenset()):
     ranks = json.loads(p["ranks_json"]) if p["ranks_json"] else {}
     rank_txt = " ".join(f'{esc(str(k))}: {grade(v) if isinstance(v, str) else esc(str(v))}'
                         for k, v in ranks.items()) if isinstance(ranks, dict) else esc(str(ranks))
-    parts.append(f'<h2>Rating</h2><p>Gesamt: <b>{esc(p["global_rank"] or "–")}</b> '
+    parts.append(f'<h2 id="rating">Rating</h2><p>Gesamt: <b>{esc(p["global_rank"] or "–")}</b> '
                  '<br>'
                  f'Kategorien: {rank_txt or "–"}<br>'
                  f'Bosse abgeschlossen: {p["bosses_completed"] if p["bosses_completed"] is not None else "–"}</p>')
@@ -291,7 +464,7 @@ def build_player(db, p, bosses, entries, reports=frozenset()):
             return "<td>–</td>"
         r = avg[c]
         return f'<td>{grade(r["avg_grade"])} ({r["logs"]} Logs, Ø {r["avg_num"]:.2f})</td>'
-    parts.append("<h2>Durchschnitt (nur erfolgreiche Logs)</h2><table><tr>"
+    parts.append('<h2 id="schnitt">Durchschnitt (nur erfolgreiche Logs)</h2><table><tr>'
                  + "".join(f"<th>{CAT_SHORT[c]}</th>" for c in CATS) + "</tr><tr>"
                  + "".join(avg_cell(c) for c in CATS) + "</tr></table>")
 
@@ -303,54 +476,41 @@ def build_player(db, p, bosses, entries, reports=frozenset()):
         parts.append(f'<p><i>Keine Wingman-Bewertungen erfolgreicher Logs vorhanden ({len(own)} Logs, Wingman-Status: {esc(str(st))}).</i></p>')
         print(f"WARNUNG {acc}: {len(own)} Logs, aber 0 bewertete (wm_status: {st}, log_player rated: {rated_n})")
 
-    # Charaktere
-    chars = db.execute("SELECT * FROM character WHERE account=? ORDER BY name COLLATE NOCASE", (acc,)).fetchall()
-    li = "".join(f'<li>{esc(c["name"])}</li>' for c in chars)
-    parts.append(f"<h2>Charaktere</h2><ul>{li or '<li>–</li>'}</ul>")
-
-    # Bossspezifisch
+    # Verlauf je Boss vorbereiten (liefert auch die Rollen/Klassen fuer die Gesamtuebersicht)
     best = {}
     for r in db.execute("SELECT * FROM player_boss_best WHERE account=?", (acc,)):
         best.setdefault(r["boss_key"], {})[r["category"]] = r["grade"]
-    keys = [k for k in set(best) | set(avgb) if k in bosses and bosses[k]["enabled"]]
-    keys.sort(key=lambda k: bosses[k]["sort"])
-    rows = []
-    for k in keys:
-        b = bosses[k]
-        cells = ""
-        for c in CATS:
-            a = avgb.get(k, {}).get(c)
-            cells += f'<td>Ø {grade(a["avg_grade"]) if a else "–"} / Best {grade(best.get(k, {}).get(c))}</td>'
-        rows.append(f'<tr class="item {boss_classes(b)}"><td>{esc(b["name"])}</td>{cells}</tr>')
-    boss_opts = []
-    seen = set()
-    for k in keys:
-        s = boss_slug(bosses[k])
-        if s not in seen:
-            seen.add(s)
-            boss_opts.append((f"boss-{s}", re.sub(r" CM$", "", bosses[k]["name"])))
-    parts.append(
-        '<h2>Bossspezifisch</h2><div id="filters">'
-        f'<label>Boss <select id="boss" data-filter>{options(boss_opts, "Alle")}</select></label>'
-        f'<label>Modus <select id="mode" data-filter>{options([("mode-normal", "Normal"), ("mode-cm", "CM"), ("mode-lcm", "LCM")], "Alle")}</select></label>'
-        '</div><table><thead><tr><th>Boss</th>'
-        + "".join(f"<th>{CAT_SHORT[c]}</th>" for c in CATS)
-        + f'</tr></thead><tbody>{"".join(rows) or "<tr><td colspan=6>Noch keine Daten</td></tr>"}</tbody></table>')
+    secs, overview = boss_sections(acc, entries, bosses, evals or {}, ccfg, reports, avgb, best)
+    if overview:
+        parts.append('<h2 id="rollen">Rollen und Klassen über alle Bosse</h2>' + roles_classes_html(overview))
+
+    # Charaktere
+    chars = db.execute("SELECT * FROM character WHERE account=? ORDER BY name COLLATE NOCASE", (acc,)).fetchall()
+    li = "".join(f'<li>{esc(c["name"])}</li>' for c in chars)
+    parts.append(f'<h2 id="charaktere">Charaktere</h2><ul>{li or "<li>–</li>"}</ul>')
 
     # Killproofs (Schluessel-Format von Wingman roh anzeigen, falls nicht in boss-Tabelle)
     kp = db.execute("SELECT * FROM player_kp WHERE account=? ORDER BY boss_key", (acc,)).fetchall()
     if kp:
         parts.append(kp_html(kp, bosses))
 
-    # Letzte Logs dieses Spielers
-    mine = [(l, b) for l, b, pl in entries if any(x["account"] == acc for x in pl)][:20]
-    lrows = "".join(
-        f'<tr><td>{fmt_time(l["encounter_time"])}</td><td>{esc(b["name"])}</td>'
-        '<td>' + links_html(link(l["dps_url"], "dps.report"), link(l["wm_url"], "Wingman"),
-                            ilink(f"{report_name(l)}#p-{ps}", "Bewertung") if l["file_hash"] in reports else "")
-        + '</td></tr>' for l, b in mine)
-    parts.append(f'<h2>Letzte Logs</h2><table><tr><th>Zeit (UTC)</th><th>Boss</th><th>Links</th></tr>'
-                 f'{lrows or "<tr><td colspan=3>–</td></tr>"}</table>')
+    # Je Boss: Bewertung, Feedback, Rollen/Klassen, Charts - standardmaessig eingeklappt
+    if secs:
+        parts.append('<h2 id="verlauf">Bosse</h2>'
+                     '<p><button type="button" data-details="open">Alle aufklappen</button> '
+                     '<button type="button" data-details="close">Alle zuklappen</button></p>'
+                     + "".join(h for _, _, h in secs))
+    toc = [("rating", "Rating"), ("schnitt", "Durchschnitt")]
+    if overview:
+        toc.append(("rollen", "Rollen und Klassen"))
+    toc.append(("charaktere", "Charaktere"))
+    if kp:
+        toc.append(("kp", "Killproofs"))
+    toc_html = "".join(f'<li><a href="#{a}">{t}</a></li>' for a, t in toc)
+    if secs:
+        toc_html += ('<li><a href="#verlauf">Bosse</a><ul class="toc-b">'
+                     + "".join(f'<li><a href="#{a}">{esc(b["name"])}</a></li>' for b, a, _ in secs) + "</ul></li>")
+    parts.insert(1, f'<nav class="toc-p" aria-label="Inhalt"><b>Inhalt</b><ul>{toc_html}</ul></nav>')
     return page(acc, "\n".join(parts), scripts=True)
 
 
@@ -411,9 +571,10 @@ def group_section(slim, boss_key, rules):
             f'<details><summary>Alle Werte</summary>{values}</details></section>')
 
 
-def build_report(l, b, plist, slim, rules):
+def build_report(l, b, plist, slim, rules, evals=None):
     """Eine Seite je Log: alle Whitelist-Spieler des Logs, je Spieler die Auffaelligkeiten laut Regeln."""
-    evals = {e["account"].casefold(): e for e in report_engine.evaluate(slim, l["boss_key"], rules)}
+    if evals is None:
+        evals = {e["account"].casefold(): e for e in report_engine.evaluate(slim, l["boss_key"], rules)}
     ph = slim.get("phases") or []
     dur = report_engine.fmt_ms(ph[0].get("end")) if ph else "?"
     ok = {1: "✔ Erfolg", 0: "✘ Niederlage"}.get(l["success"], "?")
@@ -483,6 +644,28 @@ summary{cursor:pointer}
 .kv li{display:flex;justify-content:space-between;gap:.8rem;border-bottom:1px solid var(--line);padding:2px 0;break-inside:avoid}
 .kv .v{white-space:nowrap;font-variant-numeric:tabular-nums}
 @media (max-width:600px){.links{flex-direction:column}}
+:root{--c1:#7cb7ff;--c2:#ffb86b}
+.toc-p{border:1px solid var(--line);border-radius:4px;padding:.4rem .8rem;margin:.8rem 0;display:block}
+.toc-p ul{margin:.2rem 0;padding-left:1.2rem}.toc-b{columns:14rem;font-size:.9em}
+.boss-sec{border:1px solid var(--line);border-radius:4px;padding:.3rem .8rem}
+.boss-sec[open]{padding-bottom:.8rem}.boss-sec summary small{color:var(--muted);margin-left:.4rem}
+button{background:var(--head);color:var(--fg);border:1px solid var(--line);border-radius:4px;padding:3px 8px;cursor:pointer}
+.ch{display:block;width:100%;height:auto;max-width:760px}
+.ch .g{stroke:var(--line);stroke-width:1}.ch text{fill:var(--muted);font-size:11px;font-family:sans-serif}
+.ch polyline{fill:none;stroke-width:2}.ch circle{stroke:none}
+.ch .l1 polyline{stroke:var(--c1)}.ch .l1 circle{fill:var(--c1)}
+.ch .l2 polyline{stroke:var(--c2)}.ch .l2 circle{fill:var(--c2)}
+.ch .thr polyline{stroke:var(--crit);stroke-dasharray:5 4;stroke-width:1.5}
+.legend{display:flex;gap:1.2rem;font-size:.9em;color:var(--muted)}
+.sw{display:inline-block;width:1.4em;height:3px;vertical-align:middle;margin-right:.4em}
+.sw.l1{background:var(--c1)}.sw.l2{background:var(--c2)}
+.chgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:.6rem 1.2rem}
+.chbox h4{margin:.3rem 0 0;font-weight:normal}
+.fb{margin:.3rem 0 .6rem;padding-left:1.2rem}.fb li{margin:.15rem 0}
+.rcgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.4rem 1.2rem}
+.rc h4{margin:.4rem 0 .2rem}.rc h4 small,h2 small{font-weight:normal;color:var(--muted)}
+.rt th:first-child{width:3rem}
+.scroll{overflow-x:auto}td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 """
 
 JS = """// Generischer Filter: <select data-filter id="x"> -> value = CSS-Klasse, die ein .item haben muss.
@@ -505,7 +688,7 @@ JS = """// Generischer Filter: <select data-filter id="x"> -> value = CSS-Klasse
     var p = new URLSearchParams();
     selects.forEach(function (s) { if (s.value) p.set(s.id, s.value); });
     var q = p.toString();
-    history.replaceState(null, '', location.pathname + (q ? '?' + q : ''));
+    history.replaceState(null, '', location.pathname + (q ? '?' + q : '') + location.hash);   // Sprungziel behalten
   }
 
   selects.forEach(function (s) {
@@ -513,6 +696,23 @@ JS = """// Generischer Filter: <select data-filter id="x"> -> value = CSS-Klasse
     s.addEventListener('change', apply);
   });
   apply();
+})();
+
+// Spielerseite: Sprunglinks oeffnen eingeklappte Abschnitte; Knoepfe "Alle auf-/zuklappen".
+(function () {
+  function openId(id) {
+    var el = id && document.getElementById(id);
+    if (el && el.tagName === 'DETAILS') el.open = true;
+  }
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (a) openId(decodeURIComponent(a.getAttribute('href').slice(1)));
+    var b = e.target.closest && e.target.closest('button[data-details]');
+    if (b) Array.prototype.forEach.call(document.querySelectorAll('details.boss-sec'), function (d) {
+      d.open = b.getAttribute('data-details') === 'open';
+    });
+  });
+  openId(decodeURIComponent(location.hash.slice(1)));
 })();
 """
 
@@ -522,6 +722,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--db", default="./../Backend/gw2logs.sqlite", help="Pfad zur SQLite-DB (Default: db_path aus ./config.toml, sonst ./gw2logs.sqlite)")
     ap.add_argument("--rules", default="./report_rules.toml", help="Regeldatei fuer die Log-Bewertung")
+    ap.add_argument("--charts", default="./charts.toml", help="Einstellungen fuer die Verlaufs-Charts (DPS-Faktoren)")
+    ap.add_argument("--ignore-rule-problems", action="store_true",
+                    help="trotz fehlerhafter Regeln weiterbauen (fehlerhafte Regeln werden ignoriert)")
     ap.add_argument("--out", default="./../docs", help="Ausgabeordner, relativ zum Ausfuehrverzeichnis (Default: ./site)")
     a = ap.parse_args()
 
@@ -542,8 +745,13 @@ def main():
     reports = analysed_hashes(db)
     rules_path = Path.cwd() / a.rules
     rules, problems = report_engine.load_rules(rules_path)
+    ccfg, cprob = charts.load_config(Path.cwd() / a.charts)
+    problems += [f"charts: {x}" for x in cprob]
     for pr in problems:
-        print(f"WARNUNG Regeln: {pr}")
+        print(f"{'WARNUNG' if a.ignore_rule_problems else 'FEHLER'} Regeln: {pr}", file=sys.stderr)
+    if problems and not a.ignore_rule_problems:          # kaputte Regeln nicht still verwerfen
+        sys.exit(f"Abbruch: {len(problems)} Problem(e) in {rules_path} - nichts geschrieben "
+                 "(mit --ignore-rule-problems trotzdem bauen)")
 
     out = Path.cwd() / a.out                          # Unterordner im Ausfuehrverzeichnis
     out.mkdir(parents=True, exist_ok=True)
@@ -552,13 +760,16 @@ def main():
     (out / "style.css").write_text(CSS, encoding="utf-8")
     (out / "filter.js").write_text(JS, encoding="utf-8")
     n_rep = 0
+    evals = {}
     for l, b, plist in entries:                        # zuerst: nur erfolgreiche Reports duerfen verlinkt werden
         if l["file_hash"] not in reports:
             continue
         try:
             slim = json.loads(db.execute("SELECT data FROM log_analysis WHERE file_hash=?",
                                          (l["file_hash"],)).fetchone()[0])
-            (out / report_name(l)).write_text(build_report(l, b, plist, slim, rules), encoding="utf-8")
+            ev = {e["account"].casefold(): e for e in report_engine.evaluate(slim, l["boss_key"], rules)}
+            (out / report_name(l)).write_text(build_report(l, b, plist, slim, rules, ev), encoding="utf-8")
+            evals[l["file_hash"]] = ev                 # fuer die Verlaufs-Charts der Spielerseiten
             n_rep += 1
         except Exception as e:                         # defektes Log darf den Build nicht stoppen
             print(f"WARNUNG Bewertung {l['file_hash'][:8]}: {e!r}")
@@ -567,7 +778,7 @@ def main():
     (out / "players.html").write_text(build_players(players), encoding="utf-8")
     for p in players:
         (out / f"player-{player_slug(p['account'])}.html").write_text(
-            build_player(db, p, bosses, entries, reports), encoding="utf-8")
+            build_player(db, p, bosses, entries, reports, evals, ccfg), encoding="utf-8")
     print(f"{len(entries)} Logs, {len(players)} Spieler, {n_rep} Bewertungen -> {out}/")
 
 

@@ -1,0 +1,84 @@
+# charts.toml - Einstellungen fuer die Verlaufs-Charts auf den Spielerseiten (gelesen von build_site.py, --charts)
+#
+# DPS-Chart je Boss: zwei Linien
+#   absolut       DPS auf die Target-Damage-Ziele (wie in der Bewertung)
+#   normalisiert  DPS / Faktor  -> "was haette ein normaler DPS-Spieler gemacht"
+#
+# Faktor = Anteil am Schaden eines normalen DPS (1.0 = voller DPS, 0.8 = 80 %).
+#   * Hat ein Spieler mehrere Rollen mit Faktor, werden sie MULTIPLIZIERT (BoonDPS 0.8 * Cannon 0.8 = 0.64).
+#   * Rollen ohne Eintrag zaehlen als 1.0.
+#   * "*" gilt fuer ALLE Spieler des Bosses (wird zusaetzlich multipliziert).
+#   * Statt einer Zahl ist eine Formel (Text) erlaubt, gleiche Syntax wie in report_rules.toml:
+#     {Mechanik} / {eigene[Mechanik]} = eigene Anzahl, {buff[Name]}, {metric[dps]} ...
+#     Gruppenwerte ({gruppe[..]}, {schnitt[..]}) gibt es hier NICHT. Laesst sich die Formel nicht berechnen
+#     oder ist der Faktor <= 0, erscheint der Log nur mit seinem absoluten Wert.
+#   * Boss-Abschnitt [boss."<ID>".dps_factor] ergaenzt/ueberschreibt die globalen Faktoren je Rolle.
+#     Fehlt fuer einen CM ([boss."-ID"]) ein eigener Abschnitt, gilt der des Normalmodus.
+#
+# Mechanik-Charts: in report_rules.toml bei der Regel  chart = true  setzen (geht auch bei buff und metric).
+# Der Chart zeigt den Wert der Regel je Log (bei of = [..] die Summe, bei share/ratio den Anteil/die Quote)
+# und den Schwellwert als gestrichelte Linie.
+
+only_success = true          # nur erfolgreiche Logs in Charts und Tabellen (Wipes verzerren DPS und Mechaniken)
+chart_max_logs = 30          # Charts und DPS-Tabelle je Boss zeigen nur die letzten N Logs (Feedback/Rollen: alle)
+exclude_roles = ["Heal"]     # Spieler mit einer dieser Rollen erscheinen im DPS-Chart nicht (in der Tabelle schon)
+
+# Feedback je Boss: eine Auffaelligkeit erscheint, wenn sie in MEHR als so vielen Prozent der Logs kritisch war
+feedback_min_percent = 10
+
+# "Rollen und Klassen" ganz oben (alle Bosse): nur diese Rollen bilden die Kombinationen, damit boss-spezifische
+# Rollen (Cannon, Pylon ...) die Uebersicht nicht zerfasern. In den Boss-Abschnitten zaehlen alle Rollen.
+overview_roles = ["Heal", "Alac-Support", "Quick-Support", "BoonDPS", "DPS", "Power-DPS", "Condi-DPS"]
+
+[dps_factor]
+BoonDPS = 0.8
+
+# --- Startwerte, abgeleitet aus den DPS-Schwellen in report_rules.toml -------------------------------------
+# Vale Guardian
+[boss."15438".dps_factor]
+"Condi-DPS" = 0.75                          # 16500 / 22000
+
+# Sabetha (DPS-Rolle schliesst Cannon aus -> BU-Kanonen ueber die Launches)
+[boss."15375".dps_factor]
+Cannon = 0.8                                # 22400 / 28000
+DPS = "1 - 0.1 * {Launched}"
+
+# Slothasor
+[boss."16123".dps_factor]
+Slubling = 0.75                             # 10500 / 14000
+
+# Xera
+[boss."16246".dps_factor]
+"*" = "1 - 0.1 * {TP Out}"
+
+# Mursaat Overseer (CM nutzt denselben Abschnitt)
+[boss."17172".dps_factor]
+"Took Dispel" = 0.97                        # 33000 / 34000
+
+# Dhuum (CM nutzt denselben Abschnitt)
+[boss."19450".dps_factor]
+"*" = "1 - 0.05 * {Orb CD}"
+# Kite = 0.5                                # noch austarieren
+
+# Conjured Amalgamate (CM nutzt denselben Abschnitt)
+[boss."43974".dps_factor]
+"Collector (Shield)" = 0.8                  # 29600 / 37000
+"Collector (Sword)" = 0.8
+
+# Qadim (CM nutzt denselben Abschnitt)
+[boss."20934".dps_factor]
+Lamp = 0.54                                 # 6500 / 12000
+Kite = 0.54
+
+# Qadim the Peerless
+[boss."22000".dps_factor]
+Pylon = 0.9                                 # 18900 / 21000
+# Tank = 0.7                                # noch austarieren
+
+[boss."-22000".dps_factor]
+Pylon = 0.89                                # 17000 / 19000
+# Tank = 0.7
+
+# Decima
+[boss."26774".dps_factor]
+"Range Group" = 0.89                        # 24000 / 27000

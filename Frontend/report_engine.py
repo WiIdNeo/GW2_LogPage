@@ -5,8 +5,9 @@ Liegt neben build_site.py und hat keine Abhaengigkeit zum Backend.
 Regelarten (jeweils unter [kind."Name"], boss-spezifisch unter [boss."<Boss-ID, CM negativ>".kind."Name"]):
   mechanic      Anzahl der Ereignisse des Spielers (Name wie in analysis_filter.toml)
   buff          Uptime in Phase 0 (Full Fight) in % bzw. Ø Stacks; Name wie in buffs_info
-  metric        berechnete Werte: dps, breakbar_damage, flanking_percent, resurrects
-  consumables   [consumables] ohne Namen: Anzahl verschiedener Consumables (Food/Utility/...)
+  metric        berechnete Werte: dps, condi_dps, breakbar_damage, flanking_percent, resurrects, stack_dist,
+                skill_cast_uptime
+  consumables   [consumables] ohne Namen: Anzahl verschiedener Consumables (Food/Utility/...), ohne BLACKLISTED_FOODS
 
 Schluessel einer Regel:
   critical = X                    auffaellig, wenn Wert >= X   (mechanic: Default 1)
@@ -17,7 +18,7 @@ Schluessel einer Regel:
   text_if_listed_not_critical     Text, wenn nur informativ gelistet
   link                            Link zur Erklaerung (wird als "Erklärung" angehaengt)
   professions = ["..."]           Regel nur fuer diese Professionen/Elite-Spezialisierungen
-  compare = "player"|"total"|"share"   (nur mechanic und metric; Metrik nur dps, breakbar_damage, resurrects)
+  compare = "player"|"total"|"share"   (nur mechanic und metric; Metrik nur dps, condi_dps, breakbar_damage, resurrects)
       player  Wert des Spielers (Default)
       total   Summe ueber ALLE Spieler im Log (auch Randoms); Ergebnis erscheint einmal im Abschnitt "Gruppe"
       share   Anteil des Spielers an dieser Summe in %; Ergebnis je Spieler
@@ -32,6 +33,8 @@ Schluessel einer Regel:
   of = ["A", "B"]                 nur bei mechanic: die Werte mehrerer Mechaniken werden ADDIERT und als Summe bewertet
                                   (player, total und share; {rank}/{rank_bottom} und {players} gibt es dann nicht;
                                   Rollen-Kriterien koennen nur einzelne Mechaniken vergleichen)
+  chart = true                    (mechanic, buff, metric) Wert jedes Logs fuer den Verlaufs-Chart auf der Spielerseite
+                                  merken - unabhaengig davon, ob er auffaellig ist. Bei compare = "total" ohne Wirkung.
   roles = ["Tank", "Heal"]        Regel nur fuer Spieler, die ALLE diese Rollen haben (UND-verknuepft)
   not_roles = ["Tank", "Heal"]    Regel NICHT fuer Spieler, die auch nur EINE dieser Rollen haben (ODER-verknuepft, "weder noch")
 Platzhalter in Texten: {value} {count} {threshold} {rule} {player} {account} {character} {time} {times} {roles}
@@ -48,7 +51,11 @@ Formeln: critical, critical_below und critical_above duerfen statt einer Zahl ei
     {Name} oder {eigene[Name]}   Anzahl der Mechanik beim Spieler (0, wenn nicht aufgetreten)
     {gruppe[Name]}               Summe der Mechanik ueber ALLE Spieler im Log
     {buff[Name]}                 Uptime/Stacks des Buffs beim Spieler (Phase 0), 0 wenn nicht vorhanden
-    {metric[dps]}                dps, breakbar_damage, flanking_percent, resurrects des Spielers (fehlt der Wert: Regel entfaellt)
+    {metric[dps]}                dps, condi_dps, breakbar_damage, flanking_percent, resurrects, stack_dist des Spielers
+                                 (fehlt der Wert: Regel entfaellt)
+    {schnitt[skill_cast_uptime]} Durchschnitt der Metrik ueber ALLE Spieler im Log, die einen Wert haben (auch Randoms);
+                                 fehlen die Gruppenwerte (alte Logs): Regel entfaellt. Fuer Metriken mit Gruppenwerten:
+                                 dps, condi_dps, breakbar_damage, resurrects, skill_cast_uptime
     {spieler}                    Anzahl Spieler im Log
   Bei compare = "total" (Gruppenregel) sind {Name} und {gruppe[Name]} die Gruppensumme und {metric[..]} der Gruppenwert.
   Laesst sich eine Formel nicht berechnen (Division durch 0, fehlender Wert), entfaellt die Regel fuer diesen Spieler.
@@ -68,7 +75,8 @@ Rollen ([role."Name"], boss-spezifisch [boss."<ID>".role."Name"]) - aus dem Verg
     share_min = 30   Anteil an der Gruppensumme >= 30 %    share_max = 5  Anteil <= 5 %
     min_total = 4    Gruppensumme muss >= 4 sein (Default 1)
   value_min = 30 / value_max = 5   absoluter Wert (Anzahl bzw. bei generation: Ø Uptime/Stacks fuer die Gruppe)
-  Metriken fuer Rollen: dps, breakbar_damage, resurrects
+  Metriken fuer Rollen: dps, condi_dps, breakbar_damage, resurrects (fehlen die Gruppenwerte - Logs vor Schema 6 -,
+  funktionieren nur value_min / value_max)
   source = "generation", name = "Quickness": wie viel Uptime (bzw. Stacks) der Spieler im Schnitt ALLEN Spielern im Log
   gibt (Summe seiner 'generated'-Anteile / Spielerzahl, Phase 0). Erfasst: Alacrity, Quickness, Might, Fury, Protection,
   Stability, Aegis, Resistance, Resolution, Regeneration, Swiftness, Vigor (GENERATION_BUFFS in extract_log.py).
@@ -86,11 +94,15 @@ import tomllib
 KINDS = ("mechanic", "buff", "metric", "consumables")
 RULE_KEYS = {"critical", "critical_below", "list_if_not_critical", "text_if_listed_critical",
              "text_if_listed_not_critical", "link", "professions", "compare", "min_total", "of", "roles", "not_roles",
-             "critical_above", "per", "per_scope", "min_per"}
+             "critical_above", "per", "per_scope", "min_per", "chart"}
 COMPARE = ("player", "total", "share", "ratio")
 ROLE_CRIT_KEYS = {"source", "name", "top", "bottom", "share_min", "share_max", "min_total", "value_min", "value_max",
                   "roles", "not_roles"}
-ADDITIVE_METRICS = ("dps", "breakbar_damage", "resurrects")      # nur diese gibt es als Gruppensumme
+ADDITIVE_METRICS = ("dps", "condi_dps", "breakbar_damage", "resurrects")      # nur diese gibt es als Gruppensumme
+
+# Consumables, die bei [consumables] NICHT mitgezaehlt werden (Name wie in buffs_info, z. B. "Potion of Slaying ...")
+BLACKLISTED_FOODS = {
+}
 
 
 # ----------------------------------------------------------------------------- Metriken (Phase 0, Hauptziele)
@@ -110,14 +122,24 @@ def _flanking_percent(pl, slim):
     return round(100.0 * flank / hits, 1) if hits else None
 
 
+def _stats_all(pl, key):
+    """Wert aus statsAll (Phase 0), z. B. stackDist. None, wenn nicht exportiert (Logs vor Schema 6)."""
+    v = ((pl.get("stats_all") or [{}])[0] or {}).get(key)
+    return round(v, 1) if isinstance(v, (int, float)) and not isinstance(v, bool) else None
+
+
 METRICS = {
     "dps": lambda pl, slim: _total(pl, "dps"),
+    "condi_dps": lambda pl, slim: _total(pl, "condiDps"),
     "breakbar_damage": lambda pl, slim: _total(pl, "breakbarDamage"),
     "flanking_percent": _flanking_percent,
     "resurrects": lambda pl, slim: ((pl.get("support") or [{}])[0] or {}).get("resurrects"),
+    "stack_dist": lambda pl, slim: _stats_all(pl, "stackDist"),
+    "skill_cast_uptime": lambda pl, slim: _stats_all(pl, "skillCastUptime"),
 }
-METRIC_LABEL = {"dps": "DPS (Hauptziele)", "breakbar_damage": "Breakbar-Schaden",
-                "flanking_percent": "Flankenrate %", "resurrects": "Wiederbelebungen"}
+METRIC_LABEL = {"dps": "DPS (Hauptziele)", "condi_dps": "Condi-DPS (Hauptziele)", "breakbar_damage": "Breakbar-Schaden",
+                "flanking_percent": "Flankenrate %", "resurrects": "Wiederbelebungen",
+                "stack_dist": "Abstand zum Squadzentrum", "skill_cast_uptime": "Animationsuptime %"}
 
 
 # ----------------------------------------------------------------------------- Formeln (sicherer Ausdrucks-Auswerter)
@@ -129,7 +151,7 @@ _CMP = {ast.Lt: operator.lt, ast.LtE: operator.le, ast.Gt: operator.gt, ast.GtE:
         ast.Eq: operator.eq, ast.NotEq: operator.ne}
 _TOKEN = re.compile(r"\{([^{}]+)\}")
 _TOKEN_KIND = re.compile(r"^(\w+)\[(.+)\]$")
-_TOKEN_KINDS = ("eigene", "gruppe", "buff", "metric")
+_TOKEN_KINDS = ("eigene", "gruppe", "buff", "metric", "schnitt")
 
 
 def _check_expr(node, idents):
@@ -174,8 +196,8 @@ def compile_expr(src):
     for tok in _TOKEN.findall(src):
         km = _TOKEN_KIND.match(tok.strip())
         if km and km.group(1) not in _TOKEN_KINDS:
-            raise ValueError(f"unbekannter Platzhalter '{{{tok}}}' (erlaubt: eigene[..], gruppe[..], buff[..], metric[..])")
-        if km and km.group(1) == "metric" and km.group(2) not in METRICS:
+            raise ValueError(f"unbekannter Platzhalter '{{{tok}}}' (erlaubt: eigene[..], gruppe[..], buff[..], metric[..], schnitt[..])")
+        if km and km.group(1) in ("metric", "schnitt") and km.group(2) not in METRICS:
             raise ValueError(f"unbekannte Metrik '{km.group(2)}' (erlaubt: {', '.join(METRICS)})")
     py = _TOKEN.sub(sub, src).strip()
     try:
@@ -225,8 +247,9 @@ def _eval_node(node, vals):
 
 class _Env:
     """Werte, die in Formeln als {Platzhalter} zur Verfuegung stehen."""
-    def __init__(self, own, group, buffs, metrics, players):
+    def __init__(self, own, group, buffs, metrics, players, metric_values=None):
         self.own, self.group, self.buffs, self.metrics, self.players = own, group, buffs, metrics, players
+        self.metric_values = metric_values or {}           # Werte ALLER Spieler je Metrik (anonym) -> {schnitt[..]}
 
     def value(self, tok):
         if tok == "spieler":
@@ -235,6 +258,9 @@ class _Env:
         kind, name = km.groups() if km else ("eigene", tok)
         if kind == "metric":
             return self.metrics.get(name)                  # None -> Regel entfaellt
+        if kind == "schnitt":                              # Summe aller Spieler mit Wert / deren Anzahl
+            vals = [v for v in self.metric_values.get(name) or [] if v is not None]
+            return sum(vals) / len(vals) if vals else None
         return {"eigene": self.own, "gruppe": self.group, "buff": self.buffs}[kind].get(name, 0)
 
 
@@ -364,6 +390,9 @@ def _clean_rules(block, where, problems):
                 elif isinstance(v, bool) or not isinstance(v, (int, float)):
                     problems.append(f"{where}.{kind}.{name}.{k}: muss eine Zahl oder eine Formel (Text) sein")
                     ok = False
+            if "chart" in rule and (not isinstance(rule["chart"], bool) or kind == "consumables"):
+                problems.append(f"{where}.{kind}.{name}: chart muss true/false sein (nicht bei consumables)")
+                ok = False
             if not ok:
                 continue
             src = rule.get("of", name)
@@ -458,6 +487,21 @@ def _flag(rule, value, default_crit=None):
             or (ca is not None and value > ca))
 
 
+def _chart_point(rule, value, default_crit=None):
+    """Wert + (aufgeloester) Schwellwert fuer den Verlaufs-Chart."""
+    thr = next((rule[k] for k in THRESH_KEYS if isinstance(rule.get(k), (int, float))
+                and not isinstance(rule.get(k), bool)), None)
+    if thr is None and not any(k in rule for k in THRESH_KEYS):
+        thr = default_crit
+    return {"value": value, "threshold": thr}
+
+
+def eval_formula(src, own=None, buffs=None, metrics=None):
+    """Formel ausserhalb einer Regel berechnen (z. B. DPS-Faktoren in charts.toml). {Name}/{eigene[..]} = eigene
+    Mechanik-Anzahl, {buff[..]}, {metric[..]}; Gruppenwerte gibt es hier nicht. None = nicht berechenbar."""
+    return _eval_expr(src, _Env(own or {}, {}, buffs or {}, metrics or {}, 0))
+
+
 def _text(rule, critical, label, value, pl, extra=None):
     tmpl = rule.get("text_if_listed_critical" if critical else "text_if_listed_not_critical")
     thr = next((rule[k] for k in ("critical", "critical_below", "critical_above") if rule.get(k) is not None), None)
@@ -520,6 +564,12 @@ def _criterion(c, mstats, xstats, gstats, found=frozenset()):
             parts.append("hat keine der Rollen " + ", ".join(c["not_roles"]))
         return "; ".join(parts)
     st = {"mechanic": mstats, "metric": xstats, "generation": gstats}[c["source"]].get(c["name"])
+    if st and st.get("partial"):                           # nur eigener Wert bekannt (keine Gruppenwerte)
+        if any(k in c for k in ("top", "bottom", "share_min", "share_max", "min_total")):
+            return None
+        if ("value_min" in c and not st["count"] >= c["value_min"]) or ("value_max" in c and not st["count"] <= c["value_max"]):
+            return None
+        return f"{METRIC_LABEL.get(c['name'], c['name'])}: {_num(st['count'])}"
     if not st or st["total"] < c.get("min_total", 1):
         return None
     if "top" in c and not (st["count"] > 0 and st["rank"] <= c["top"]):
@@ -551,7 +601,8 @@ def _criterion(c, mstats, xstats, gstats, found=frozenset()):
 def evaluate(slim, boss_key, rules):
     """Bewertet ein gekuerztes Log. Rueckgabe: Liste je Spieler:
     {account, character, profession, group, roles:[{name, why:[...]}], findings:[{kind,name,value,critical,text,link}],
-     values:{mechanics, buffs, metrics, consumables, mechanic_stats:{name:{count,share,rank,...}}, metric_stats}}"""
+     values:{mechanics, buffs, metrics, consumables, mechanic_stats:{name:{count,share,rank,...}}, metric_stats,
+             charts:{Regelname: {value, threshold}}}}"""
     chars = slim.get("characters") or {}
     grp = slim.get("group") or {}
     events, present = {}, set()
@@ -578,6 +629,7 @@ def evaluate(slim, boss_key, rules):
     for pl in slim.get("players") or []:
         acc = pl["account"]
         findings = []
+        charts = {}                                  # Regelname -> {value, threshold} fuer Verlaufs-Charts
         metrics = {k: fn(pl, slim) for k, fn in METRICS.items()}
 
         # Rang/Anteil im Vergleich mit ALLEN Spielern (aus den anonymen Gruppenwerten)
@@ -597,12 +649,16 @@ def evaluate(slim, boss_key, rules):
             if vals and own is not None:
                 gstats[name] = _rank_stats(vals, own)
 
-        # Rollen
+        # Rollen (fehlen Gruppenwerte einer Metrik, z. B. condi_dps in alten Logs: nur eigener Wert fuer value_min/max)
+        rxstats = dict(xstats)
+        for name in ADDITIVE_METRICS:
+            if name not in rxstats and metrics.get(name) is not None:
+                rxstats[name] = {"count": metrics[name], "partial": True}
         roles = []
         for rname, r in merged("role")[0].items():
             if set(r.get("not_roles") or []) & {x["name"] for x in roles}:
                 continue                              # Rolle entfaellt, wenn der Spieler eine der not_roles (weiter oben definiert) hat
-            hits = [_criterion(c, mstats, xstats, gstats, {x["name"] for x in roles}) for c in r["criteria"]]
+            hits = [_criterion(c, mstats, rxstats, gstats, {x["name"] for x in roles}) for c in r["criteria"]]
             if (all(hits) if r.get("match") == "all" else any(hits)):
                 roles.append({"name": rname, "why": [h for h in hits if h], "description": r.get("description", "")})
         role_names = [r["name"] for r in roles]
@@ -611,7 +667,7 @@ def evaluate(slim, boss_key, rules):
                "_own": {n: len(t) for (a, n), t in events.items() if a == acc}}
 
         def add(kind, name, rule, value, critical, label, extra=None):
-            findings.append({"kind": kind, "name": name, "value": value, "critical": critical,
+            findings.append({"kind": kind, "name": name, "value": value, "critical": critical, "label": label,
                              "text": _text(rule, critical, label, value, plx, extra), "link": rule.get("link")})
 
         uptimes = {}                                 # Buff-Uptimes Phase 0 (auch fuer Formeln: {buff[Name]})
@@ -619,7 +675,7 @@ def evaluate(slim, boss_key, rules):
             if per_phase:
                 uptimes[name] = per_phase[0].get("uptime", 0)
         env = _Env(plx["_own"], plx["_group"] or {}, uptimes, {k: v for k, v in metrics.items() if v is not None},
-                   grp.get("player_count", 0))
+                   grp.get("player_count", 0), grp.get("metric_values"))
 
         # Mechaniken
         rs, scoped = merged("mechanic")
@@ -667,6 +723,8 @@ def evaluate(slim, boss_key, rules):
             rule = _resolve(rule, env)
             if rule is None:
                 continue
+            if rule.get("chart"):
+                charts[name] = _chart_point(rule, value, 1 if cmp_ == "player" else None)
             crit = _flag(rule, value, default_crit=1 if cmp_ == "player" else None)
             if crit or (rule.get("list_if_not_critical") and count > 0):
                 add("mechanic", name, rule, value, crit, name, extra)
@@ -679,6 +737,8 @@ def evaluate(slim, boss_key, rules):
             rule = _resolve(rule, env)
             if rule is None:
                 continue
+            if rule.get("chart"):
+                charts[name] = _chart_point(rule, v)
             crit = _flag(rule, v)
             if crit or rule.get("list_if_not_critical"):
                 add("buff", name, rule, v, crit, name)
@@ -701,12 +761,15 @@ def evaluate(slim, boss_key, rules):
             rule = _resolve(rule, env)
             if rule is None:
                 continue
+            if rule.get("chart"):
+                charts[name] = _chart_point(rule, v)
             crit = _flag(rule, v)
             if crit or rule.get("list_if_not_critical"):
                 add("metric", name, rule, v, crit, METRIC_LABEL.get(src, name), extra or None)
 
         # Consumables
-        cons = sorted({c.get("name") for c in pl.get("consumables") or [] if c.get("name")})
+        cons = sorted({c.get("name") for c in pl.get("consumables") or []
+                       if c.get("name") and c.get("name") not in BLACKLISTED_FOODS})
         rule = merged("consumables")[0].get("")
         rule = _resolve(rule, env) if rule and _applies(rule, pl, role_names) else None
         if rule:
@@ -727,7 +790,8 @@ def evaluate(slim, boss_key, rules):
                 "mechanic_stats": {n: st for n, st in mstats.items() if st and st["count"] > 0},
                 "generation": {n: st["count"] for n, st in gstats.items() if st["count"] > 0},
                 "generation_stats": {n: st for n, st in gstats.items() if st["count"] > 0},
-                "metric_stats": xstats}})
+                "metric_stats": xstats,
+                "charts": charts}})
     return out
 
 
@@ -741,7 +805,8 @@ def evaluate_group(slim, boss_key, rules):
     if not grp:
         return {"findings": findings, "values": values}
     gcounts = {n: i["count"] for n, i in values["mechanics"].items()}
-    env = _Env(gcounts, gcounts, {}, {k: v for k, v in values["metrics"].items() if v is not None}, values["player_count"])
+    env = _Env(gcounts, gcounts, {}, {k: v for k, v in values["metrics"].items() if v is not None}, values["player_count"],
+               grp.get("metric_values"))
     for kind in ("mechanic", "metric"):
         g = dict(rules["global"].get(kind) or {})
         b = (rules["boss"].get(str(boss_key)) or {}).get(kind) or {}

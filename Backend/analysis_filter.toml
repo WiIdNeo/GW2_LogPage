@@ -1,5 +1,7 @@
 # Filter fuer extract_log.py / gw2logs.py - je Boss eine Whitelist fuer Ziele (NPC-ID) und Mechaniken (Name).
 # Schluessel: Boss-ID, bei Challenge Mode negativ.  Fehlt 'targets' bzw. 'mechanics' bei einem Boss, wird dort nicht gefiltert.
+# damage_targets = [NPC-IDs] (optional, einzeilig): diese Ziele zaehlen fuer den Target-Damage (Default: Hauptziele der Phase).
+#   Sie werden immer exportiert, auch wenn sie in 'targets' auskommentiert sind.
 # NICHT GEWUENSCHTES BITTE AUSKOMMENTIEREN (#), NICHT LOESCHEN: Beim naechsten 'python extract_log.py <Ordner> --catalog'
 # werden nur Eintraege ergaenzt, die weder aktiv noch auskommentiert in dieser Datei stehen.
 
@@ -28,7 +30,7 @@ mechanics = [
   #"Green",  # max 12 Ereignisse | Distributed Magic (Stood in Green)
   "Res",  # max 11 Ereignisse | Res
   "Downed",  # max 8 Ereignisse | Downed
-  "Got up",  # max 7 Ereignisse | Got up
+  #"Got up",  # max 7 Ereignisse | Got up
   #"Attune G",  # max 5 Ereignisse | Pylon Attunement: Green
   "Green Cast G",  # max 5 Ereignisse | Distributed Magic (Green Field appeared in Green Sector)
   #"Green Cast R",  # max 5 Ereignisse | Distributed Magic (Green Field appeared in Red Sector)
@@ -65,12 +67,13 @@ mechanics = [
   "Res",  # max 2 Ereignisse | Res
   "Dead",  # max 1 Ereignisse | Dead
   "Downed",  # max 1 Ereignisse | Downed
-  "Got up",  # max 1 Ereignisse | Got up
+  #"Got up",  # max 1 Ereignisse | Got up
   "Resp",  # max 1 Ereignisse | Resp
 ]
 
 # Sabetha the Saboteur 1  (2 Log(s))
 [boss."15375"]
+damage_targets = [15375, 15372, 15404, 15430]   # zaehlen fuer den Target-Damage: Sabetha, Kernan, Knuckles, Karde
 targets = [
   # --- neu am 2026-11-22 ---
   #-16,  # North Cannon  [in keiner Phase]
@@ -92,7 +95,7 @@ mechanics = [
   "Dead",  # max 8 Ereignisse | Dead
   "Downed",  # max 8 Ereignisse | Downed
   "Kick Bomb",  # max 5 Ereignisse | Kicked Heavy Bomb
-  "Got up",  # max 4 Ereignisse | Got up
+  #"Got up",  # max 4 Ereignisse | Got up
   "Launched",  # max 4 Ereignisse | Shell-Shocked (launched up to cannons)
   #"CC.K",  # max 2 Ereignisse | Platform Quake (Breakbar)
   #"CCed.K",  # max 2 Ereignisse | Platform Quake (Breakbar broken)
@@ -296,9 +299,9 @@ targets = [
   17194,  # Cairn the Indomitable
 ]
 mechanics = [
-  "Miss.Qck",  # max 166 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Qck",  # max 166 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "KB",  # max 158 Ereignisse | Knockback Crystals
-  "Miss.Alac",  # max 146 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Alac",  # max 146 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   "Knck.Pll",  # max 118 Ereignisse | Knocked Back or Pulled
   #"Agony 25",  # max 50 Ereignisse | Shared Agony Damage (25% Player's HP)
   "Stab.Green.C",  # max 35 Ereignisse | Green Spatial Manipulation Field while affected by stability
@@ -309,7 +312,7 @@ mechanics = [
   #"Agony 75",  # max 16 Ereignisse | Shared Agony Damage (75% Player's HP)
   "Downed",  # max 14 Ereignisse | Downed
   "Agony",  # max 13 Ereignisse | Shared Agony Debuff Application
-  "Got up",  # max 13 Ereignisse | Got up
+  #"Got up",  # max 13 Ereignisse | Got up
   "Res",  # max 11 Ereignisse | Res
   "Lnch",  # max 10 Ereignisse | Launched
   "Leap",  # max 9 Ereignisse | Jump between green fields
@@ -395,7 +398,7 @@ mechanics = [
   "B.Gr",  # max 20 Ereignisse | Big Green (friends mechanic)
   "S.Gr",  # max 20 Ereignisse | Small Green (friends mechanic)
   "Downed",  # max 12 Ereignisse | Downed
-  "Got up",  # max 12 Ereignisse | Got up
+  #"Got up",  # max 12 Ereignisse | Got up
   #"S.Fix",  # max 12 Ereignisse | Fixated by Samarog
   #"R.Fix",  # max 10 Ereignisse | Fixated by Rigom
   "Brtlzd",  # max 9 Ereignisse | Brutalized (jumped upon by Samarog->Breakbar)
@@ -998,6 +1001,7 @@ mechanics = [
 
 # Cardinal Adina CM  (7 Log(s))
 [boss."-22006"]
+damage_targets = [22006, -2, -3]   # zaehlen fuer den Target-Damage: Adina + Haende
 targets = [
   # --- neu am 2026-11-22 ---
   #-3,  # Hand of Eruption NE 1
@@ -1032,6 +1036,7 @@ mechanics = [
 
 # Cardinal Adina 1  (12 Log(s))
 [boss."22006"]
+damage_targets = [22006, -2, -3]   # zaehlen fuer den Target-Damage: Adina + Haende
 targets = [
   # --- neu am 2026-11-22 ---
   -3,  # Hand of Eruption NE 1
@@ -1188,8 +1193,8 @@ targets = [
 ]
 mechanics = [
   # --- neu am 2026-11-22 ---
-  "Miss.Alac",  # max 839 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
-  "Miss.Qck",  # max 420 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Alac",  # max 839 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Qck",  # max 420 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "P.Magma",  # max 202 Ereignisse | Hit by Pylon Magma
   "B.Tether",  # max 113 Ereignisse | 25% damage reduction
   #"P.Rect",  # max 49 Ereignisse | Hit by Purple Rectangle
@@ -1207,7 +1212,7 @@ mechanics = [
   "Downed",  # max 10 Ereignisse | Downed
   "Lckt",  # max 10 Ereignisse | Lockout
   "Orb caught",  # max 10 Ereignisse | Collected a Pylon Orb
-  "Got up",  # max 9 Ereignisse | Got up
+  #"Got up",  # max 9 Ereignisse | Got up
   "Knck.Pll",  # max 9 Ereignisse | Knocked Back or Pulled
   "Rush.H",  # max 8 Ereignisse | Hit by Qadim Rush
   "A.Prj.H",  # max 7 Ereignisse | Hit by Aimed Projectile
@@ -1473,7 +1478,7 @@ mechanics = [
   "Res",  # max 2 Ereignisse | Res
   "DouseDarkness.H",  # max 1 Ereignisse | Hit by Douse in Darkness
   "Exposed.E",  # max 1 Ereignisse | Gained Exposed (Breakbar broken)
-  "Got up",  # max 1 Ereignisse | Got up
+  #"Got up",  # max 1 Ereignisse | Got up
   "Knck.Dwn",  # max 1 Ereignisse | Knocked Down
   "Knck.Pll",  # max 1 Ereignisse | Knocked Back or Pulled
 ]
@@ -1575,7 +1580,7 @@ mechanics = [
   "FissTorm.H",  # max 38 Ereignisse | Hit by Fissure of Torment
   "Downed",  # max 24 Ereignisse | Downed
   "ToxOrb.H",  # max 19 Ereignisse | Hit by Toxic Orb
-  "Got up",  # max 14 Ereignisse | Got up
+  #"Got up",  # max 14 Ereignisse | Got up
   "HrtPier.H",  # max 14 Ereignisse | Hit by Heartpiercer
   "Puddle",  # max 13 Ereignisse | Hit by Ley Breach (Red Puddle)
   "Dead",  # max 10 Ereignisse | Dead
@@ -1610,17 +1615,17 @@ targets = [
 ]
 mechanics = [
   # --- neu am 2026-11-24 ---
-  "Miss.Alac",  # max 196 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Alac",  # max 196 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   "ToxBull.H",  # max 168 Ereignisse | Hit by Toxic Bullet
   "ElecBlast.H",  # max 123 Ereignisse | Hit by Electric Blast (Echo AoEs)
-  "Miss.Qck",  # max 96 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Qck",  # max 96 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "FissTorm.H",  # max 48 Ereignisse | Hit by Fissure of Torment
   "Shck.Wv",  # max 45 Ereignisse | Hit by Shockwave attack
   "Res",  # max 26 Ereignisse | Res
   "HrtPier.H",  # max 19 Ereignisse | Hit by Heartpiercer
   "ToxOrb.H",  # max 17 Ereignisse | Hit by Toxic Orb
   "Downed",  # max 10 Ereignisse | Downed
-  "Got up",  # max 10 Ereignisse | Got up
+  #"Got up",  # max 10 Ereignisse | Got up
   "Puddle",  # max 9 Ereignisse | Hit by Ley Breach (Red Puddle)
   "Cone",  # max 8 Ereignisse | Hit by Cone attack
   "Cone.S",  # max 6 Ereignisse | Hit by Side Cone attack
@@ -1664,7 +1669,7 @@ mechanics = [
   "ExtVuln.A",  # max 24 Ereignisse | Applied Extreme Vulnerability
   "Lckt",  # max 17 Ereignisse | Lockout
   "Downed",  # max 14 Ereignisse | Downed
-  "Got up",  # max 13 Ereignisse | Got up
+  #"Got up",  # max 13 Ereignisse | Got up
   "Shooting Stars",  # max 11 Ereignisse | Shooting Stars Cast
   #"DancStars.Achiv.L",  # max 10 Ereignisse | Achievement Eligibility: Danced with the Stars Lost
   "Shar.Des.T",  # max 10 Ereignisse | Targeted by Shared Destruction (Greens - Meteor Crash)
@@ -1691,9 +1696,9 @@ targets = [
 ]
 mechanics = [
   # --- neu am 2026-11-24 ---
-  "Miss.Qck",  # max 235 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Qck",  # max 235 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "Spin.Neb.H",  # max 106 Ereignisse | Spining Nebula Hit (Spin Projectiles)
-  "Miss.Alac",  # max 76 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Alac",  # max 76 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   "Rsdl.Anxty",  # max 60 Ereignisse | Residual Anxiety
   "Infirmity",  # max 54 Ereignisse | Infirmity Applied (Reduced incoming healing)
   "Sl.Fst.H",  # max 54 Ereignisse | Soul Feat (Pulsing Orb AoEs)
@@ -1706,7 +1711,7 @@ mechanics = [
   "Debilitated",  # max 5 Ereignisse | Debilitated Applied (Reduced outgoing damage)
   "Dmn.Blst.H",  # max 5 Ereignisse | Demonic Blast Hit (Cones AoEs)
   "Downed",  # max 5 Ereignisse | Downed
-  "Got up",  # max 5 Ereignisse | Got up
+  #"Got up",  # max 5 Ereignisse | Got up
   "Spinning Nebula",  # max 5 Ereignisse | Spinning Nebula Cast
   "Lckt",  # max 3 Ereignisse | Lockout
   "PurLight.Dagda.C",  # max 3 Ereignisse | Casted Purifying Light (Hit Dagda)
@@ -1745,7 +1750,7 @@ mechanics = [
   "Emp.A",  # max 35 Ereignisse | Gained Empowered
   "Downed",  # max 24 Ereignisse | Downed
   "Exposed",  # max 22 Ereignisse | Exposed Applied (Increased incoming damage)
-  "Got up",  # max 21 Ereignisse | Got up
+  #"Got up",  # max 21 Ereignisse | Got up
   "Ins.A",  # max 21 Ereignisse | Insatiable Applied (Absorbed Gluttony Orb)
   "CrushReg.H",  # max 20 Ereignisse | Hit by Crushing Regret (Green)
   "Green.A",  # max 18 Ereignisse | Crushing Regret Applied (Green)
@@ -1788,8 +1793,8 @@ targets = [
 ]
 mechanics = [
   # --- neu am 2026-11-24 ---
-  "Miss.Alac",  # max 440 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
-  "Miss.Qck",  # max 245 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Alac",  # max 440 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Qck",  # max 245 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "Flames.S",  # max 235 Ereignisse | Stood in Flames
   "Pwrd.Up1",  # max 160 Ereignisse | Powered Up (Split 1)
   "Res",  # max 32 Ereignisse | Res
@@ -1799,7 +1804,7 @@ mechanics = [
   "Rush.H",  # max 16 Ereignisse | Hit by Rush
   "Targ.Ord.A",  # max 14 Ereignisse | Received Target Order
   "Downed",  # max 12 Ereignisse | Downed
-  "Got up",  # max 12 Ereignisse | Got up
+  #"Got up",  # max 12 Ereignisse | Got up
   "FallAxe.B.H",  # max 8 Ereignisse | Hit by Mech Rider Big Cone
   "Pwrd.Up2",  # max 8 Ereignisse | Powered Up (Split 2)
   "Burst.H",  # max 7 Ereignisse | Hit by Burst
@@ -1826,9 +1831,9 @@ mechanics = [
   # --- neu am 2026-11-24 ---
   "PernVort.H",  # max 320 Ereignisse | Hit by Pernicious Vortex (Pull)
   "CrackWind.H",  # max 235 Ereignisse | Hit by Crackling Wind (Push)
-  "Miss.Qck",  # max 208 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Qck",  # max 208 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "Red.VermIndi.H",  # max 117 Ereignisse | Hit by Boiling Aether (Vermilion & Indigo)
-  "Miss.Alac",  # max 48 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Alac",  # max 48 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   "TriBolt.H",  # max 36 Ereignisse | Hit by Tri Bolt (Spread AoEs)
   "TidTorm.A",  # max 27 Ereignisse | Tidal Torment Applied
   "Red.Arse.H",  # max 26 Ereignisse | Hit by Boiling Aether (Arsenite)
@@ -1851,7 +1856,7 @@ mechanics = [
   "MalfWovShld.A",  # max 3 Ereignisse | Knight gained Malfunctioning Ley-Woven Shielding
   "TriChg.H",  # max 3 Ereignisse | Hit by Tribocharge
   "Downed",  # max 1 Ereignisse | Downed
-  "Got up",  # max 1 Ereignisse | Got up
+  #"Got up",  # max 1 Ereignisse | Got up
 ]
 
 # Guardian's Glade  (3 Log(s))
@@ -1864,8 +1869,8 @@ targets = [
 ]
 mechanics = [
   # --- neu am 2026-11-24 ---
-  "Miss.Qck",  # max 206 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
-  "Miss.Alac",  # max 127 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Qck",  # max 206 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Alac",  # max 127 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   "Tantrum.H",  # max 107 Ereignisse | Hit by Tantrum
   "Tornado.H",  # max 63 Ereignisse | Hit by Tornado
   "CrocTackle.H",  # max 58 Ereignisse | Hit by Crocodilian Razortooth Tackle
@@ -1880,7 +1885,7 @@ mechanics = [
   "Bee.Cntmntd",  # max 21 Ereignisse | Contaminated by Bitting Swarm
   "ShredArmor.A",  # max 20 Ereignisse | Applied Shredded Armor
   "Downed",  # max 18 Ereignisse | Downed
-  "Got up",  # max 17 Ereignisse | Got up
+  #"Got up",  # max 17 Ereignisse | Got up
   "Stomp.H",  # max 13 Ereignisse | Hit by Stomp
   "LightStk.H",  # max 12 Ereignisse | Hit by Lightning Strike
   "Ate Croc",  # max 10 Ereignisse | Ate a Crocodilian Razortooth
@@ -1918,8 +1923,8 @@ targets = [
 mechanics = [
   # --- neu am 2026-11-24 ---
   "Orb Push",  # max 1133 Ereignisse | Orb was pushed by player
-  "Miss.Qck",  # max 255 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
-  "Miss.Alac",  # max 252 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Qck",  # max 255 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Alac",  # max 252 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   "J.Grasp.H",  # max 69 Ereignisse | Hit by Grasp of Jormag
   "Spread.B",  # max 67 Ereignisse | Baited spread mechanic
   "GraspVoid.H",  # max 62 Ereignisse | Hit by Grasp of the Void (Final Orb Projectile)
@@ -1933,7 +1938,7 @@ mechanics = [
   "Res",  # max 30 Ereignisse | Res
   "Downed",  # max 27 Ereignisse | Downed
   "Void.D",  # max 27 Ereignisse | Received Void debuff
-  "Got up",  # max 23 Ereignisse | Got up
+  #"Got up",  # max 23 Ereignisse | Got up
   "Goop.H",  # max 20 Ereignisse | Hit by goop left by heart
   "Exposed",  # max 18 Ereignisse | Exposed Applied (Increased incoming damage)
   "MagicDisc.H",  # max 18 Ereignisse | Hit by Magic Discharge (Orb Explosion Wave)
@@ -2002,7 +2007,7 @@ mechanics = [
   "Vicious Slam",  # max 5 Ereignisse | Cast Vicious Slam (Launch)
   "I.Slice",  # max 4 Ereignisse | Hit by Icy Slice
   "Dead",  # max 3 Ereignisse | Dead
-  "Got up",  # max 3 Ereignisse | Got up
+  #"Got up",  # max 3 Ereignisse | Got up
   "I.Slash",  # max 3 Ereignisse | Hit by Icy Slash
   "IceShatt.H",  # max 3 Ereignisse | Hit by Ice Shatter (Large AoEs)
   #"Lethal Coalescence",  # max 3 Ereignisse | Cast Lethal Coalescence
@@ -2028,11 +2033,11 @@ targets = [
 mechanics = [
   # --- neu am 2026-11-24 ---
   "EterRefl.H",  # max 694 Ereignisse | Hit by Eternal Reflection (Staff Frontal)
-  "Miss.Alac",  # max 508 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
+  #"Miss.Alac",  # max 508 Ereignisse | Triggered when an expected alacrity provider has not given the player from their alacrity
   "SurrCur.H",  # max 372 Ereignisse | Hit by Surrounding Curse (Staff Projectiles)
   "ThouStr.H",  # max 286 Ereignisse | Hit by Thousand Strikes (Spear Frontal)
   "CosmChar.H",  # max 199 Ereignisse | Hit by Cosmic Charge (Spear Charge)
-  "Miss.Qck",  # max 194 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
+  #"Miss.Qck",  # max 194 Ereignisse | Triggered when an expected quickness provider has not given the player from their subgroup
   "RagStor.H",  # max 137 Ereignisse | Hit by Raging Storm (Spear Projectiles)
   "ExciExtr.H",  # max 129 Ereignisse | Hit by Excision Extremis (Random Half-Circles)
   "DivEter.H",  # max 76 Ereignisse | Hit by Division Eternal (Sword Frontal)
@@ -2051,7 +2056,7 @@ mechanics = [
   "VisEter.H",  # max 24 Ereignisse | Hit by Visions of Eternity (Intermission Attack)
   "Downed",  # max 23 Ereignisse | Downed
   "Ascen.R",  # max 22 Ereignisse | Removed Ascension
-  "Got up",  # max 22 Ereignisse | Got up
+  #"Got up",  # max 22 Ereignisse | Got up
   "JudEter.H",  # max 22 Ereignisse | Hit by Judgment of Eternity (3-Player Green failed)
   "Res",  # max 20 Ereignisse | Res
   "SlicReal.H",  # max 20 Ereignisse | Hit by Slice Through Reality (Sword Teleport)

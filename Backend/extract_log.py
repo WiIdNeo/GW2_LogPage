@@ -21,6 +21,8 @@ Konventionen im Ausgabeformat:
   * Mit Whitelist (Accounts) bleiben nur diese Spieler uebrig; Mechanik-Ereignisse anderer Spieler entfallen.
   * Pro Boss kann eine Filterdatei (TOML) Ziele (NPC-ID) und Mechaniken (Name) auf eine Whitelist begrenzen.
     Schluessel: Boss-ID, bei Challenge Mode negativ (wie in bosses.toml), z. B. [boss."-17194"].
+  * damage_targets = [NPC-IDs] in der Filterdatei: diese Ziele zaehlen fuer "dps_targets_total" und die Gruppen-
+    DPS (Default: Hauptziele der Phase, Prioritaet MAIN). Sie werden immer exportiert.
 """
 import argparse
 import collections
@@ -38,13 +40,14 @@ import tomllib
 from pathlib import Path
 
 # ----------------------------------------------------------------------------- Konfiguration
-SCHEMA_VERSION = 5                             # 5: + players[].incoming_damage
+SCHEMA_VERSION = 6                             # 5: + players[].incoming_damage  6: + stats_all, condi_dps, damage_targets
 META_FIELDS = ("eliteInsightsVersion", "gW2Build", "triggerID", "isCM", "success",
                "durationMS", "duration", "timeStartStd", "timeEndStd")
 PLAYER_FIELDS = ("account", "name", "group", "profession", "hasCommanderTag", "friendlyNPC", "notInSquad")
 TARGET_FIELDS = ("id", "name", "finalHealth", "finalBarrier", "barrierPercent", "healthPercentBurned")
 DPS_FIELDS = ("dps", "condiDps", "powerDps", "breakbarDamage")
-STATS_FIELDS = ("flankingRate", "connectedDirectDamageCount", "killed", "downed", "stackDist", "skillCastUptime")
+STATS_FIELDS = ("flankingRate", "connectedDirectDamageCount", "killed", "downed")
+STATS_ALL_FIELDS = ("stackDist", "distToCom", "skillCastUptime", "skillCastUptimeNoAA")   # aus statsAll (je Spieler, nicht je Ziel)
 SUPPORT_FIELDS = ("resurrects", "resurrectTime")
 DROP_VOLUME_KEYS = {"incomingBy", "incomingByExtensionBy"}   # "wer hat es erzeugt" -> nicht exportieren
 BUFF_INFO_DROP = {"icon", "descriptions"}      # aus buffMap-Eintraegen entfernt (URLs / lange Texte)
@@ -159,7 +162,8 @@ def id_name_map(raw_map, prefix):
 
 # ----------------------------------------------------------------------------- Filterdatei
 def load_filters(path):
-    """analysis_filter.toml -> {boss_key: {"targets": set[int]|None, "mechanics": set[str]|None, ["incoming_damage": int]}}"""
+    """analysis_filter.toml -> {boss_key: {"targets": set[int]|None, "mechanics": set[str]|None, ["incoming_damage": int],
+    ["damage_targets": set[int]]}}"""
     data = tomllib.loads(Path(path).read_text(encoding="utf-8")).get("boss", {})
     out = {}
     for key, v in data.items():
@@ -168,6 +172,8 @@ def load_filters(path):
         if "incoming_damage" in v:                  # Zahl = Top-N, true = Default, false/0 = nicht exportieren
             n = v["incoming_damage"]
             out[str(key)]["incoming_damage"] = INCOMING_TOP if n is True else (0 if n is False else max(0, int(n)))
+        if v.get("damage_targets"):                 # NPC-IDs, die fuer den Target-Damage zaehlen
+            out[str(key)]["damage_targets"] = set(v["damage_targets"])
     return out
 
 
@@ -208,6 +214,11 @@ def extract(root, graph="full", keep_zero=False, source_name=None, whitelist=Non
             rel = kept
         else:
             warnings.append(f"Ziel-Whitelist {sorted(flt['targets'])} trifft kein Ziel - nicht angewendet")
+    dmg_ids = flt.get("damage_targets") or set()
+    dmg_idx = [t for t in range(n_t) if raw_targets[t].get("id") in dmg_ids]
+    if dmg_ids and not dmg_idx:
+        warnings.append(f"damage_targets {sorted(dmg_ids)} trifft kein Ziel - Hauptziele werden verwendet")
+    rel = sorted(set(rel) | set(dmg_idx))                            # Target-Damage-Ziele immer exportieren
     rel_set = set(rel)
     used_buffs = set()
 
@@ -246,6 +257,8 @@ def extract(root, graph="full", keep_zero=False, source_name=None, whitelist=Non
     players = []
     characters = {}
     main_per_phase = [[i for i in main_targets_of_phase(ph, n_t) if i in rel_set] for ph in phases]
+    # Ziele fuer den Target-Damage: aus damage_targets (in jeder Phase alle - wer in einer Phase fehlt, hat dort 0 Schaden)
+    dmg_per_phase = [list(dmg_idx) for _ in phases] if dmg_idx else main_per_phase
 
     # ---- Gruppenwerte ueber ALLE Spieler (auch Nicht-Whitelist). Nur Zahlen, keine Namen.
     real = [pl for pl in raw_players if not pl.get("friendlyNPC")]
@@ -265,15 +278,19 @@ def extract(root, graph="full", keep_zero=False, source_name=None, whitelist=Non
             c = collections.Counter(o)          # events: ALLE Ereignisse der Mechanik, auch mit NPC als Akteur
             g_mech[n] = {"count": len(o), "players": len(c), "events": events_by_mech.get(n, 0),
                          "counts": sorted((c.get(i, 0) for i in range(len(real))), reverse=True)}
-    metric_values = {"dps": [], "breakbar_damage": [], "resurrects": []}
+    metric_values = {"dps": [], "condi_dps": [], "breakbar_damage": [], "resurrects": [], "skill_cast_uptime": []}
     for pl in real:
         dps_t = pl.get("dpsTargets") or []
         o_g0 = orient_of(dps_t, n_t, n_ph)
-        tot = sum_dicts(pick(at(dps_t, t, 0, o_g0) or {}, DPS_FIELDS) for t in (main_per_phase[0] if main_per_phase else []))
+        tot = sum_dicts(pick(at(dps_t, t, 0, o_g0) or {}, DPS_FIELDS) for t in (dmg_per_phase[0] if dmg_per_phase else []))
         metric_values["dps"].append(tot.get("dps", 0))
+        metric_values["condi_dps"].append(tot.get("condiDps", 0))
         metric_values["breakbar_damage"].append(tot.get("breakbarDamage", 0))
         metric_values["resurrects"].append(((pl.get("support") or [{}])[0] or {}).get("resurrects", 0) or 0)
-    g_metrics = {k: sum(v) for k, v in metric_values.items()}
+        scu = ((pl.get("statsAll") or [{}])[0] or {}).get("skillCastUptime")      # nur Spieler mit Wert -> Schnitt
+        if isinstance(scu, (int, float)) and not isinstance(scu, bool):
+            metric_values["skill_cast_uptime"].append(scu)
+    g_metrics = {k: sum(v) for k, v in metric_values.items() if k != "skill_cast_uptime"}   # Uptime-Summe ist sinnlos
     # ---- Boon-Erzeugung: wie viel Uptime (bzw. Stacks) erzeugt ein Spieler im Schnitt fuer ALLE Spieler im Log.
     # Summe der 'generated'-Anteile jedes Spielers ueber alle Empfaenger (Phase 0), geteilt durch die Spielerzahl.
     gen_ids = {}
@@ -326,12 +343,13 @@ def extract(root, graph="full", keep_zero=False, source_name=None, whitelist=Non
             per_target[str(t)] = entry
         out["targets"] = per_target
 
-        # Gesamtschaden auf die Hauptziele der jeweiligen Phase (fuer Multi-Target-Kaempfe)
+        # Gesamtschaden auf die Target-Damage-Ziele (damage_targets bzw. Hauptziele) der jeweiligen Phase
         out["dps_targets_total"] = [
-            sum_dicts(pick(at(dps_t, t, p, o_dps) or {}, DPS_FIELDS) for t in main_per_phase[p])
+            sum_dicts(pick(at(dps_t, t, p, o_dps) or {}, DPS_FIELDS) for t in dmg_per_phase[p])
             for p in range(n_ph)]
 
         out["support"] = [pick(e, SUPPORT_FIELDS) for e in (pl.get("support") or [])]
+        out["stats_all"] = [pick(e, STATS_ALL_FIELDS) for e in (pl.get("statsAll") or [])]   # je Phase: stackDist ...
 
         if inc_top:                                  # Incoming Damage: wer/was hat DIESEM Spieler wie viel Schaden gemacht
             out["incoming_damage"] = incoming_damage_of(pl, skill_names, buff_names, inc_top)
@@ -425,6 +443,7 @@ def extract(root, graph="full", keep_zero=False, source_name=None, whitelist=Non
         "dps_slug": slug,                 # == letzter Teil von log.dps_url in der DB
         "phases": phases,
         "main_targets_per_phase": main_per_phase,
+        "damage_targets": dmg_idx,        # Original-Indizes der Ziele aus damage_targets (leer = Hauptziele)
         "targets": targets,
         "characters": characters,
         "group": group,
@@ -492,6 +511,8 @@ _one = lambda s: " ".join(str(s or "").split())
 
 CATALOG_HEADER = """# Filter fuer extract_log.py / gw2logs.py - je Boss eine Whitelist fuer Ziele (NPC-ID) und Mechaniken (Name).
 # Schluessel: Boss-ID, bei Challenge Mode negativ.  Fehlt 'targets' bzw. 'mechanics' bei einem Boss, wird dort nicht gefiltert.
+# damage_targets = [NPC-IDs] (optional, einzeilig): diese Ziele zaehlen fuer den Target-Damage (Default: Hauptziele der Phase).
+#   Sie werden immer exportiert, auch wenn sie in 'targets' auskommentiert sind.
 # NICHT GEWUENSCHTES BITTE AUSKOMMENTIEREN (#), NICHT LOESCHEN: Beim naechsten 'python extract_log.py <Ordner> --catalog'
 # werden nur Eintraege ergaenzt, die weder aktiv noch auskommentiert in dieser Datei stehen.
 """

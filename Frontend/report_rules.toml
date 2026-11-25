@@ -146,6 +146,18 @@
         [mechanic."Miss.Qck"]
         list_if_not_critical = false
 
+        [mechanic."stackDist"]
+        critical_above = 360
+        not_roles = ["Kite", "Pylon", "Flak Kite", "HK", "Golem Kite", "Push", "Lampe", "Melee Gruppe", "Range Gruppe"]
+        list_if_not_critical = true
+        text_if_listed_critical = "Du hast im Schnitt {value} Einheiten vom Squadzentrum entfernt gestanden. Das kann bedeuten, dass du einige Boon- und Heal-Applications verpasst hast!"
+
+        [mechanic."skillCastUptime"]
+        compare = "share"
+        critical_below = "100 / {player}"
+        list_if_not_critical = true
+        text_if_listed_critical = "Du hast weniger Annimationsuptime, als der Durchschnitt."
+
     # Roles
         [role."Alac-Support"]
         criteria = [ { source = "generation", name = "Alacrity", top = 2, value_min = 30 } ]
@@ -158,6 +170,13 @@
 
         [role."Heal"]
         criteria = [{ roles = ["Alac-Support", "Quick-Support"], not_roles = ["BoonDPS"] }]
+
+    # Buffs
+        [consumables]
+        critical_below = 3
+        critical_above = 3
+        list_if_not_critical = false
+        text_if_listed_critical = "Du hattest nicht alle 3 Standard-Buffs (Food, Utility, Reinforced Armor) aktiv."
 
 
 # Vale Guardian
@@ -219,6 +238,28 @@
         critical_below = 13200
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
+    # Boons
+
+        [boss."15438".buff."Might"]
+        critical_below = 20
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."15438".buff."Fury"]
+        critical_below = 80
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."15438".buff."Alacrity"]
+        critical_below = 80
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."15438".buff."Quickness"]
+        critical_below = 80
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."15438".buff."Protect"]
+        critical_below = 80
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
+
 
 # Gorseval
     # Mechanics
@@ -260,6 +301,28 @@
         roles = "BoonDPS"
         critical_below = 17600
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+    # Boons
+
+        [boss."15429".buff."Might"]
+        critical_below = 24
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."15429".buff."Fury"]
+        critical_below = 93
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."15429".buff."Alacrity"]
+        critical_below = 93
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."15429".buff."Quickness"]
+        critical_below = 93
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."15429".buff."Protect"]
+        critical_below = 93
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
 
 
 # Sabetha
@@ -348,6 +411,28 @@
         critical_below = 17920
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
+    # Boons
+
+        [boss."15375".buff."Might"]
+        critical_below = 24
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."15375".buff."Fury"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."15375".buff."Alacrity"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."15375".buff."Quickness"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."15375".buff."Protect"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
+
 
 # Slothar
     # Mechanics
@@ -413,6 +498,28 @@
         critical_below = 8400
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
+    # Boons
+
+        [boss."16123".buff."Might"]
+        critical_below = 20
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."16123".buff."Fury"]
+        critical_below = 87
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."16123".buff."Alacrity"]
+        critical_below = 87
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."16123".buff."Quickness"]
+        critical_below = 87
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."16123".buff."Protect"]
+        critical_below = 87
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
+
 
 # Mathias
     # Mechanics
@@ -476,6 +583,28 @@
         critical_below = 13600
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
+    # Boons
+
+        [boss."16115".buff."Might"]
+        critical_below = 20
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."16115".buff."Fury"]
+        critical_below = 90
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."16115".buff."Alacrity"]
+        critical_below = 90
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."16115".buff."Quickness"]
+        critical_below = 90
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."16115".buff."Protect"]
+        critical_below = 90
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
+
 
 # Keep Construct CM
     # Mechanics
@@ -523,6 +652,28 @@
         roles = "BoonDPS"
         critical_below = 20000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+    # Boons
+
+        [boss."-16235".buff."Might"]
+        critical_below = 20
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."-16235".buff."Fury"]
+        critical_below = 90
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."-16235".buff."Alacrity"]
+        critical_below = 90
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."-16235".buff."Quickness"]
+        critical_below = 90
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."-16235".buff."Protect"]
+        critical_below = 90
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
 
 
 # Keep Construct
@@ -572,6 +723,28 @@
         critical_below = 20000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
+    # Boons
+
+        [boss."16235".buff."Might"]
+        critical_below = 20
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."16235".buff."Fury"]
+        critical_below = 90
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."16235".buff."Alacrity"]
+        critical_below = 90
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."16235".buff."Quickness"]
+        critical_below = 90
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."16235".buff."Protect"]
+        critical_below = 90
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
+
 
 # Xera
     # Mechanics
@@ -601,6 +774,28 @@
         roles = "BoonDPS"
         critical_below = "9600 - 9600 * 0.1 * {TP Out}"
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold} - bei deiner ANzahl Ports)."
+
+    # Boons
+
+        [boss."16246".buff."Might"]
+        critical_below = 15
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."16246".buff."Fury"]
+        critical_below = 60
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."16246".buff."Alacrity"]
+        critical_below = 60
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."16246".buff."Quickness"]
+        critical_below = 60
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."16246".buff."Protect"]
+        critical_below = 60
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
 
 
 # Cairn CM
@@ -652,6 +847,27 @@
         critical_below = 23200
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
+    # Boons
+
+        [boss."-17194".buff."Might"]
+        critical_below = 24
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."-17194".buff."Fury"]
+        critical_below = 97
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."-17194".buff."Alacrity"]
+        critical_below = 97
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."-17194".buff."Quickness"]
+        critical_below = 97
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."-17194".buff."Protect"]
+        critical_below = 97
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
 
 # Cairn
     # Mechanics
@@ -701,6 +917,28 @@
         roles = "BoonDPS"
         critical_below = 24800
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+    # Boons
+
+        [boss."17194".buff."Might"]
+        critical_below = 24
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."17194".buff."Fury"]
+        critical_below = 97
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."17194".buff."Alacrity"]
+        critical_below = 97
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."17194".buff."Quickness"]
+        critical_below = 97
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."17194".buff."Protect"]
+        critical_below = 97
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
 
 
 # MO CM
@@ -759,6 +997,28 @@
         critical_below = 26200
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
+    # Boons
+
+        [boss."-17172".buff."Might"]
+        critical_below = 24
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."-17172".buff."Fury"]
+        critical_below = 97
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."-17172".buff."Alacrity"]
+        critical_below = 97
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."-17172".buff."Quickness"]
+        critical_below = 97
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."-17172".buff."Protect"]
+        critical_below = 97
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
+
 
 # MO
     # Mechanics
@@ -815,6 +1075,28 @@
         roles = ["BoonDPS", "Took Dispel"]
         critical_below = 26200
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+    # Boons
+
+        [boss."17172".buff."Might"]
+        critical_below = 24
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."17172".buff."Fury"]
+        critical_below = 97
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."17172".buff."Alacrity"]
+        critical_below = 97
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."17172".buff."Quickness"]
+        critical_below = 97
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."17172".buff."Protect"]
+        critical_below = 97
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
 
 
 # Samarog CM
@@ -881,11 +1163,32 @@
         critical_below = 16000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
-    # CC
-        [boss."-17188".metric.breakbar_damage]
+        [boss."-17188".metric.breakbarDamage]
         compare = "share"
         critical_below = "11.11 - (1.235 * {Brtlzd})"
         text_if_listed_critical = "Dein DPS war mit {value} niedriger als erwartet bei deiner Menge CC-Phasen (Erwartungswert: {threshold})."
+
+    # Boons
+
+        [boss."-17188".buff."Might"]
+        critical_below = 23
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."-17188".buff."Fury"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."-17188".buff."Alacrity"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."-17188".buff."Quickness"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."-17188".buff."Protect"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
 
 
 # Samarog
@@ -948,11 +1251,32 @@
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
     # CC
-        [boss."17188".metric.breakbar_damage]
+        [boss."17188".metric.breakbarDamage]
         compare = "share"
         critical_below = "11.11 - (1.235 * {Brtlzd})"
         text_if_listed_critical = "Dein DPS war mit {value} niedriger als erwartet bei deiner Menge CC-Phasen (Erwartungswert: {threshold})."
 
+    # Boons
+
+        [boss."17188".buff."Might"]
+        critical_below = 23
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."17188".buff."Fury"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."17188".buff."Alacrity"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."17188".buff."Quickness"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."17188".buff."Protect"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
 
 # Deimos
     # Mechanics
@@ -1005,6 +1329,33 @@
         critical_below = 16000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
+    # Boons
+
+        [boss."17188".buff."Might"]
+        critical_below = 20
+        not_roles = "HK"
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."17188".buff."Fury"]
+        critical_below = 70
+        not_roles = "HK"
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."17188".buff."Alacrity"]
+        critical_below = 70
+        not_roles = "HK"
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."17188".buff."Quickness"]
+        critical_below = 70
+        not_roles = "HK"
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."17188".buff."Protect"]
+        critical_below = 70
+        not_roles = "HK"
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
+
 
 # Deimos CM
     # Mechanics
@@ -1053,6 +1404,33 @@
         roles = "BoonDPS"
         critical_below = 16000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+    # Boons
+
+        [boss."-17188".buff."Might"]
+        critical_below = 20
+        not_roles = "HK"
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."-17188".buff."Fury"]
+        critical_below = 70
+        not_roles = "HK"
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."-17188".buff."Alacrity"]
+        critical_below = 70
+        not_roles = "HK"
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."-17188".buff."Quickness"]
+        critical_below = 70
+        not_roles = "HK"
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."-17188".buff."Protect"]
+        critical_below = 70
+        not_roles = "HK"
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
 
 
 # SH CM
@@ -1103,6 +1481,28 @@
         critical_below = 24000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
+    # Boons
+
+        [boss."-19767".buff."Might"]
+        critical_below = 23
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."-19767".buff."Fury"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."-19767".buff."Alacrity"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."-19767".buff."Quickness"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."-19767".buff."Protect"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
+
 
 # SH
     # Mechanics
@@ -1151,6 +1551,28 @@
         roles = "BoonDPS"
         critical_below = 24000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+    # Boons
+
+        [boss."19767".buff."Might"]
+        critical_below = 23
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."19767".buff."Fury"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."19767".buff."Alacrity"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."19767".buff."Quickness"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."19767".buff."Protect"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
 
 
 # Dhuum CM
@@ -1221,6 +1643,28 @@
         critical_below = "8000 - 8000 * 0.05 * {Orb CD}"
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold} bei deiner Anzahl Greens)."
 
+    # Boons
+
+        [boss."-19450".buff."Might"]
+        critical_below = 20
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."-19450".buff."Fury"]
+        critical_below = 80
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."-19450".buff."Alacrity"]
+        critical_below = 80
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."-19450".buff."Quickness"]
+        critical_below = 80
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."-19450".buff."Protect"]
+        critical_below = 80
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
+
 
 # Dhuum
     # Mechanics
@@ -1285,6 +1729,28 @@
         critical_below = "8000 - 8000 * 0.05 * {Orb CD}"
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold} bei deiner Anzahl Greens)."
 
+    # Boons
+
+        [boss."19450".buff."Might"]
+        critical_below = 20
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."19450".buff."Fury"]
+        critical_below = 80
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."19450".buff."Alacrity"]
+        critical_below = 80
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."19450".buff."Quickness"]
+        critical_below = 80
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."19450".buff."Protect"]
+        critical_below = 80
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
+
 
 # Conjured Amalgamit CM
     # Mechanics
@@ -1342,6 +1808,28 @@
         roles = ["Collector (Shield)", "Collector (Sword)"]
         critical_below = 23680
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+    # Boons
+
+        [boss."-43974".buff."Might"]
+        critical_below = 23
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."-43974".buff."Fury"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."-43974".buff."Alacrity"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."-43974".buff."Quickness"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."-43974".buff."Protect"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
 
 
 # Conjured Amalgamit
@@ -1401,6 +1889,28 @@
         critical_below = 23680
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
+    # Boons
+
+        [boss."43974".buff."Might"]
+        critical_below = 23
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."43974".buff."Fury"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."43974".buff."Alacrity"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."43974".buff."Quickness"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."43974".buff."Protect"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
+
 
 # Twin Largos CM
     # Mechanics
@@ -1447,6 +1957,28 @@
         critical_below = 16000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
+    # Boons
+
+        [boss."-21105".buff."Might"]
+        critical_below = 24
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."-21105".buff."Fury"]
+        critical_below = 97
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."-21105".buff."Alacrity"]
+        critical_below = 97
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."-21105".buff."Quickness"]
+        critical_below = 97
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."-21105".buff."Protect"]
+        critical_below = 97
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
+
 
 # Twin Largos
     # Mechanics
@@ -1492,6 +2024,28 @@
         roles = "BoonDPS"
         critical_below = 16000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+    # Boons
+
+        [boss."21105".buff."Might"]
+        critical_below = 24
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."21105".buff."Fury"]
+        critical_below = 97
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."21105".buff."Alacrity"]
+        critical_below = 97
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."21105".buff."Quickness"]
+        critical_below = 97
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."21105".buff."Protect"]
+        critical_below = 97
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
 
 
 # Qadim CM
@@ -1557,6 +2111,33 @@
         critical_below = 6500
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
+    # Boons
+
+        [boss."-20934".buff."Might"]
+        not_roles = ["Kite","Lamp"]
+        critical_below = 23
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."-20934".buff."Fury"]
+        not_roles = ["Kite","Lamp"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."-20934".buff."Alacrity"]
+        not_roles = ["Kite","Lamp"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."-20934".buff."Quickness"]
+        not_roles = ["Kite","Lamp"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."-20934".buff."Protect"]
+        not_roles = ["Kite","Lamp"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
+
 
 # Qadim
     # Mechanics
@@ -1621,6 +2202,33 @@
         critical_below = 6500
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
+    # Boons
+
+        [boss."-20934".buff."Might"]
+        not_roles = ["Kite","Lamp"]
+        critical_below = 23
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."-20934".buff."Fury"]
+        not_roles = ["Kite","Lamp"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."-20934".buff."Alacrity"]
+        not_roles = ["Kite","Lamp"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."-20934".buff."Quickness"]
+        not_roles = ["Kite","Lamp"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."-20934".buff."Protect"]
+        not_roles = ["Kite","Lamp"]
+        critical_below = 95
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
+
 
 # Adina CM
     # Mechanics
@@ -1656,6 +2264,28 @@
         critical_below = 12000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
+    # Boons
+
+        [boss."-22006".buff."Might"]
+        critical_below = 20
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."-22006".buff."Fury"]
+        critical_below = 80
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."-22006".buff."Alacrity"]
+        critical_below = 80
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."-22006".buff."Quickness"]
+        critical_below = 80
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."-22006".buff."Protect"]
+        critical_below = 80
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
+
 
 # Adina
     # Mechanics
@@ -1690,6 +2320,28 @@
         roles = "BoonDPS"
         critical_below = 12000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+    # Boons
+
+        [boss."22006".buff."Might"]
+        critical_below = 20
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."22006".buff."Fury"]
+        critical_below = 80
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."22006".buff."Alacrity"]
+        critical_below = 80
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."22006".buff."Quickness"]
+        critical_below = 80
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."22006".buff."Protect"]
+        critical_below = 80
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
 
 
 # Sabir CM
@@ -1731,6 +2383,28 @@
         critical_below = 15200
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
+    # Boons
+
+        [boss."-21964".buff."Might"]
+        critical_below = 23
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."-21964".buff."Fury"]
+        critical_below = 93
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."-21964".buff."Alacrity"]
+        critical_below = 93
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."-21964".buff."Quickness"]
+        critical_below = 93
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."-21964".buff."Protect"]
+        critical_below = 93
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
+
 
 # Sabir
     # Mechanics
@@ -1770,6 +2444,28 @@
         roles = "BoonDPS"
         critical_below = 17600
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+    # Boons
+
+        [boss."21964".buff."Might"]
+        critical_below = 23
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."21964".buff."Fury"]
+        critical_below = 93
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."21964".buff."Alacrity"]
+        critical_below = 93
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."21964".buff."Quickness"]
+        critical_below = 93
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."21964".buff."Protect"]
+        critical_below = 93
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
 
 
 # Qadim the Peerless CM
@@ -1866,6 +2562,33 @@
         critical_below = 13800
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
+    # Boons
+
+        [boss."-22000".buff."Might"]
+        not_roles = ["Pylon", "Tank"]
+        critical_below = 21
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."-22000".buff."Fury"]
+        not_roles = ["Pylon", "Tank"]
+        critical_below = 85
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."-22000".buff."Alacrity"]
+        not_roles = ["Pylon", "Tank"]
+        critical_below = 85
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."-22000".buff."Quickness"]
+        not_roles = ["Pylon", "Tank"]
+        critical_below = 85
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."-22000".buff."Protect"]
+        not_roles = ["Pylon", "Tank"]
+        critical_below = 85
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
+
 
 # Qadim the Peerless
     # Mechanics
@@ -1961,6 +2684,32 @@
         critical_below = 15000
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
+    # Boons
+
+        [boss."22000".buff."Might"]
+        not_roles = ["Pylon", "Tank"]
+        critical_below = 21
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."22000".buff."Fury"]
+        not_roles = ["Pylon", "Tank"]
+        critical_below = 85
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."22000".buff."Alacrity"]
+        not_roles = ["Pylon", "Tank"]
+        critical_below = 85
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."22000".buff."Quickness"]
+        not_roles = ["Pylon", "Tank"]
+        critical_below = 85
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."22000".buff."Protect"]
+        not_roles = ["Pylon", "Tank"]
+        critical_below = 85
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
 
 # Greer
     # Mechanics
@@ -2005,6 +2754,28 @@
         roles = "BoonDPS"
         critical_below = 20800
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+    # Boons
+
+        [boss."26725".buff."Might"]
+        critical_below = 23
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."26725".buff."Fury"]
+        critical_below = 93
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."26725".buff."Alacrity"]
+        critical_below = 93
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."26725".buff."Quickness"]
+        critical_below = 93
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."26725".buff."Protect"]
+        critical_below = 93
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
 
 
 # Decima
@@ -2074,6 +2845,33 @@
         critical_below = 21600
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
+    # Boons
+
+        [boss."26725".buff."Might"]
+        not_roles = "Red Kite"
+        critical_below = 24
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."26725".buff."Fury"]
+        not_roles = "Red Kite"
+        critical_below = 97
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."26725".buff."Alacrity"]
+        not_roles = "Red Kite"
+        critical_below = 97
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."26725".buff."Quickness"]
+        not_roles = "Red Kite"
+        critical_below = 97
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."26725".buff."Protect"]
+        not_roles = "Red Kite"
+        critical_below = 97
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
+
 
 # Ura
     # Mechanics
@@ -2121,6 +2919,28 @@
         roles = "BoonDPS"
         critical_below = 22400
         text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+    # Boons
+
+        [boss."26712".buff."Might"]
+        critical_below = 23
+        text_if_listed_critical = "Deine Macht war mit {value} Stacks im Schnitt zu gering."
+
+        [boss."26712".buff."Fury"]
+        critical_below = 93
+        text_if_listed_critical = "Deine Wut-Uptime war mit {value}% zu gering."
+
+        [boss."26712".buff."Alacrity"]
+        critical_below = 93
+        text_if_listed_critical = "Deine Alac-Uptime war mit {value}% zu gering."
+
+        [boss."26712".buff."Quickness"]
+        critical_below = 93
+        text_if_listed_critical = "Deine Quick-Uptime war mit {value}% zu gering."
+
+        [boss."26712".buff."Protect"]
+        critical_below = 93
+        text_if_listed_critical = "Deine Prot-Uptime war mit {value}% zu gering."
 
 
 # Ice Broot Construct

@@ -44,12 +44,11 @@ META_FIELDS = ("eliteInsightsVersion", "gW2Build", "triggerID", "isCM", "success
 PLAYER_FIELDS = ("account", "name", "group", "profession", "hasCommanderTag", "friendlyNPC", "notInSquad")
 TARGET_FIELDS = ("id", "name", "finalHealth", "finalBarrier", "barrierPercent", "healthPercentBurned")
 DPS_FIELDS = ("dps", "condiDps", "powerDps", "breakbarDamage")
-STATS_FIELDS = ("flankingRate", "connectedDirectDamageCount", "killed", "downed")
+STATS_FIELDS = ("flankingRate", "connectedDirectDamageCount", "killed", "downed", "stackDist", "skillCastUptime")
 SUPPORT_FIELDS = ("resurrects", "resurrectTime")
 DROP_VOLUME_KEYS = {"incomingBy", "incomingByExtensionBy"}   # "wer hat es erzeugt" -> nicht exportieren
 BUFF_INFO_DROP = {"icon", "descriptions"}      # aus buffMap-Eintraegen entfernt (URLs / lange Texte)
-GENERATION_BUFFS = ("Alacrity", "Quickness", "Might", "Fury", "Protection", "Stability", "Aegis",
-                    "Resistance", "Resolution", "Regeneration", "Swiftness", "Vigor")   # fuer Rollen "wer gibt was"
+GENERATION_BUFFS = ("Alacrity", "Quickness", "Regeneration", "Might", "Protection", "Fury")   # fuer Rollen "wer gibt was"
 INCOMING_TOP = 10                              # Default: so viele Incoming-Damage-Quellen je Spieler
 TOTAL_PRIORITIES = {"MAIN"}                    # welche Ziele in "dps_targets_total" einfliessen
 

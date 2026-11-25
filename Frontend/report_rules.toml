@@ -137,6 +137,15 @@
         list_if_not_critical = true
         text_if_listed_critical = "Du hast {value}x wiederbelebt. Insgesamt gab es {gruppe[Downed]} Downs in der Gruppe."
 
+        [mechanic."Got up"]
+        list_if_not_critical = false
+
+        [mechanic."Miss.Alac"]
+        list_if_not_critical = false
+
+        [mechanic."Miss.Qck"]
+        list_if_not_critical = false
+
     # Roles
         [role."Alac-Support"]
         criteria = [ { source = "generation", name = "Alacrity", top = 2, value_min = 30 } ]
@@ -177,7 +186,7 @@
 
     # Roles
         [boss."15438".role."Condi-DPS"]
-        criteria = [{source = "metric", name = "CondiDPS", value_min = 5000}]
+        criteria = [{source = "metric", name = "condiDps", value_min = 5000}]
 
         [boss."15438".role."Power-DPS"]
         criteria = [{not_roles = ["Condi-DPS", "BoonDPS", "Heal"]}]
@@ -2121,6 +2130,23 @@
         list_if_not_critical = false
         text_if_listed_critical = "Du hast in den Kühlescherben getroffen. Auch wenn das die normale Strat in Pugs ist, solltest du diese AoEs zumindest versuchen zu vermeiden."
 
+    # Roles
+        [boss."22154".role."DPS"]
+        criteria = [{not_roles = ["BoonDPS", "Heal"]}]
+
+    # DPS
+        [boss."22154".metric."DPS"]
+        role = "DPS"
+        critical_below = 27500
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+        [boss."22154".metric."BoonDPS"]
+        role = "DPS"
+        critical_below = 22000
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+
+
 
 # Freanir of Jormag
     # Mechanics
@@ -2129,25 +2155,310 @@
         list_if_not_critical = false
         text_if_listed_critical = "Du wurdest eingefroren. Geh das nächste Mal möglichst schnell in die Mitte (in beiden Freanir-Phasen)"
 
+    # Roles
+        [boss."22492".role."DPS"]
+        criteria = [{not_roles = ["BoonDPS", "Heal"]}]
+
+    # DPS
+        [boss."22492".metric."DPS"]
+        role = "DPS"
+        critical_below = 21000
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+        [boss."22492".metric."BoonDPS"]
+        role = "DPS"
+        critical_below = 16800
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 # Kodan Twins
 
-# ---------nothing----------
+    # Roles
+        [boss."22343".role."DPS"]
+        criteria = [{not_roles = ["BoonDPS", "Heal"]}]
+
+    # DPS
+        [boss."22343".metric."DPS"]
+        role = "DPS"
+        critical_below = 35000
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+        [boss."22343".metric."BoonDPS"]
+        role = "DPS"
+        critical_below = 28000
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # Boneskinner
 
+    # Mechanics
+        [boss."22521".mechanic."Grasp.H"]
+        critical = 2
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest von mehreren Klauen getroffen. Achte darauf, sie zu dodgen oder schneller herauszulaufen."
+
+    # Roles
+        [boss."22521".role."DPS"]
+        criteria = [{not_roles = ["BoonDPS", "Heal"]}]
+
+    # DPS
+        [boss."22521".metric."DPS"]
+        role = "DPS"
+        critical_below = 30000
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+        [boss."22521".metric."BoonDPS"]
+        role = "DPS"
+        critical_below = 24000
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 # Wisper of Jormag
+
+    # Mechanics
+        [boss."22711".mechanic."H.Chains"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest von den Ketten getroffen. Achte darauf, dass du nicht in der Hitbox oder vor jemandem mit einer Kette stehst."
+
+    # Roles
+        [boss."22711".role."DPS"]
+        criteria = [{not_roles = ["BoonDPS", "Heal"]}]
+
+    # DPS
+        [boss."22711".metric."DPS"]
+        role = "DPS"
+        critical_below = 20000
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+        [boss."22711".metric."BoonDPS"]
+        role = "DPS"
+        critical_below = 16000
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # Aetherblade Hideout
 
+    # Mechanics
+        [boss."24033".mechanic."Puddle"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest von einem Blitz/Ley Linie getroffen. Wenn ein Spieler in der Gruppe einen Blauen Blitz/Ley Linie über sich hat und die gruppe nicht verlässt, rotiere um den Boss herum."
+
+        [boss."24033".mechanic."Shck.Wv"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest von der Schockwelle getroffen. Achte darauf sie zu Springen!"
+
+        [boss."24033".mechanic."Cones"]
+        of = ["Cone.S", "Cone"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest von der Cone getroffen. Achte darauf sie  zu dodgen!."
+
+        [boss."24033".mechanic."Smash"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du hast in einem Todes-AoE gestanden. Wennd er Rand eines AoEs  Kringel hat, renn sofort hinaus!."
+
+    # Roles
+        [boss."24033".role."DPS"]
+        criteria = [{not_roles = ["BoonDPS", "Heal"]}]
+
+    # DPS
+        [boss."24033".metric."DPS"]
+        role = "DPS"
+        critical_below = 20000
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+        [boss."24033".metric."BoonDPS"]
+        role = "DPS"
+        critical_below = 16000
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+
+# AH CM
+
+    # Mechanics
+        [boss."-24033".mechanic."Puddle"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest von einem Blitz/Ley Linie getroffen. Wenn ein Spieler in der Gruppe einen Blauen Blitz/Ley Linie über sich hat und die gruppe nicht verlässt, rotiere um den Boss herum."
+
+        [boss."-24033".mechanic."Exposed"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du hast {value} Stacks exposed gesammelt!"
+
+        [boss."-24033".mechanic."Shck.Wv"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest von der Schockwelle getroffen. Achte darauf sie zu Springen!"
+
+        [boss."-24033".mechanic."Cones"]
+        of = ["Cone.S", "Cone"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest von der Cone getroffen. Achte darauf sie  zu dodgen!."
+
+        [boss."-24033".mechanic."Smash"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du hast in einem Todes-AoE gestanden. Wennd er Rand eines AoEs  Kringel hat, renn sofort hinaus!."
+
+        [boss."-24033".mechanic."Green.D"]
+        critical_below = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du warst in keinem Green."
+
+
+    # Roles
+        [boss."-24033".role."DPS"]
+        criteria = [{not_roles = ["BoonDPS", "Heal"]}]
+
+    # DPS
+        [boss."-24033".metric."DPS"]
+        role = "DPS"
+        critical_below = 20000
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+        [boss."-24033".metric."BoonDPS"]
+        role = "DPS"
+        critical_below = 16000
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
 
 # Xulai Junk Jard
 
+    # Mechanics
+        [boss."23957".mechanic."AnkkaPull.H"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest in die Mitte gesogen."
+
+        [boss."23957".mechanic."ZhtRch.Pull"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest von Zhaitans Wyrms herangezogen (Donut); achte darauf, das zu side-steppen."
+
+        [boss."23957".mechanic."ZhtRch.Knck"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest von Zhaitans Wyrms geschubst; achte darauf, das zu side-steppen."
+
+        [boss."23957".mechanic."Krait.H"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest von den Krait eingesogen."
+
+        [boss."23957".mechanic."Lich.H"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest vom Lich eingesogen."
+
+        [boss."23957".mechanic."Quaggan.H"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest von den explodierenden Quaggan getroffen."
+
+
+    # Roles
+        [boss."23957".role."DPS"]
+        criteria = [{not_roles = ["BoonDPS", "Heal"]}]
+
+    # DPS
+        [boss."23957".metric."DPS"]
+        role = "DPS"
+        critical_below = 21000
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+        [boss."23957".metric."BoonDPS"]
+        role = "DPS"
+        critical_below = 16800
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+# XJJ CM
+
+    # Mechanics
+        [boss."-23957".mechanic."AnkkaPull.H"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest in die Mitte gesogen."
+
+        [boss."-23957".mechanic."ZhtRch.Pull"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest von Zhaitans Wyrms herangezogen (Donut); achte darauf, das zu side-steppen."
+
+        [boss."-23957".mechanic."ZhtRch.Knck"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest von Zhaitans Wyrms geschubst; achte darauf, das zu side-steppen."
+
+        [boss."-23957".mechanic."Krait.H"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest von den Krait eingesogen."
+
+        [boss."-23957".mechanic."Lich.H"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest vom Lich eingesogen."
+
+        [boss."-23957".mechanic."Quaggan.H"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest von den explodierenden Quaggan getroffen."
+
+
+    # Roles
+        [boss."-23957".role."DPS"]
+        criteria = [{not_roles = ["BoonDPS", "Heal"]}]
+
+    # DPS
+        [boss."-23957".metric."DPS"]
+        role = "DPS"
+        critical_below = 21000
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+        [boss."-23957".metric."BoonDPS"]
+        role = "DPS"
+        critical_below = 16800
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+
+
 
 # Kainieng Overlook
+
+    # mechanics
+        [boss."24485".mechanic."ElecRain.H"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest vom Mech Barrage getroffen. achte darauf diesen auszuweichen, um nicht zu downen."
+
+        [boss."24485".mechanic."Wave.H"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest vom Dragon Trigger von Li getroffen."
+
+        [boss."24485".mechanic."Rush.H"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest von Li überfahren."
+
+    # Roles
+        [boss."24485".role."DPS"]
+        criteria = [{not_roles = ["BoonDPS", "Heal"]}]
+
+    # DPS
+        [boss."24485".metric."DPS"]
+        role = "DPS"
+        critical_below = 25000
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+        [boss."24485".metric."BoonDPS"]
+        role = "DPS"
+        critical_below = 20000
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # Harvest Tempel
@@ -2155,11 +2466,93 @@
 
 # Old Lions Court
 
+    # ---------no mechanic application is critical, only their positioning, so no mechs here----------
+
+    # Roles
+        [boss."25413".role."DPS"]
+        criteria = [{not_roles = ["BoonDPS", "Heal"]}]
+
+    # DPS
+        [boss."25413".metric."DPS"]
+        role = "DPS"
+        critical_below = 25000
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+        [boss."25413".metric."BoonDPS"]
+        role = "DPS"
+        critical_below = 20000
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
 
 # Cosmic Observatory
 
+    # Roles
+        [boss."25705".role."DPS"]
+        criteria = [{not_roles = ["BoonDPS", "Heal"]}]
+
+    # DPS
+        [boss."25705".metric."DPS"]
+        role = "DPS"
+        critical_below = 25000
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+        [boss."25705".metric."BoonDPS"]
+        role = "DPS"
+        critical_below = 20000
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+
+# CO CM
+
+    # Mechanics
+        [boss."-25705".mechanic."Debilitated"]
+        critical = 1
+        list_if_not_critical = false
+        text_if_listed_critical = "Du hast {value} Stacks vom Damage Debuff erhalten. Achte darauf dich nicht von den Projektilen treffen zu lassen!"
+
+        [boss."-25705".mechanic."Sl.Fst.H"]
+        critical = 3
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest {value} Ticks vom Soul Feast getroffen, achte darauf nicht in Roten AoEs zu stehen und vor allem herauszutragen, wenn du davon anvisiert wirst."
+
+    # Roles
+        [boss."-25705".role."DPS"]
+        criteria = [{not_roles = ["BoonDPS", "Heal"]}]
+
+    # DPS
+        [boss."-25705".metric."DPS"]
+        role = "DPS"
+        critical_below = 18000
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+        [boss."-25705".metric."BoonDPS"]
+        role = "DPS"
+        critical_below = 14400
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
 
 # Temple of Febe
+
+    # Mechanics
+        [boss."25989".mechanic."EnvGaz.H"]
+        critical = 3
+        list_if_not_critical = false
+        text_if_listed_critical = "Du wurdest {value} Ticks vom Soul Feast getroffen, achte darauf nicht in Roten AoEs zu stehen und vor allem herauszutragen, wenn du davon anvisiert wirst."
+
+    # Roles
+        [boss."25989".role."DPS"]
+        criteria = [{not_roles = ["BoonDPS", "Heal"]}]
+
+    # DPS
+        [boss."25989".metric."DPS"]
+        role = "DPS"
+        critical_below = 27500
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
+
+        [boss."25989".metric."BoonDPS"]
+        role = "DPS"
+        critical_below = 22000
+        text_if_listed_critical = "Dein DPS war mit {value} niedrig (erwartet mind. {threshold})."
 
 
 # Kela

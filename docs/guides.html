@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#272a2f">
+<title>GW2 Logs</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav><a href="index.html">Logs</a> | <a href="players.html">Spieler</a> | <a href="players.html">Spieler</a> | <a href="guides.html">Allgemeine Hilfen und Guides</a> | <a href="features.html">Geplante Features</a> | <a href="legal.html">Lizenz &amp; Rechtliches</a></nav>
+
+<h1>Guides</h1>
+
+Hier findet ihr alle möglichen Ressourcen zu Raids.
+
+<nav class="toc-p" aria-label="Inhalt">
+    <b>Encounter</b>
+    <ul>
+        <li><a href="#Abkrz">Encounterabkürzungen</a></li>
+        <li><a href="#c_vs_p_enc">Condi oder Power?</a></li>
+        <li><a href="#LvRes">Live-Ressourcen</a></li>
+        <ul>
+            <li><a href="#LvRes_sab">Sabetha</a></li>
+            <li><a href="#LvRes_q1">Qadim</a></li>
+        </ul>
+        <li><a href="#enc_guides">Guides</a></li>
+    </ul>
+    <b>Builds</b>
+    <ul>
+        <li><a href="#bld_sites">Build Sites</a></li>
+        <li><a href="#own_blds">Eigene Builds</a></li>
+        <li><a href="#blds_trlst">Tier List</a></li>
+    </ul>
+</nav>
+
+<h2>Encounter</h2>
+
+<h3 id="Abkrz">Abkürzungsverzeichnis</h3>
+
+<table border="1">
+    <tr>
+      <td>VG</td>
+      <td>MO</td>
+      <td>SH</td>
+      <td>CA</td>
+      <td>QtP/Q2</td>
+      <td>IBC</td>
+      <td>FJ/FoJ</td>
+      <td>Kodans/Bears/Brothers/V&C/Fallen</td>
+      <td>BS</td>
+      <td>WoJ/Wisper</td>
+      <td>IBS3</td>
+      <td>IBS5</td>
+      <td>AH</td>
+      <td>XJJ</td>
+      <td>KO</td>
+      <td>HT</td>
+      <td>OLC</td>
+      <td>CO</td>
+      <td>Febe/ToF/Cerus</td>
+      <td>NoE/Vloxx</td>
+    </tr>
+    <tr>
+      <td>Vale Guardian</td>
+      <td>Mursaat Overseer</td>
+      <td>Soulless Horror</td>
+      <td>Conjured Amalgamate</td>
+      <td>Qadim the Peerless</td>
+      <td>Icebrood Construct</td>
+      <td>Fraenir Jormag</td>
+      <td>Kodan Super Brothers / Voice and Claw of the Fallen</td>
+      <td>Boneskinner</td>
+      <td>Wisper of Jormag</td>
+      <td>Sammlung aus: IBC, FJ und Voice and Claw</td>
+      <td>Sammlung aus: IBS3, BS und Wisper</td>
+      <td>Aetherblade Hideout</td>
+      <td>Xunlai Junk Jard</td>
+      <td>Kaineng Overlook</td>
+      <td>Harvest Temple</td>
+      <td>Old Lions court</td>
+      <td>Cosmic Observatory</td>
+      <td>Temple of Febe</td>
+      <td>Nexus of Eternity</td>
+    </tr>
+</table>
+
+<h3 id="c_vs_p_enc">Condi oder Power?</h3>
+
+Tatsächlich ist die Frage COndi oder power garnicht immer eindeutig zu beantworten, da einige Bosse beides zulassen.
+In solchen Fällen nenne ich zwar eine Tendenz, diese kann jedoch einfach darauf basieren, dass man sein build seltener wechseln muss.
+Besonders bei strats, wo die Gruppe sich aufteilt, wie in Deimos CM, kommt es auch auf die Gruppe an, der man angehört.
+
+<table border="1">
+    <tr>
+        <td>Encounter</td>
+        <td>Condi oder Power?</td>
+        <td>Anmerkungen</td>
+    </tr>
+    <tr>
+        <td>Vale Guardian</td>
+        <td>Power</td>
+        <td>Der Vale Guardian hat verringerte Rüstung, wodurch PowerDPSler hier einen Vorteil haben.</td>
+    </tr>
+    <tr>
+        <td>Gorseval</td>
+        <td>Power</td>
+        <td>Gorseval hat eher kurze Phasen, wodurch power hier im Vorteil ist</td>
+    </tr>
+    <tr>
+        <td>Sabetha</td>
+        <td>starke Tendenz: Power</td>
+        <td>Sabetha hat relativ kurze Phasen, darum ist Power hier allgemein im vorteil</td>
+    </tr>
+    <tr>
+        <td>Slothar</td>
+        <td>Power</td>
+        <td>Slothar cleanst all seine Condis bei jeder CC-Phase, wodurch Condi hier einen starken Nachteil hat</td>
+    </tr>
+    <tr>
+        <td>Mathias</td>
+        <td>Condi</td>
+        <td>Mathias hat Tick-Technisch gesehen nur zwei Phasen. Zusätzlich können die Condis schon während der Bubbles gestackt werden.</td>
+    </tr>
+    <tr>
+        <td>Keep Construct</td>
+        <td>Power</td>
+        <td>Hat kurze Phasen, wodurch Power einen Vorteil hat.</td>
+    </tr>
+    <tr>
+        <td>Xera</td>
+        <td>Power</td>
+        <td>egal. Beide Phasen sind relativ lang, wodurch Condi hier allgemein gut darsteht, allerdings erfordert das zweite Minispiel eher Burst, um es schnell abzuschließen</td>
+    </tr>
+    <tr>
+        <td>Cairn</td>
+        <td>Condi (im CM: Range)</td>
+        <td>Nur eine Phase. (Im Cm müssen die Greens gespielt werden, wesegen Range hier allgemein ein größerer Damage-Vorteil ist als Condi)</td>
+    </tr>
+    <tr>
+        <td>Mursaat Overseer</td>
+        <td>Condi</td>
+        <td>Nur eine Phase</td>
+    </tr>
+    <tr>
+        <td>Samarog</td>
+        <td>Power</td>
+        <td>Samarog hat sehr kurze Phasen, wodurch Power hier im Vorteil ist</td>
+    </tr>
+    <tr>
+        <td>Deimos</td>
+        <td>tendenz: Power</td>
+        <td>Hier kommt es stark auf die angewandte Strategie an. Sollte eine Gruppe immer bei Deimos bleiben, ist Condi besser, wobei Range hier nicht unwichtig ist, da Deimos manchmal sehr träge ist, was sein Movement angeht.</td>
+    </tr>
+    <tr>
+        <td>Soulless Horror</td>
+        <td>Condi</td>
+        <td>Da hier im Allgemeinen die Golems durch die gruppe geschubbst werden (kürzester Weg, beste Segen) ist Power hier völlig unerwünscht.</td>
+    </tr>
+    <tr>
+        <td>Dhuum</td>
+        <td>Range</td>
+        <td>Wenngleich Condi hier allgemein als favorisiert angesehen ist, ist range doch bedeutend wichtiger, um den Damage während der Sucks und der vielen Mechaniken, die das weglaufen vom Boss erfordern aufrecht zu halten.</td>
+    </tr>
+    <tr>
+        <td>Conjured Amalgamate</td>
+        <td>Power</td>
+        <td>Kurze, burstlastige Phasen</td>
+    </tr>
+    <tr>
+        <td>Twins</td>
+        <td>Condi</td>
+        <td>Hier ist Condi im allgemeinen im Vorteil, wenngleich Range das durchaus einfach ausgleichen kann.</td>
+    </tr>
+    <tr>
+        <td>Qadim</td>
+        <td>Power</td>
+        <td>Qadim erhält mehrere Segen, darunter Schutz und Resolution. Die PUG-Strat entfernt nur Prot, weswegen Condi 33% weniger Schaden macht. Zusätzlich hat Qadim verringerte Rüstung, was Power zusätzlich stärkt.</td>
+    </tr>
+    <tr>
+        <td>Adina</td>
+        <td>Power</td>
+        <td>kurze, burstlastige Phasen</td>
+    </tr>
+    <tr>
+        <td>Sabir</td>
+        <td>Power</td>
+        <td>Der SAK gibt dir einen Power-Damage Buff.</td>
+    </tr>
+    <tr>
+        <td>QtP</td>
+        <td>Condi</td>
+        <td>Condi ist hier im allgemeinen im Vorteil, da Qadim lange tickt, obwohl er nicht direkt angreifbar ist und die Phasen relativ lang sind.</td>
+    </tr>
+    <tr>
+        <td>Greer</td>
+        <td>Condi</td>
+        <td>Greer hat realtiv lange Phasen, wodurch Condi hier im Vorteil ist.</td>
+    </tr>
+    <tr>
+        <td>Decima</td>
+        <td>Condi</td>
+        <td>Decima hat realtiv lange Phasen, wodurch Condi hier im Vorteil ist.</td>
+    </tr>
+    <tr>
+        <td>Ura</td>
+        <td>Condi</td>
+        <td>Ura hat realtiv lange Phasen, wodurch Condi hier im Vorteil ist.</td>
+    </tr>
+    <tr>
+        <td>IBC</td>
+        <td>Power</td>
+        <td>Zwei kurze, burstlastige Phasen</td>
+    </tr>
+    <tr>
+        <td>FJ</td>
+        <td>Power Range</td>
+        <td>viele kurze Phasen, ist viel weg von der Gruppe.</td>
+    </tr>
+    <tr>
+        <td>Voice and Claw</td>
+        <td>Power</td>
+        <td>Sehr burstlastig.</td>
+    </tr>
+    <tr>
+        <td>BS</td>
+        <td>Condi oder Range</td>
+        <td>Nur eine Phase, relativ oft weg vond er Gruppe. Range kann den Damage-lost durch das wegrennen in den meisten Situationen ausgleichen.</td>
+    </tr>
+    <tr>
+        <td>Wisper</td>
+        <td>Power</td>
+        <td>Relativ kurze Phasen. Für den Orbangriff ist Range sehr praktisch.</td>
+    </tr>
+    <tr>
+        <td>AH</td>
+        <td>Power</td>
+        <td>Viele Kurze Phasen.</td>
+    </tr>
+    <tr>
+        <td>XJJ</td>
+        <td>Condi</td>
+        <td>Viele lange Phasen. Range ist hier sehr praktisch, um den Damage während vieler mechaniken aufrecht zu erhalten.</td>
+    </tr>
+    <tr>
+        <td>KO</td>
+        <td>Condi</td>
+        <td>Relativ Lange Phasen.</td>
+    </tr>
+    <tr>
+        <td>HT</td>
+        <td>Power</td>
+        <td>Viele Phasen.</td>
+    </tr>
+    <tr>
+        <td>OLC</td>
+        <td>Range</td>
+        <td>Range ist hier sehr wichtig, allerdings macht Condi es oft einfacher währen Mechaniken den DPS aufrecht zu erhalten.</td>
+    </tr>
+    <tr>
+        <td>CO</td>
+        <td>Condi</td>
+        <td>Wenige lange Phasen. Im CM ist Range jedoch wichtiger.</td>
+    </tr>
+    <tr>
+        <td>Febe</td>
+        <td>Egal</td>
+        <td>In den zwischenphasen ist Power besser, für die Boss-Phasen ist Condi etwas höher. Im NM ist aber eigentlich alles egal. Range ist hier nicht schlecht, um den Damage aufrecht zu erhalten, wenn die Puddles gelegt werden.</td>
+    </tr>
+    <tr>
+        <td>Kela</td>
+        <td>Power (Range)</td>
+        <td>Hier ist Power m it range eindeutig im Vorteil, da man viele Gegner auf entfernung schnell wegbursten kann.</td>
+    </tr>
+    <tr>
+        <td>Vloxx</td>
+        <td>Condi</td>
+        <td>Nur eine Phase mit viel Bewegung des Gegners. Range ist sehr sinnvoll.</td>
+    </tr>
+</table>
+
+<h3 id="LvRes">Live-Ressourcen</h3>
+
+Für alle, die kein Blish nutzen wollen oder können, gibt es einige Bilder und Übersichten:
+
+<h4 id="LvRes_sab">Sabetha</h4>
+
+<a href="https://www.gw2raids.info/timers/sabetha/">Cannon-Timer</a>
+
+<h4 id="LvRes_q1">Qadim</h4>
+
+<img
+  src="https://assets.hardstuck.gg/uploads/q1-lamp2.jpg"
+  alt="Hardstuck Picture of Lamp Paths"
+  style="max-width: 100%; height: auto;"
+>
+<a href="https://hardstuck.gg/gw2/guides/w6-mythwright-gambit/qadim/">Source</a>
+
+<h3 id="enc_guides">Raid Guides</h3>
+
+Für eine schnelle Auffrischung empfehle ich die <a href="">Get to the Point</a> Reihe von Mukluk. Auch als Komplettguide reichen die völlig aus.
+Wenn ihr jedoch etwas schriftliches bevorzugt oder dinge nochmal in Ruhe durchgehen wollt sind die Guides von <a href="https://hardstuck.gg/gw2/guides/">Hardstuck</a> sicherlich besser.
+
+<h4>Video-Reihen</h4>
+<ul>
+    <li><a href="https://youtube.com/playlist?list=PLYXBmGBTfXeSAtTZXzdrY33Z0lJ9sVFHW&si=H1s59SeNabsZj0kB">Get to the Point - Mukluk</a></li>
+    <li><a href="https://youtu.be/Hwd7v0Vr2eY?si=aqKkD6l01Klx6q9y">Get to the Point: Raid Challange Motes</a></li>
+    <li>Ihr werdet außerdem einige Strike CM Guides finden, wenn ihr danach sucht.</li>
+    <li><a href="https://youtube.com/playlist?list=PL0MyD05qpBmws5SR5eerzRRfg-g0jE3-A&si=KuPThtEL504XxAlO">Raid Guides auf Deutsch - Waldorn (nicht vollständig)</a></li>
+</ul>
+
+<h4>Schriftliche Guides</h4>
+
+Da diese Guides von wenigen Leuten geschrieben werden, die zumeist aktiv an anderen Projekten wie den Benchmarks arbeiten, sind einige Guides oder
+Teile davon veraltet. Besonders die Klassenempfehlungen bei Hardstuck sind davon betroffen, aber auch nie aktualisierte Guides von Snowcrows sind davon betroffen.
+Generell werden die Strike-Guides weniger gepflegt, als die der Raids, einfach weil Anfänger selten nach schriftlichen Guides fragen und bei den erfahrenen Spielern kaum noch
+die notwendigkeit besteht mal etwas nach zu lesen.
+Sollte ein Guide stark veraltet sein, weist mich darauf hin, ich kann eine aktualisierte Version schreiben (oder einen Bekannten anhauen, der die schon auf seinem Discord hat).
+
+<ul>
+    <li><a href="https://snowcrows.com/guides/raids">Snowcrows: Raids</a></li>
+    <li><a href="https://snowcrows.com/guides/strikes">Snowcrows: Strikes</a></li>
+    <li><a href="https://hardstuck.gg/gw2/guides/strike-missions/">Hardstuck: Strikes</a></li>
+    <li><a href="https://hardstuck.gg/gw2/guides/raids/">Hardstuck: Raids</a></li>
+</ul>
+
+<h2>Builds</h2>
+
+<h3 id="bld_sites">Build-Seiten</h3>
+
+<h4><a href="https://snowcrows.com/benchmarks">Snowcrows.com</a></h4>
+
+Die aktuellsten Raid Builds. Alle ziemlich stark, die schwierigkeitseinschätzungen auch gut.
+Die Qualität ist gut, auch wenn viele Dinge, die möglich wären, wie alternative Waffen oder Utility-Skills weggelassen oder nur kryptisch genannt werden.
+Einige Accessibility-Builds.
+Bei Heilern sollte hier nicht blind das empfohlene Gear gespielt werden, da dies selten fürs Tanking oder Survivability ausgelegt ist.
+
+<h4><a href="https://metabattle.com/wiki/MetaBattle_Wiki">Metabattle.com</a></h4>
+
+Etwas mehr Builds als Snowcorws, allerdings sammelt es die Build nur von anderen websites zusammen. Dadurch dauern anpassungen länger oder werden komplett vergessen.
+Die Builds von dieser Seite sollten immer nochmal auf sinnhaftigkeit getestet werden.
+Viele alternative Waffen oder Nieschenbuilds, oft auch mit extra Benchmark.
+Immer auch Versionen für Spieler ohne bestimmte Erweiterungen.
+
+<h4><a href="https://aw2.help/">Accessibility Wars</a></h4>
+
+Eine Seite, die sich auf einfache low-APM-Builds spezialisiert hat. Die Builds werden von verschiedenen bekannten Spielern und Streamern erstellt und von ihnen maintained.
+Auch hier sollte die Aktualität überprüft werden.
+
+
+<h3 id="own_blds">Eigene Builds</h3>
+
+Wenn ihr selbst Builds bauen und testen wollt, empfehle ich folgende zwei Seiten:
+
+<h4><a href="https://de.gw2skills.net/editor/">gw2skills.net</a></h4>
+
+Diese Seite stellt eine Sandbox-umgebung zur Verfügung, um Builds mit verschiedenen Ausrüstungen zu bauen.
+Export zum Spiel via Chatlink.
+Sie ist wirklich gut, wenn man eine mathematische Vorplanung der Skills, Boons, Uptimes und Waffen machen mag.
+Auch diese Seite braucht nach Balance Patches mitunter einige Wochen, bevor sie angepasst wird.
+
+<h4 id="blds_trlst"><a href="https://optimizer.discretize.eu/?m=raids">Gear Optimizer</a></h4>
+
+Dieser optimizer erlaubt es relativ schnell das optimale Gear für ein Build herauszufinden.
+Dabei müsst ihr allerdings bereits ein Gefühl für die richtigen Möglichkeiten haben. Dabei kann gw2skills.net sehr hilfreich sein.
+
+<h4><a href="https://docs.google.com/spreadsheets/d/1-EBwlbA5xpvB5vjOWvVSDoJxVtJkhtsclZxwytx8-Xw/edit?usp=sharing">Tier Lists</a></h4>
+
+Disclaimer:
+
+Tier Lists sind immer zu einem nicht unnennenswerten Teil subjektiv. Ich versuche eine Möglichst faire Matrix zu entwerfen, mit deren Hilfe ich fair bewerte, solltet ihr jedoch glauben, ein build sollte besser oder schlechter bewertet sein, meldet euch bei mir.
+
+
+
+<script src="filter.js"></script>
+</body>
+</html>

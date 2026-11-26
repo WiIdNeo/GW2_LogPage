@@ -89,6 +89,7 @@ def result_class(l):
 
 def page(title, body, scripts=False, nav=True):
     navhtml = ('<nav><a href="index.html">Logs</a><a href="players.html">Spieler</a>'
+               '<a href="guides.html">Allgemeine Hilfen und Guides</a>'
                '<a href="features.html">Geplante Features</a>'
                '<a href="legal.html">Lizenz &amp; Rechtliches</a></nav>') if nav else ""
     js = '<script src="filter.js"></script>' if scripts else ""

@@ -1,12 +1,13 @@
 """Erzeugt aus der gw2logs-SQLite-DB eine statische Website.
 
-Seiten:
-  index.html          Log-Uebersicht mit Filter (Spieler / Boss / Modus)
-  players.html        Spielerliste
-  player-<slug>.html  eine Seite pro Whitelist-Spieler (mit Verlaufs-Charts je Boss, siehe charts.py/charts.toml)
-  report-<hash>.html  Bewertung eines Logs (alle Spieler, Auffaelligkeiten nach report_rules.toml)
-  (legal.html und features.html werden NICHT erzeugt - nur verlinkt; liegen manuell im Ausgabeordner)
-  style.css, filter.js
+Seiten (Ordnerstruktur im Ausgabeordner):
+  index.html                       Log-Uebersicht mit Filter (Spieler / Boss / Modus)
+  players.html                     Spielerliste
+  spieler/player-<slug>.html       eine Seite pro Whitelist-Spieler (mit Verlaufs-Charts je Boss, siehe charts.py/charts.toml)
+  bewertungen/report-<hash>.html   Bewertung eines Logs (alle Spieler, Auffaelligkeiten nach report_rules.toml)
+  (legal.html, features.html und guides.html werden NICHT erzeugt - nur verlinkt; liegen manuell top-level im Ausgabeordner)
+  style.css, filter.js             top-level, werden von allen Seiten genutzt
+Ordnernamen: PLAYER_DIR / REPORT_DIR. Seiten in Unterordnern verlinken top-level-Dateien mit root="../".
 
 Jeder filterbare Container hat die Klasse 'item' plus Klassen wie
   player-<slug>  boss-<short>  mode-normal|mode-cm|mode-lcm
@@ -29,6 +30,8 @@ import report_engine
 CATS = ["Damage", "Mechanics", "Speed", "Support", "Teamplay"]
 GRADES = ["SSS", "SS", "S", "A+", "A", "B+", "B", "C+", "C", "D", "E", "F"]  # Index+1 = Zahl (wie in gw2logs.py)
 CAT_SHORT = {"Damage": "DPS", "Mechanics": "Mech", "Speed": "Speed", "Support": "Supp", "Teamplay": "Team"}
+PLAYER_DIR = "spieler"        # Unterordner fuer die Spielerseiten
+REPORT_DIR = "bewertungen"    # Unterordner fuer die Bewertungen (Reports)
 
 
 # ---------------------------------------------------------------- Helfer
@@ -79,6 +82,21 @@ def report_name(l):
     return f"report-{l['file_hash'][:12]}.html"
 
 
+def player_name(account):
+    return f"player-{player_slug(account)}.html"
+
+
+def report_href(l, root=""):
+    """Relativer Link auf die Bewertung. root: '' von top-level-Seiten, '../' aus einem Unterordner."""
+    return f"{root}{REPORT_DIR}/{report_name(l)}"
+
+
+def player_href(account, root=""):
+    """Relativer Link auf die Spielerseite. root wie bei report_href."""
+    return f"{root}{PLAYER_DIR}/{player_name(account)}"
+
+
+
 def ilink(href, text):
     return f'<a href="{esc(href)}">{esc(text)}</a>'
 
@@ -87,12 +105,13 @@ def result_class(l):
     return {1: "result-ok", 0: "result-fail"}.get(l["success"], "")
 
 
-def page(title, body, scripts=False, nav=True):
-    navhtml = ('<nav><a href="index.html">Logs</a><a href="players.html">Spieler</a>'
-               '<a href="guides.html">Allgemeine Hilfen und Guides</a>'
-               '<a href="features.html">Geplante Features</a>'
-               '<a href="legal.html">Lizenz &amp; Rechtliches</a></nav>') if nav else ""
-    js = '<script src="filter.js"></script>' if scripts else ""
+def page(title, body, scripts=False, nav=True, root=""):
+    """root: Praefix fuer top-level-Dateien ('' fuer top-level-Seiten, '../' fuer Seiten in Unterordnern)."""
+    navhtml = (f'<nav><a href="{root}index.html">Logs</a><a href="{root}players.html">Spieler</a>'
+               f'<a href="{root}guides.html">Allgemeine Hilfen und Guides</a>'
+               f'<a href="{root}features.html">Geplante Features</a>'
+               f'<a href="{root}legal.html">Lizenz &amp; Rechtliches</a></nav>') if nav else ""
+    js = f'<script src="{root}filter.js"></script>' if scripts else ""
     return f"""<!DOCTYPE html>
 <html lang="de">
 <head>
@@ -101,7 +120,7 @@ def page(title, body, scripts=False, nav=True):
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#272a2f">
 <title>{esc(title)}</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="{root}style.css">
 </head>
 <body>
 {navhtml}
@@ -208,7 +227,7 @@ def build_index(entries, players, reports=frozenset()):
                            + [f"player-{player_slug(p['account'])}" for p in plist] if x)
         links = links_html(link(l["dps_url"], "dps.report"), link(l["wm_url"], "Wingman"),
                            link(l["yt_url"], "YouTube"),
-                           ilink(report_name(l), "Bewertung") if l["file_hash"] in reports else "")
+                           ilink(report_href(l), "Bewertung") if l["file_hash"] in reports else "")
         ok = {1: "✔", 0: "✘"}.get(l["success"], "?")
         rows.append(f'<tr class="{classes}"><td>{fmt_time(l["encounter_time"])}</td>'
                     f'<td>{esc(b["name"])}</td><td>{ok}</td><td>{links}</td></tr>')
@@ -221,7 +240,7 @@ def build_index(entries, players, reports=frozenset()):
 
 def build_players(players):
     items = "".join(f'<li class="item player-{player_slug(p["account"])}">'
-                    f'<a href="player-{player_slug(p["account"])}.html">{esc(p["account"])}</a></li>'
+                    f'<a href="{esc(player_href(p["account"]))}">{esc(p["account"])}</a></li>'
                     for p in players)
     return page("Spieler", f'<p><a href="index.html">→ Log-Übersicht</a></p><ul>{items}</ul>')
 
@@ -398,7 +417,7 @@ def boss_sections(acc, entries, bosses, evals, ccfg, reports, avgb, best):
             for name, pt in (v.get("charts") or {}).items():
                 mech.setdefault(name, {})[i] = pt
             links = links_html(link(l["dps_url"], "dps.report"), link(l["wm_url"], "Wingman"),
-                               ilink(f"{report_name(l)}#p-{ps}", "Bewertung") if l["file_hash"] in reports else "")
+                               ilink(f"{report_href(l, '../')}#p-{ps}", "Bewertung") if l["file_hash"] in reports else "")
             rows.append(f'<tr><td>{when}</td><td>{esc(", ".join(roles) or "–")}</td>'
                         f'<td>{esc(ev.get("profession") or "?")}</td><td class="num">{charts.fmt_num(dps)}</td>'
                         f'<td class="num">{"nicht im Chart" if excl else charts.fmt_num(f)}</td>'
@@ -414,7 +433,7 @@ def boss_sections(acc, entries, bosses, evals, ccfg, reports, avgb, best):
         parts.append('<div class="scroll"><table><thead><tr><th>Zeit (UTC)</th><th>Rollen</th><th>Klasse</th>'
                      '<th>DPS</th><th>Faktor</th><th>normalisiert</th><th>Links</th></tr></thead><tbody>'
                      + "".join(reversed(rows)) + "</tbody></table></div>")
-        flt = f"index.html?player=player-{ps}&amp;boss=boss-{boss_slug(b)}&amp;mode=mode-{boss_mode(b)}" \
+        flt = f"../index.html?player=player-{ps}&amp;boss=boss-{boss_slug(b)}&amp;mode=mode-{boss_mode(b)}" \
               + ("&amp;result=result-ok" if ccfg["only_success"] else "")
         parts.append(f'<p class="muted">Charts und Tabelle: '
                      + (f'die letzten {len(win)} Logs' if len(win) > 1 else "1 Log")
@@ -446,8 +465,8 @@ def build_player(db, p, bosses, entries, reports=frozenset(), evals=None, ccfg=N
     acc = p["account"]
     ps = player_slug(acc)
     ccfg = ccfg or charts.load_config("")[0]
-    parts = ['<p><a href="players.html">← Spielerübersicht</a> | <a href="index.html">→ Log-Übersicht</a> | '
-             f'<a href="index.html?player=player-{ps}">→ Logs von {esc(acc)}</a></p>']
+    parts = ['<p><a href="../players.html">← Spielerübersicht</a> | <a href="../index.html">→ Log-Übersicht</a> | '
+             f'<a href="../index.html?player=player-{ps}">→ Logs von {esc(acc)}</a></p>']
 
     # Gesamtrating
     ranks = json.loads(p["ranks_json"]) if p["ranks_json"] else {}
@@ -512,7 +531,7 @@ def build_player(db, p, bosses, entries, reports=frozenset(), evals=None, ccfg=N
         toc_html += ('<li><a href="#verlauf">Bosse</a><ul class="toc-b">'
                      + "".join(f'<li><a href="#{a}">{esc(b["name"])}</a></li>' for b, a, _ in secs) + "</ul></li>")
     parts.insert(1, f'<nav class="toc-p" aria-label="Inhalt"><b>Inhalt</b><ul>{toc_html}</ul></nav>')
-    return page(acc, "\n".join(parts), scripts=True)
+    return page(acc, "\n".join(parts), scripts=True, root="../")
 
 
 def kv_list(pairs):
@@ -580,7 +599,7 @@ def build_report(l, b, plist, slim, rules, evals=None):
     dur = report_engine.fmt_ms(ph[0].get("end")) if ph else "?"
     ok = {1: "✔ Erfolg", 0: "✘ Niederlage"}.get(l["success"], "?")
     shown = [(p, evals[p["account"].casefold()]) for p in plist if p["account"].casefold() in evals]
-    head = ['<p><a href="index.html">← Log-Übersicht</a></p>',
+    head = ['<p><a href="../index.html">← Log-Übersicht</a></p>',
             f'<p>{fmt_time(l["encounter_time"])} UTC<br>{ok}<br>Dauer {dur}</p>',
             links_html(link(l["dps_url"], "dps.report"), link(l["wm_url"], "Wingman")),
             '<p class="muted">Springe zu</p><div class="toc">'
@@ -608,7 +627,7 @@ def build_report(l, b, plist, slim, rules, evals=None):
         parts.append(f'<section id="p-{player_slug(p["account"])}"><h2>{esc(p["account"])}'
                      + (f' <span class="crit badge">{crit} kritisch</span>' if crit else "")
                      + f'<small>{esc(sub)}</small></h2>{roles_html(ev.get("roles"))}{body}<details><summary>Alle Werte</summary>{values}</details></section>')
-    return page(f'Bewertung: {b["name"]}', "\n".join(head + parts))
+    return page(f'Bewertung: {b["name"]}', "\n".join(head + parts), root="../")
 
 
 CSS = """:root{color-scheme:dark;--bg:#272a2f;--fg:#e6e8eb;--muted:#a0a6ae;--line:#454a52;--head:#31353b;
@@ -755,9 +774,12 @@ def main():
                  "(mit --ignore-rule-problems trotzdem bauen)")
 
     out = Path.cwd() / a.out                          # Unterordner im Ausfuehrverzeichnis
-    out.mkdir(parents=True, exist_ok=True)
-    for old in list(out.glob("player-*.html")) + list(out.glob("report-*.html")):
-        old.unlink()                                   # entfernte Spieler/Logs loeschen
+    player_dir, report_dir = out / PLAYER_DIR, out / REPORT_DIR
+    for d in (out, player_dir, report_dir):
+        d.mkdir(parents=True, exist_ok=True)
+    for old in (list(player_dir.glob("player-*.html")) + list(report_dir.glob("report-*.html"))
+                + list(out.glob("player-*.html")) + list(out.glob("report-*.html"))):
+        old.unlink()                                   # entfernte Spieler/Logs (und Dateien aus der alten flachen Struktur) loeschen
     (out / "style.css").write_text(CSS, encoding="utf-8")
     (out / "filter.js").write_text(JS, encoding="utf-8")
     n_rep = 0
@@ -769,7 +791,7 @@ def main():
             slim = json.loads(db.execute("SELECT data FROM log_analysis WHERE file_hash=?",
                                          (l["file_hash"],)).fetchone()[0])
             ev = {e["account"].casefold(): e for e in report_engine.evaluate(slim, l["boss_key"], rules)}
-            (out / report_name(l)).write_text(build_report(l, b, plist, slim, rules, ev), encoding="utf-8")
+            (report_dir / report_name(l)).write_text(build_report(l, b, plist, slim, rules, ev), encoding="utf-8")
             evals[l["file_hash"]] = ev                 # fuer die Verlaufs-Charts der Spielerseiten
             n_rep += 1
         except Exception as e:                         # defektes Log darf den Build nicht stoppen
@@ -778,7 +800,7 @@ def main():
     (out / "index.html").write_text(build_index(entries, players, reports), encoding="utf-8")
     (out / "players.html").write_text(build_players(players), encoding="utf-8")
     for p in players:
-        (out / f"player-{player_slug(p['account'])}.html").write_text(
+        (player_dir / player_name(p["account"])).write_text(
             build_player(db, p, bosses, entries, reports, evals, ccfg), encoding="utf-8")
     print(f"{len(entries)} Logs, {len(players)} Spieler, {n_rep} Bewertungen -> {out}/")
 
